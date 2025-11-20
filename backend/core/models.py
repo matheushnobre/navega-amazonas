@@ -241,13 +241,12 @@ class AssociatedPassenger(BaseModel):
         on_delete=models.PROTECT,
         null=False,
         related_name='associated_passengers',
-        db_column='id_passenger'
+        db_column='id_ticket'
     )
     passenger = models.ForeignKey(
         to='Passenger',
         on_delete=models.PROTECT,
         null=False,
-        related_name='tickets',
         db_column='id_passenger'
     )
     
