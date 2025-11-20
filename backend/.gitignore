@@ -1,0 +1,70 @@
+# Bytecode e cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos de configuração locais
+*.env
+.env
+*.venv
+venv/
+ENV/
+env/
+.envrc
+
+# Config de IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs
+*.log
+logs/
+
+# Dados temporários
+*.tmp
+*.temp
+*.pid
+
+# Testes
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Build / distribuição
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_convert
+
+# Django
+*.sqlite3
+db.sqlite3
+/static/
+/media/
+
+# Flask
+instance/
+*.db
+
+# Cache de dependências
+pip-wheel-metadata/
+pip-log.txt
+
+# mypy, lint, etc.
+.mypy_cache/
+.pyre/
+.pytype/
+.pyright/
+.ruff_cache/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db

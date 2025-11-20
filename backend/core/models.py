@@ -1,0 +1,237 @@
+from django.db import models
+from django.conf import settings
+
+# Create your models here.
+class BaseModel(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+    
+    class Meta:
+        abstract = True
+        
+class ChoiceOptions():
+    class VesselTypeChoices(models.TextChoices):
+        BOAT = ('B', 'Boat') # barco
+        SPEED_BOAT = ('S', 'Speed Boat') # lancha
+        FERRY_BOAT = ('F', 'Ferry Boat') # ferry boat
+        
+    class TypeOfAccommodationChoices(models.TextChoices):
+        INDIVIDUAL = ('I', 'Individual')
+        CABIN = ('C', 'Cabin')
+        
+    class PaymentMethodChoices(models.TextChoices):
+        PIX = ('P', 'Pix')
+        MONEY = ('M', 'Money')
+        CARD = ('C', 'Card')
+        OTHER = ('O', 'Other')
+        
+    class PaymentStatusChoices(models.TextChoices):
+        D = ('D', 'Done')
+        W = ('W', 'Waiting')
+        C = ('C', 'Canceled')
+        
+class Enterprise(BaseModel):
+    name = models.CharField(max_length=50, null=False, blank=False)
+    document = models.CharField(max_length=20, null=False, blank=False, unique=True)
+    
+    class Meta:
+        db_table = 'enterprise'
+        managed = True
+    
+class Vessel(BaseModel):
+    name = models.CharField(max_length=50, null=False, blank=False)
+    image = models.ImageField(upload_to='vessels/', null=False, blank=False)
+    registry_code = models.CharField(max_length=50, null=False, blank=False)
+    vessel_type = models.CharField(max_length=1, null=False, choices=ChoiceOptions.VesselTypeChoices.choices)
+    individual_capacity = models.IntegerField(null=False, blank=False)
+    enterprise = models.ForeignKey(
+        to='Enterprise',
+        on_delete=models.PROTECT,
+        related_name='vessels',
+        null=False,
+        db_column='id_enterprise'
+    )
+    
+    class Meta:
+        db_table = 'vessel'
+        managed = True
+
+class Cabin(BaseModel):
+    capacity = models.IntegerField(null=False, blank=False)
+    description = models.CharField(max_length=200, null=False, blank=False)
+    vessel = models.ForeignKey(
+        to='Vessel',
+        on_delete=models.CASCADE,
+        related_name='cabins',
+        null=False,
+        db_column='id_vessel'        
+    )
+    
+    class Meta:
+        db_table = 'cabin'
+        managed = True
+    
+class City(BaseModel):
+    name = models.CharField(max_length=50, null=False, blank=False)
+    state = models.CharField(max_length=50, null=False, blank=False)
+    image = models.ImageField(upload_to='cities/', null=False, blank=False)
+    
+    class Meta:
+        db_table = 'city'
+        managed = True
+    
+class Harbor(BaseModel):
+    name = models.CharField(max_length=50, null=False, blank=False)
+    city = models.ForeignKey(
+        to='City',
+        on_delete=models.PROTECT,
+        related_name='harbors',
+        null=False,
+        db_column='id_city'    
+    )
+    
+class Trip(BaseModel):
+    departure_harbor = models.ForeignKey(
+        to='Harbor',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='departing_trips',
+        db_column='id_departure_harbor'    
+    )
+    departure_datetime = models.DateTimeField(null=False, blank=False)
+    arrival_harbor = models.ForeignKey(
+        to='Harbor',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='arriving_trips',
+        db_column='id_arrival_harbor'
+    )
+    arrival_datetime = models.DateTimeField(null=False, blank=False)
+    vessel = models.ForeignKey(
+        to='Vessel',
+        on_delete=models.PROTECT,
+        related_name='trips',
+        null=False,
+        db_column='id_vessel'
+    )
+    base_price =  models.DecimalField(null=False, decimal_places=2, max_digits=6)
+    
+    class Meta:
+        db_table = 'trip'
+        managed = True
+    
+class TripStop(BaseModel):
+    trip = models.ForeignKey(
+        to='Trip',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='trip_stops',
+        db_column='id_trip'            
+    )
+    harbor = models.ForeignKey(
+        to='Harbor',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='harbors',
+        db_column='id_harbor'
+    )
+    stop_datetime = models.DateTimeField(null=False, blank=False)
+    number = models.IntegerField()
+    
+    class Meta:
+        db_table = 'trip_stop'
+        managed = True
+    
+class TripSegment(BaseModel):
+    trip = models.ForeignKey(
+        to='Trip',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='trip_segments',
+        db_column='id_trip'            
+    )
+    from_stop = models.ForeignKey(
+        to='TripStop',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='from_stop', # apenas para não dar conflito, nem será usado
+        db_column='id_from_stop'
+    )
+    to_stop = models.ForeignKey(
+        to='TripStop',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='to_stop', # apenas para não dar conflito, nem será usado
+        db_column='id_to_stop'
+    )
+    
+    class Meta:
+        db_table = 'trip_segment'
+        managed = True
+    
+class Passenger(BaseModel):
+    name = models.CharField(max_length=50, null=False, blank=False)
+    document = models.CharField(max_length=30, null=False, blank=False, unique=True)
+    birthday = models.DateField(null=False, blank=False)
+    
+    class Meta:
+        db_table = 'passenger'
+        managed = True 
+class Payment(BaseModel):
+    payment_method = models.CharField(max_length=1, null=False, blank=False, choices=ChoiceOptions.PaymentMethodChoices.choices)
+    payment_status = models.CharField(max_length=1, null=False, blank=False, choices=ChoiceOptions.PaymentStatusChoices.choices)
+    paid_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        db_table = 'payment'
+        managed = True
+class Cart(BaseModel):
+    user = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='carts',
+        db_column='id_user'
+    )
+    
+    payment = models.ForeignKey(
+        to='Payment',
+        on_delete=models.PROTECT,
+        null=True,
+        db_column='id_payment'
+    )
+    
+    class Meta:
+        db_table = 'cart'
+        managed = True
+    
+class Ticket(BaseModel):
+    trip_segment = models.ForeignKey(
+        to='TripSegment',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='tickets',
+        db_column='id_trip_segment'
+    )
+    type_of_accommodation = models.CharField(max_length=1, null=False, blank=False, choices=ChoiceOptions.TypeOfAccommodationChoices.choices)
+    passenger = models.ForeignKey(
+        to='Passenger',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='tickets',
+        db_column='id_passenger'
+    )
+    cart = models.ForeignKey(
+        to='Cart',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='tickets',
+        db_column='id_cart'
+    )
+    
+    class Meta:
+        db_table = 'ticket'
+        managed = True
+        
