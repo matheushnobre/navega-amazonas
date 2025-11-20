@@ -42,7 +42,7 @@ class Enterprise(BaseModel):
     
 class Vessel(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
-    image = models.ImageField(upload_to='vessels/', null=False, blank=False)
+    image = models.ImageField(upload_to='assets/vessels/', null=False, blank=False)
     registry_code = models.CharField(max_length=50, null=False, blank=False)
     vessel_type = models.CharField(max_length=1, null=False, choices=ChoiceOptions.VesselTypeChoices.choices)
     individual_capacity = models.IntegerField(null=False, blank=False)
@@ -76,11 +76,14 @@ class Cabin(BaseModel):
 class City(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
     state = models.CharField(max_length=50, null=False, blank=False)
-    image = models.ImageField(upload_to='cities/', null=False, blank=False)
+    image = models.ImageField(upload_to='assets/cities/', null=False, blank=False)
     
     class Meta:
         db_table = 'city'
         managed = True
+        
+    def __str__(self):
+        return f'{self.name}-{self.state}'
     
 class Harbor(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
