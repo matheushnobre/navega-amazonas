@@ -235,3 +235,22 @@ class Ticket(BaseModel):
         db_table = 'ticket'
         managed = True
         
+class AssociatedPassenger(BaseModel):
+    ticket = models.ForeignKey(
+        to='Ticket',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='associated_passengers',
+        db_column='id_passenger'
+    )
+    passenger = models.ForeignKey(
+        to='Passenger',
+        on_delete=models.PROTECT,
+        null=False,
+        related_name='tickets',
+        db_column='id_passenger'
+    )
+    
+    class Meta:
+        db_table = 'associated_passenger'
+        managed = True
