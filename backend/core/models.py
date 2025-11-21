@@ -35,6 +35,7 @@ class ChoiceOptions():
 class Enterprise(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
     document = models.CharField(max_length=20, null=False, blank=False, unique=True)
+    image = models.ImageField(upload_to='assets/enterprises', null=False, blank=False)
     
     class Meta:
         db_table = 'enterprise'
