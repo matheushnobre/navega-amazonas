@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class BaseModel(models.Model):
@@ -28,19 +29,35 @@ class ChoiceOptions():
         OTHER = ('O', 'Other')
         
     class PaymentStatusChoices(models.TextChoices):
-        D = ('D', 'Done')
-        W = ('W', 'Waiting')
-        C = ('C', 'Canceled')
+        DONE = ('D', 'Done')
+        WAITING = ('W', 'Waiting')
+        CANCELED = ('C', 'Canceled')
+    
+    class UserTypeChoices(models.TextChoices):
+        ENTERPRISE = ('E', 'Enterprise')
+        CUSTOMER = ('C', 'Customer')
+                
+class CustomUser(AbstractUser):
+    type_user = models.CharField(max_length=1, choices=ChoiceOptions.UserTypeChoices.choices, default='C')    
         
 class Enterprise(BaseModel):
-    name = models.CharField(max_length=50, null=False, blank=False)
+    user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    fantasy_name = models.CharField(max_length=50, null=False, blank=False)
     document = models.CharField(max_length=20, null=False, blank=False, unique=True)
-    image = models.ImageField(upload_to='assets/enterprises', null=False, blank=False)
+    image = models.ImageField(upload_to='assets/enterprises/', null=False, blank=False)
     
     class Meta:
-        db_table = 'enterprise'
+        db_table = 'Enterprise'
         managed = True
+
+class Customer(BaseModel):
+    user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    document = models.CharField(max_length=50, null=False, blank=False, unique=True)
     
+    class Meta:
+        db_table = 'customer'
+        managed = True
+            
 class Vessel(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
     image = models.ImageField(upload_to='assets/vessels/', null=False, blank=False)
