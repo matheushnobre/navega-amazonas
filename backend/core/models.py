@@ -36,12 +36,22 @@ class ChoiceOptions():
     class UserTypeChoices(models.TextChoices):
         ENTERPRISE = ('E', 'Enterprise')
         CUSTOMER = ('C', 'Customer')
-                
+        
+    class TicketStatusChoices(models.TextChoices):
+        RESERVED = ('Reserved')
+        CONFIRMED = ('Confirmed')
+        CANCELED = ('Canceled')
+        
 class CustomUser(AbstractUser):
     type_user = models.CharField(max_length=1, choices=ChoiceOptions.UserTypeChoices.choices, default='C')    
         
-class Enterprise(BaseModel):
-    user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+class Enterprise(models.Model):
+    user = models.OneToOneField(
+        to=settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name='enterprise_profile'
+    )
     fantasy_name = models.CharField(max_length=50, null=False, blank=False)
     document = models.CharField(max_length=20, null=False, blank=False, unique=True)
     image = models.ImageField(upload_to='assets/enterprises/', null=False, blank=False)
@@ -50,10 +60,15 @@ class Enterprise(BaseModel):
         db_table = 'Enterprise'
         managed = True
 
-class Customer(BaseModel):
-    user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    document = models.CharField(max_length=50, null=False, blank=False, unique=True)
-    
+class Customer(models.Model):
+    user = models.OneToOneField(
+        to=settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name='customer_profile'
+    )
+    document = models.CharField(max_length=50, null=False, blank=False, unique=True)  
+      
     class Meta:
         db_table = 'customer'
         managed = True
@@ -159,7 +174,7 @@ class TripStop(BaseModel):
         db_column='id_harbor'
     )
     stop_datetime = models.DateTimeField(null=False, blank=False)
-    number = models.IntegerField()
+    number = models.DecimalField(null=False, decimal_places=2, max_digits=6)
     
     class Meta:
         db_table = 'trip_stop'
@@ -187,6 +202,8 @@ class TripSegment(BaseModel):
         related_name='to_stop', # apenas para não dar conflito, nem será usado
         db_column='id_to_stop'
     )
+    price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+    individual_vacancies = models.IntegerField(default=0)
     
     class Meta:
         db_table = 'trip_segment'
@@ -200,33 +217,65 @@ class Passenger(BaseModel):
     class Meta:
         db_table = 'passenger'
         managed = True 
+        
 class Payment(BaseModel):
+    # inserir sale
     payment_method = models.CharField(max_length=1, null=False, blank=False, choices=ChoiceOptions.PaymentMethodChoices.choices)
     payment_status = models.CharField(max_length=1, null=False, blank=False, choices=ChoiceOptions.PaymentStatusChoices.choices)
     paid_at = models.DateTimeField(null=True, blank=True)
+    amount = models.DecimalField(null=False, blank=False, max_digits=6, decimal_places=2)
     
     class Meta:
         db_table = 'payment'
         managed = True
+        
 class Cart(BaseModel):
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         null=False,
         related_name='carts',
         db_column='id_user'
     )
     
-    payment = models.ForeignKey(
-        to='Payment',
-        on_delete=models.PROTECT,
-        null=True,
-        db_column='id_payment'
-    )
+    is_open = models.BooleanField(default=True)
     
     class Meta:
         db_table = 'cart'
         managed = True
+
+class CartItem(BaseModel):
+    cart = models.ForeignKey(
+        to='Cart',
+        on_delete=models.CASCADE,
+        null=False,
+        related_name='items',
+        db_column='id_cart'
+    )
+    
+    ticket = models.ForeignKey(
+        to='Ticket',
+        on_delete=models.PROTECT,
+        null=False,
+        db_column='id_ticket'
+    )
+    
+class Sale(BaseModel):
+    cart = models.OneToOneField(
+        to='Cart',
+        on_delete=models.PROTECT,
+        null=False,
+        db_column='id_cart'
+    )
+    
+    payment = models.OneToOneField(
+        to='Payment',
+        on_delete=models.PROTECT,
+        null=False,
+        db_column='id_payment'
+    )
+    
+    total_amount = models.DecimalField(null=False, decimal_places=2, max_digits=6)
     
 class Ticket(BaseModel):
     trip_segment = models.ForeignKey(
@@ -237,21 +286,16 @@ class Ticket(BaseModel):
         db_column='id_trip_segment'
     )
     type_of_accommodation = models.CharField(max_length=1, null=False, blank=False, choices=ChoiceOptions.TypeOfAccommodationChoices.choices)
-    passenger = models.ForeignKey(
+    main_passenger = models.ForeignKey(
         to='Passenger',
         on_delete=models.PROTECT,
         null=False,
         related_name='tickets',
         db_column='id_passenger'
     )
-    cart = models.ForeignKey(
-        to='Cart',
-        on_delete=models.PROTECT,
-        null=False,
-        related_name='tickets',
-        db_column='id_cart'
-    )
-    
+    price = models.DecimalField(null=False, decimal_places=2, max_digits=6)
+    status = models.CharField(max_length=10, default='Reserved', choices=ChoiceOptions.TicketStatusChoices.choices)
+
     class Meta:
         db_table = 'ticket'
         managed = True
