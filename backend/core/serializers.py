@@ -6,12 +6,10 @@ from .models import CustomUser, Harbor, City, Enterprise, Customer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser 
-        fields = ['id', 'password', 'username', 'email']
-
-    def validate_email(self, value):
-        if CustomUser.objects.filter(email=value).exists():
-            raise serializers.ValidationError('This email already exists.')
-        return value
+        fields = ['id', 'password', 'email', 'username', 'type_user', 'groups', 'user_permissions']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
 class EnterpriseSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -20,17 +18,18 @@ class EnterpriseSerializer(serializers.ModelSerializer):
         model = Enterprise
         fields = '__all__'
         
-        def create(self, validated_data):
-            user_data = validated_data.pop('user')
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+    
+        user = CustomUser.objects.create_user(
+            password = user_data['password'],
+            email = user_data['email'],
+            username = user_data['email'],
+            type_user = 'E'
+        )     
         
-            user = CustomUser.objects.create_user(
-                password = user_data['password'],
-                email = user_data['email'],
-                username = user_data['email']
-            )     
-           
-            enterprise = Enterprise.objects.create(user=user, **validated_data)        
-            return enterprise
+        enterprise = Enterprise.objects.create(user=user, **validated_data)        
+        return enterprise
         
 class CustomerSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -50,6 +49,7 @@ class CustomerSerializer(serializers.ModelSerializer):
            
         customer = Customer.objects.create(user=user, **validated_data)        
         return customer
+    
 class HarborSerializer(serializers.ModelSerializer):
     class Meta:
         model = Harbor
