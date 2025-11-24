@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg">
+  @if (logado) {
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <a class="nav-link active fw-bold fs-5" href="#">Principal</a>
+
+        <div class="dropdown">
+          <img 
+            src="/assets/icons/person.svg" 
+            width="36" height="36"
+            class="p-1 dropdown-toggle" 
+            alt="icone de usuário"
+            style="
+              border: 0.05rem solid var(--color-primary);
+              border-radius:300px;
+              background-color: var(--color-primary);
+              cursor: pointer;
+            "
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+          
+          <ul class="dropdown-menu dropdown-menu-end mt-2">
+            <li><a class="dropdown-item" href="#">Meu perfil</a></li>
+            <li><a class="dropdown-item" href="#">Minhas viagens</a></li>
+            <li><a class="dropdown-item" href="#">Configurações</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#">Sair</a></li>
+          </ul>
+        </div>
+
+      </div>
+  }
+  @else {
+    <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active fw-bold" aria-current="page" href="#">Principal</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+  }
+</nav>

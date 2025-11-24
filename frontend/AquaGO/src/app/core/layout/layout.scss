@@ -1,0 +1,14 @@
+//ver depois para ficar no máximo em 1200px
+.container-fluid{
+    height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.container-content{
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    padding: 0;
+    margin: 0 auto;
+    //border: 1px solid red;
+}
