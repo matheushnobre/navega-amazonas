@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.db.utils import IntegrityError
 from rest_framework import serializers
-from .models import CustomUser, Harbor, City, Enterprise, Customer
+from .models import CustomUser, Harbor, City, Enterprise, Customer, Trip, Vessel
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,3 +62,16 @@ class CitySerializer(serializers.ModelSerializer):
         model = City 
         fields = '__all__'
 
+class VesselSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vessel 
+        fields = '__all__'
+
+class TripSerializer(serializers.ModelSerializer):
+    departure_harbor = serializers.StringRelatedField()
+    arrival_harbor = HarborSerializer()
+    vessel = VesselSerializer()
+    
+    class Meta:
+        model = Trip
+        fields = '__all__'
