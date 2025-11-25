@@ -67,6 +67,7 @@ class Customer(models.Model):
         primary_key=True,
         related_name='customer_profile'
     )
+    name = models.CharField(max_length=50, null=False, blank=False)
     document = models.CharField(max_length=50, null=False, blank=False, unique=True)  
       
     class Meta:
