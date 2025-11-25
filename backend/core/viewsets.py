@@ -4,7 +4,7 @@ from .serializers import UserSerializer, CitySerializer, HarborSerializer, Enter
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .permissions import IsSelfUser
+from .permissions import IsSelfUser, IsEnterprise
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -63,6 +63,12 @@ class CustomerViewSet(viewsets.ModelViewSet):
 class VesselViewSet(viewsets.ModelViewSet):
     queryset = Vessel.objects.all()
     serializer_class = VesselSerializer
+    
+    def get_permissions(self):
+        if self.action == 'list':
+            return [IsAuthenticated()]
+        
+        return [IsAuthenticated(), IsEnterprise()]
 
 class TripViewSet(viewsets.ModelViewSet):
     queryset = Trip.objects.all()

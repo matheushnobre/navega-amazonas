@@ -66,6 +66,14 @@ class VesselSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vessel 
         fields = '__all__'
+        read_only_fields = ['enterprise']
+        
+    def create(self, validated_data):
+        # It's not possible to create an vessel of another enterprise.
+        request = self.context['request']
+        validated_data['enterprise'] = request.user.enterprise_profile
+        return super().create(validated_data)
+
 
 class TripSerializer(serializers.ModelSerializer):
     departure_harbor = serializers.StringRelatedField()
