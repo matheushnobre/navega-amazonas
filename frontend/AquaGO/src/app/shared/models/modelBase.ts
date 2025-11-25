@@ -1,4 +1,4 @@
-export class model_base{
+export class modelBase{
     id!: number;
     created_at!: Date;
     modified!: Date;

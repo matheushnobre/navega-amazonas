@@ -15,6 +15,7 @@ export class Home implements AfterViewInit{
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLDivElement>;
 
+  //Tratar pra não receber negativos em input
   isDown = false;
   startX = 0;
   scrollLeft = 0;

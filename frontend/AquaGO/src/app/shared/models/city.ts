@@ -1,6 +1,6 @@
-import { model_base } from "./model_base";
+import { modelBase } from "./modelBase";
 
-export class City extends model_base{
+export class City extends modelBase{
     image!: string;   //Imagem da cidade
     state!: string; //Amazonas
     name!:  string; //Nome
