@@ -7,6 +7,17 @@
     aspect-ratio: 5 / 4;
 
 }
+.card-enterprise-container:hover{
+    border: none;
+    box-shadow: 0 0 4px var(--color-border);
+}
 p{
     text-align: justify;
+}
+@media(max-width:511px){
+    .card-enterprise-container{
+        width: 100%;
+        aspect-ratio: 0;
+        height: auto;
+    }
 }

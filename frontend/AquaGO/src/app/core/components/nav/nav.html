@@ -1,34 +1,35 @@
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg px-2">
   @if (logado) {
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-      <a class="nav-link active fw-bold fs-5" href="#">Principal</a>
-
-        <div class="dropdown">
-          <img 
-            src="/assets/icons/person.svg" 
-            width="36" height="36"
-            class="p-1 dropdown-toggle" 
-            alt="icone de usuário"
-            style="
-              border: 0.05rem solid var(--color-primary);
-              border-radius:300px;
-              background-color: var(--color-primary);
-              cursor: pointer;
-            "
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-          
-          <ul class="dropdown-menu dropdown-menu-end mt-2">
-            <li><a class="dropdown-item" href="#">Meu perfil</a></li>
-            <li><a class="dropdown-item" href="#">Minhas viagens</a></li>
-            <li><a class="dropdown-item" href="#">Configurações</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="#">Sair</a></li>
-          </ul>
-        </div>
-
+    <div class="container-fluid d-flex justify-content-between align-items-center px-0">
+      <div class="d-flex justify-content-center align-items-center gap-2">
+        <img src="/logo.svg" width="36px" height="36px" alt="">
+        <h2 class="fw-bold fs-6" style="color: #fefefe;">AquaGO!</h2>
       </div>
+      <div class="dropdown">
+        <img 
+          src="/assets/icons/person.svg" 
+          width="36" height="36"
+          class="p-1 dropdown-toggle" 
+          alt="icone de usuário"
+          style="
+            border: 0.05rem solid var(--color-primary);
+            border-radius:300px;
+            background-color: var(--color-primary);
+            cursor: pointer;
+          "
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+        
+        <ul class="dropdown-menu dropdown-menu-end mt-2">
+          <li><a class="dropdown-item" href="#">Meu perfil</a></li>
+          <li><a class="dropdown-item" href="#">Minhas viagens</a></li>
+          <li><a class="dropdown-item" href="#">Configurações</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="#">Sair</a></li>
+        </ul>
+      </div>
+    </div>
   }
   @else {
     <div class="container-fluid">

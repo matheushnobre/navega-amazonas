@@ -9,7 +9,14 @@
     align-items: center;
     justify-content: end;
     cursor: pointer;
+    transition: background-size 0.5s ease-in-out;
+    background-repeat: no-repeat;
 }
 p{
     -webkit-user-select: none;
+}
+.city:hover{
+    border: none;
+    background-size: 120%;
+    box-shadow: 0 0 0.5rem var(--color-primary);
 }

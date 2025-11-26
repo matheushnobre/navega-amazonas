@@ -1,9 +1,15 @@
 .navbar{
     width: 100%;
     position: fixed;
-    background-color: #fefefe !important;
+    background-color: var(--color-primary) !important;
     opacity: 100% !important;
     z-index: 1;
+    transition: opacity .3s ease, transform .3s ease;
+}
+.hidden {
+    display: none;
+    pointer-events: none;
+    transform: translateY(-20px);
 }
 .container-fluid{
     max-width: 800px;

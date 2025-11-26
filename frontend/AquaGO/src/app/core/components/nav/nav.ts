@@ -14,4 +14,6 @@ export class Nav {
   @Input()
   user!:string;
   //inserir o tipo usuário e depois passar os dados dele aqui
+
+
 }
