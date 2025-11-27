@@ -42,8 +42,8 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(user)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'], url_path='my_enterprises')  
-    def my_enterprises(self, request):
+    @action(detail=False, methods=['get'], url_path='enterprises')  
+    def get_enterprises(self, request):
         """
         Returns all enterprises associated with the authenticated user.
         GET /api/users/my_enterprises/
@@ -74,21 +74,26 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
+    http_method_names = ['get']
+    permission_classes = [AllowAny]
     
-    def get_permissions(self):
-        if self.action in ['list']:
-            return [AllowAny()]
-        return [IsAuthenticated()]  
+    @action(detail=True, methods=['get'], url_path='harbors')  
+    def get_harbors(self, request, pk=None):
+        """
+        Returns all harbors associated with a city.
+        GET /api/cities/get_harbors/
+        """
+        city = self.get_object()
+        harbors = Harbor.objects.filter(city=city, active=True)
+        serializer = HarborSerializer(harbors, many=True)
+        return Response(serializer.data)    
        
 class HarborViewSet(viewsets.ModelViewSet):
     queryset = Harbor.objects.all()
     serializer_class = HarborSerializer
-    
-    def get_permissions(self):
-        if self.action in ['list']:
-            return [AllowAny()]
-        return [IsAuthenticated()]  
-    
+    http_method_names = ['get']
+    permission_classes = [AllowAny]
+
 class VesselViewSet(viewsets.ModelViewSet):
     queryset = Vessel.objects.all()
     serializer_class = VesselSerializer

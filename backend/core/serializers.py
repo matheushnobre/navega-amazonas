@@ -36,17 +36,17 @@ class EnterpriseSerializer(serializers.ModelSerializer):
         validated_data.setdefault('active', True)
         return super().create(validated_data)
         
-class HarborSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Harbor
-        fields = '__all__'
-
-class CitySerializer(serializers.ModelSerializer):
-    harbors = HarborSerializer(many=True, read_only=True)
-    
+class CitySerializer(serializers.ModelSerializer):    
     class Meta:
         model = City 
-        fields = '__all__'
+        fields = ['id', 'name', 'state', 'image']
+        
+class HarborSerializer(serializers.ModelSerializer):
+    city = CitySerializer()
+    
+    class Meta:
+        model = Harbor
+        fields = ['id', 'name', 'city']
 
 class VesselSerializer(serializers.ModelSerializer):
     class Meta:

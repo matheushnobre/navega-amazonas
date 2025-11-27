@@ -111,6 +111,9 @@ class Harbor(BaseModel):
         db_column='id_city'    
     )
     
+    def __str__(self):
+        return self.name
+    
 class Trip(BaseModel):
     departure_harbor = models.ForeignKey(
         to='Harbor',
