@@ -39,6 +39,18 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(user)
         return Response(serializer.data)
         
+class EnterpriseViewSet(viewsets.ModelViewSet):
+    queryset = Enterprise.objects.all()
+    serializer_class = EnterpriseSerializer
+    
+    def get_permissions(self):
+        if self.action in ['list']:
+            return [AllowAny()]
+        elif self.action in ['create']:
+            return [IsAuthenticated()]
+        
+        return [IsAuthenticated(), IsEnterprise()]    
+    
 
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
@@ -57,15 +69,6 @@ class HarborViewSet(viewsets.ModelViewSet):
         if self.action in ['list']:
             return [AllowAny()]
         return [IsAuthenticated()]  
-    
-class EnterpriseViewSet(viewsets.ModelViewSet):
-    queryset = Enterprise.objects.all()
-    serializer_class = EnterpriseSerializer
-    
-    def get_permissions(self):
-        if self.action in ['create', 'list']:
-            return [AllowAny()]
-        return [IsAuthenticated(), IsSelfUser()]    
     
 class VesselViewSet(viewsets.ModelViewSet):
     queryset = Vessel.objects.all()
