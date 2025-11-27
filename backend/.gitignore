@@ -68,3 +68,6 @@ pip-log.txt
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# Others
+assets

@@ -1,0 +1,105 @@
+from rest_framework import viewsets, status
+from .models import CustomUser, City, Harbor, Enterprise, Trip, Vessel
+from .serializers import UserSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, VesselSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .permissions import IsSelfUser, IsEnterprise
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = [AllowAny]
+        elif self.action == 'list':
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [IsAuthenticated, IsSelfUser]
+            
+        return [perm() for perm in permission_classes]
+    
+    def _block_update(self, *args, **kwargs):
+        return Response(
+            {'detail': 'User update is not allowed'},
+            status = status.HTTP_405_METHOD_NOT_ALLOWED
+        )
+    
+    def update(self, request, *args, **kwargs):
+        return self._block_update()
+        
+    def partial_update(self, request, *args, **kwargs):
+        return self._block_update()
+    
+    @action(detail=False, methods=['get'], url_path='me')
+    def me(self, request):
+        """
+        Returns the logged-in user's data.
+        GET /api/users/me/
+        """
+        user = request.user
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='my_enterprises')  
+    def my_enterprises(self, request):
+        """
+        Returns all enterprises associated with the authenticated user.
+        GET /api/users/my_enterprises/
+        """
+        user = request.user
+        enterprises = Enterprise.objects.filter(user=user, active=True)
+        serializer = EnterpriseSerializer(enterprises, many=True)
+        return Response(serializer.data)    
+        
+class EnterpriseViewSet(viewsets.ModelViewSet):
+    queryset = Enterprise.objects.all()
+    serializer_class = EnterpriseSerializer
+    
+    def get_permissions(self):
+        if self.action in ['list']:
+            permission_classes = [AllowAny]
+        elif self.action in ['create']:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAuthenticated, IsEnterprise]
+        
+        return [perm() for perm in permission_classes]  
+
+    def perform_destroy(self, instance): # We don't delete enterprises. Only changes field active to false.
+        instance.active = False 
+        instance.save()
+    
+class CityViewSet(viewsets.ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    
+    def get_permissions(self):
+        if self.action in ['list']:
+            return [AllowAny()]
+        return [IsAuthenticated()]  
+       
+class HarborViewSet(viewsets.ModelViewSet):
+    queryset = Harbor.objects.all()
+    serializer_class = HarborSerializer
+    
+    def get_permissions(self):
+        if self.action in ['list']:
+            return [AllowAny()]
+        return [IsAuthenticated()]  
+    
+class VesselViewSet(viewsets.ModelViewSet):
+    queryset = Vessel.objects.all()
+    serializer_class = VesselSerializer
+    
+    def get_permissions(self):
+        if self.action == 'list':
+            return [IsAuthenticated()]
+        
+        return [IsAuthenticated(), IsEnterprise()]
+
+class TripViewSet(viewsets.ModelViewSet):
+    queryset = Trip.objects.all()
+    serializer_class = TripSerializer
+    
