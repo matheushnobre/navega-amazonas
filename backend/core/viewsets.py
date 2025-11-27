@@ -1,7 +1,7 @@
-from rest_framework import viewsets
-from .models import CustomUser, City, Harbor, Enterprise, Customer, Trip, Vessel
-from .serializers import UserSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, CustomerSerializer, TripSerializer, VesselSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import viewsets, status
+from .models import CustomUser, City, Harbor, Enterprise, Trip, Vessel
+from .serializers import UserSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, VesselSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .permissions import IsSelfUser, IsEnterprise
@@ -9,6 +9,25 @@ from .permissions import IsSelfUser, IsEnterprise
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
+    
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        elif self.action == 'list':
+            return [IsAdminUser()]
+        return [IsAuthenticated(), IsSelfUser()]
+    
+    def update(self, request, *args, **kwargs):
+        return Response(
+            {'detail': 'User update is not allowed.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+        
+    def partial_update(self, request, *args, **kwargs):
+        return Response(
+            {'detail': 'User update is not allowed.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
     
     @action(detail=False, methods=['get'], url_path='me')
     def me(self, request):
@@ -46,18 +65,6 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['create', 'list']:
             return [AllowAny()]
-        return [IsAuthenticated(), IsSelfUser()]    
-
-class CustomerViewSet(viewsets.ModelViewSet):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
-    
-    def get_permissions(self):
-        if self.action == 'create':
-            return [AllowAny()]
-        elif self.action == 'list':
-            return [IsAuthenticated()]
-        
         return [IsAuthenticated(), IsSelfUser()]    
     
 class VesselViewSet(viewsets.ModelViewSet):

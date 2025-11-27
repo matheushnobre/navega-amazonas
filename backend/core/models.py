@@ -32,10 +32,6 @@ class ChoiceOptions():
         DONE = ('D', 'Done')
         WAITING = ('W', 'Waiting')
         CANCELED = ('C', 'Canceled')
-    
-    class UserTypeChoices(models.TextChoices):
-        ENTERPRISE = ('E', 'Enterprise')
-        CUSTOMER = ('C', 'Customer')
         
     class TicketStatusChoices(models.TextChoices):
         RESERVED = ('Reserved')
@@ -43,35 +39,21 @@ class ChoiceOptions():
         CANCELED = ('Canceled')
         
 class CustomUser(AbstractUser):
-    type_user = models.CharField(max_length=1, choices=ChoiceOptions.UserTypeChoices.choices, default='C')    
+    name = models.CharField(max_length=50, null=False, blank=False)
+    cpf = models.CharField(max_length=11, null=False, blank=False)
         
-class Enterprise(models.Model):
-    user = models.OneToOneField(
+class Enterprise(BaseModel):
+    user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE,
-        primary_key=True,
-        related_name='enterprise_profile'
+        related_name='enterprises'
     )
     fantasy_name = models.CharField(max_length=50, null=False, blank=False)
-    document = models.CharField(max_length=20, null=False, blank=False, unique=True)
+    cnpj = models.CharField(max_length=20, null=False, blank=False, unique=True)
     image = models.ImageField(upload_to='assets/enterprises/', null=False, blank=False)
     
     class Meta:
-        db_table = 'Enterprise'
-        managed = True
-
-class Customer(models.Model):
-    user = models.OneToOneField(
-        to=settings.AUTH_USER_MODEL, 
-        on_delete=models.CASCADE,
-        primary_key=True,
-        related_name='customer_profile'
-    )
-    name = models.CharField(max_length=50, null=False, blank=False)
-    document = models.CharField(max_length=50, null=False, blank=False, unique=True)  
-      
-    class Meta:
-        db_table = 'customer'
+        db_table = 'enterprise'
         managed = True
             
 class Vessel(BaseModel):
