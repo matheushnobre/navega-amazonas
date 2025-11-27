@@ -3,6 +3,7 @@ import { Nav } from "../../core/components/nav/nav";
 import { CustomInput } from "../../shared/components/custom-input/custom-input";
 import { CustomButton } from "../../shared/components/custom-button/custom-button";
 import { Footer } from "../../core/components/footer/footer";
+import { customUser } from '../../shared/models/customUser';
 
 @Component({
   selector: 'app-register-enterprise',
@@ -12,4 +13,5 @@ import { Footer } from "../../core/components/footer/footer";
 })
 export class RegisterEnterprise {
 
+  user:customUser = new customUser();
 }

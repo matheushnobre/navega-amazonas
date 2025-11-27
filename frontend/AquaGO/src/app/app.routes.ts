@@ -3,6 +3,7 @@ import { Home } from './features/home/home';
 import { Login } from './features/login/login';
 import { RegisterEnterprise } from './features/register-enterprise/register-enterprise';
 import { Dashboard } from './features/dashboard/dashboard';
+import { Enterprise } from './features/enterprise/enterprise';
 
 export const routes: Routes = [
     {path:'',redirectTo:'home',pathMatch:'full'},
@@ -10,4 +11,5 @@ export const routes: Routes = [
     {path:'login',component:Login},
     {path:'register-enterprise',component:RegisterEnterprise},
     {path:'dashboard',component:Dashboard},
+    {path:'enterprise/:id',component:Enterprise},
 ];

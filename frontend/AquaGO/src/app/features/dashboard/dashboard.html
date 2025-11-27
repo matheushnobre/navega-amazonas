@@ -1,15 +1,39 @@
 <div class="container-fluid w-100 px-0">
     <app-nav [logado]="true" [user]=user class="w-100"></app-nav>
-    <section name="init" class="init card px-2" style="width:100%;max-width: 800px;">
-        <h3 class="fw-bold fs-5 p-2">Olá, {{user.username}}</h3>
-        <p class="px-2">Aqui você consegue acompanhar todas as suas embarcações e verificar suas viagens</p>
-    </section>  
-    <section name="list-enterprises-user">
-        @for (enterprise of user.enterprises; track $index) {
-            <div class="item-enterprise card">
-                <img [src]=enterprise.image>
-                <h2>{{enterprise.fantasy_name}}</h2>
+    <div class="dashboard-container">
+        <section name="init" class="init px-2">
+            <div class="init-contente card px-2">
+                <h3 class="fw-bold fs-5 p-2">Olá, {{user.username}}</h3>
+                <p class="px-2">Aqui você consegue acompanhar todas as suas empresas e verificar suas viagens</p>
             </div>
-        } 
-    </section>
+        </section>  
+
+        <section name="enterprises" class="enterprises mt-3 w-100 d-flex flex-column align-items-center px-2" style="max-width: 800px;">
+            <div class="enterprises-menu w-100 d-flex flex-row justify-content-between">
+                <h3 class="fs-5 fw-bold">Minhas Empresas</h3>
+                <app-custom-button
+                    name="Adicionar"
+                ></app-custom-button>
+            </div>
+            <div class="enterprises-list w-100 d-flex gap-3 flex-row mt-3">
+                @for (enterprise of user.enterprises; track $index) {
+                    <!-- tornar isso um scroll -->
+                    <div class="item-enterprise card px-2">
+                        <img [src]=enterprise.image>
+                        <h2 class="fw-bold fs-5 m-0 mt-1 text-center" style="overflow: hidden;text-overflow: ellipsis;height: min-content;line-height: 1.5rem;width: 100%;flex:1">
+                            {{enterprise.fantasy_name}}
+                        </h2>                    
+                        <!-- ver o que colocar aqui -->
+                        <p class="fs-6 mt-0">{{enterprise.cnpj}}</p>
+                        <app-custom-button
+                            class="w-100"
+                            name="Saber mais" 
+                            (click)="select(enterprise.id)"
+                        ></app-custom-button>
+                    </div>
+                } 
+            </div>
+        </section>
+    </div>
+    <app-footer class="mt-5 w-100"></app-footer>
 </div>
