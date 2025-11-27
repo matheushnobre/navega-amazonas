@@ -23,3 +23,20 @@ class IsEnterprise(BasePermission):
             return False
 
         return request.user == obj.user
+    
+class IsEnterpriseCheck(BasePermission):
+    # Some endpoints, are only available for enterprises.
+    
+    def has_permission(self, request, view):
+        user = request.user 
+        
+        if not user or not user.is_authenticated: 
+            return False 
+        
+        return user.enterprises.exists()
+    
+    def has_object_permission(self, request, view, obj):
+        if not request.user or not request.user.is_authenticated:
+            return False
+
+        return request.user == obj.enterprise.user

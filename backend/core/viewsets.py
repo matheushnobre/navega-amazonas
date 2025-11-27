@@ -4,7 +4,7 @@ from .serializers import UserSerializer, CitySerializer, HarborSerializer, Enter
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .permissions import IsSelfUser, IsEnterprise
+from .permissions import IsSelfUser, IsEnterprise, IsEnterpriseCheck
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -46,7 +46,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_enterprises(self, request):
         """
         Returns all enterprises associated with the authenticated user.
-        GET /api/users/my_enterprises/
+        GET /api/users/enterprises/
         """
         user = request.user
         enterprises = Enterprise.objects.filter(user=user, active=True)
@@ -58,7 +58,7 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
     serializer_class = EnterpriseSerializer
     
     def get_permissions(self):
-        if self.action in ['list']:
+        if self.action in ['list', 'get_vessels']:
             permission_classes = [AllowAny]
         elif self.action in ['create']:
             permission_classes = [IsAuthenticated]
@@ -70,6 +70,17 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance): # We don't delete enterprises. Only changes field active to false.
         instance.active = False 
         instance.save()
+        
+    @action(detail=True, methods=['get'], url_path='vessels', permission_classes=[AllowAny])  
+    def get_vessels(self, request, pk=None):
+        """
+        Returns all vessels associated with a enterprise.
+        GET /api/enterprises/vesseçs/
+        """
+        enterprise = self.get_object()
+        vessels = Vessel.objects.filter(enterprise=enterprise, active=True)
+        serializer = VesselSerializer(vessels, many=True)
+        return Response(serializer.data)    
     
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
@@ -81,7 +92,7 @@ class CityViewSet(viewsets.ModelViewSet):
     def get_harbors(self, request, pk=None):
         """
         Returns all harbors associated with a city.
-        GET /api/cities/get_harbors/
+        GET /api/cities/harbors/
         """
         city = self.get_object()
         harbors = Harbor.objects.filter(city=city, active=True)
@@ -99,11 +110,17 @@ class VesselViewSet(viewsets.ModelViewSet):
     serializer_class = VesselSerializer
     
     def get_permissions(self):
-        if self.action == 'list':
-            return [IsAuthenticated()]
-        
-        return [IsAuthenticated(), IsEnterprise()]
+        if self.action in ['list', 'retrive']:
+            permission_classes  = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated, IsEnterpriseCheck]
+            
+        return [perm() for perm in permission_classes]  
 
+    def perform_destroy(self, instance): # We don't delete enterprises. Only changes field active to false.
+        instance.active = False 
+        instance.save()
+        
 class TripViewSet(viewsets.ModelViewSet):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer

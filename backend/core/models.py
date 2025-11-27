@@ -14,9 +14,9 @@ class BaseModel(models.Model):
         
 class ChoiceOptions():
     class VesselTypeChoices(models.TextChoices):
-        BOAT = ('B', 'Boat') # barco
-        SPEED_BOAT = ('S', 'Speed Boat') # lancha
-        FERRY_BOAT = ('F', 'Ferry Boat') # ferry boat
+        BOAT = ('BOAT', 'Barco') 
+        SPEED_BOAT = ('SPEED_BOAT', 'Lancha')
+        FERRY_BOAT = ('FERRY_BOAT', 'Ferry Boat')
         
     class TypeOfAccommodationChoices(models.TextChoices):
         INDIVIDUAL = ('I', 'Individual')
@@ -60,8 +60,9 @@ class Vessel(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
     image = models.ImageField(upload_to='assets/vessels/', null=False, blank=False)
     registry_code = models.CharField(max_length=50, null=False, blank=False)
-    vessel_type = models.CharField(max_length=1, null=False, choices=ChoiceOptions.VesselTypeChoices.choices)
+    vessel_type = models.CharField(max_length=20, null=False, choices=ChoiceOptions.VesselTypeChoices.choices)
     individual_capacity = models.IntegerField(null=False, blank=False)
+    number_of_cabins = models.IntegerField(default=0)
     enterprise = models.ForeignKey(
         to='Enterprise',
         on_delete=models.PROTECT,
@@ -72,23 +73,7 @@ class Vessel(BaseModel):
     
     class Meta:
         db_table = 'vessel'
-        managed = True
-
-class Cabin(BaseModel):
-    capacity = models.IntegerField(null=False, blank=False)
-    description = models.CharField(max_length=200, null=False, blank=False)
-    vessel = models.ForeignKey(
-        to='Vessel',
-        on_delete=models.CASCADE,
-        related_name='cabins',
-        null=False,
-        db_column='id_vessel'        
-    )
-    
-    class Meta:
-        db_table = 'cabin'
-        managed = True
-    
+        managed = True  
 class City(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
     state = models.CharField(max_length=50, null=False, blank=False)

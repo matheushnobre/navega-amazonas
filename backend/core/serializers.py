@@ -1,8 +1,9 @@
 from django.db import transaction
 from django.db.utils import IntegrityError
 from rest_framework import serializers, status
-from .models import CustomUser, Harbor, City, Enterprise, Trip, Vessel
+from .models import ChoiceOptions, CustomUser, Harbor, City, Enterprise, Trip, Vessel
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,7 +34,6 @@ class EnterpriseSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         user = request.user
         validated_data['user'] = user 
-        validated_data.setdefault('active', True)
         return super().create(validated_data)
         
 class CitySerializer(serializers.ModelSerializer):    
@@ -49,17 +49,35 @@ class HarborSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'city']
 
 class VesselSerializer(serializers.ModelSerializer):
+    vessel_type = serializers.CharField()
+    
+    def validate_enterprise(self, value):
+        request = self.context['request']
+        user = request.user 
+        
+        if value.user != user:
+            raise PermissionDenied('You do not own this enterprise')
+        
+        return value
+    
+    def validate_vessel_type(self, value):
+        v = value.strip().lower()
+        
+        mapping = {
+            'barco': ChoiceOptions.VesselTypeChoices.BOAT,
+            'lancha': ChoiceOptions.VesselTypeChoices.SPEED_BOAT,
+            'ferry boat': ChoiceOptions.VesselTypeChoices.FERRY_BOAT
+        }
+        
+        if v not in mapping:
+            raise serializers.ValidationError('Invalid vessel type')
+        
+        return mapping[v]
+        
     class Meta:
         model = Vessel 
         fields = '__all__'
-        read_only_fields = ['enterprise']
-        
-    def create(self, validated_data):
-        # It's not possible to create an vessel of another enterprise.
-        request = self.context['request']
-        validated_data['enterprise'] = request.user.enterprise_profile
-        return super().create(validated_data)
-
+        read_only_fields = ['active']
 
 class TripSerializer(serializers.ModelSerializer):
     departure_harbor = serializers.StringRelatedField()
