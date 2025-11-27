@@ -12,22 +12,25 @@ class UserViewSet(viewsets.ModelViewSet):
     
     def get_permissions(self):
         if self.action == 'create':
-            return [AllowAny()]
+            permission_classes = [AllowAny]
         elif self.action == 'list':
-            return [IsAdminUser()]
-        return [IsAuthenticated(), IsSelfUser()]
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [IsAuthenticated, IsSelfUser]
+            
+        return [perm() for perm in permission_classes]
+    
+    def _block_update(self, *args, **kwargs):
+        return Response(
+            {'detail': 'User update is not allowed'},
+            status = status.HTTP_405_METHOD_NOT_ALLOWED
+        )
     
     def update(self, request, *args, **kwargs):
-        return Response(
-            {'detail': 'User update is not allowed.'},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        return self._block_update()
         
     def partial_update(self, request, *args, **kwargs):
-        return Response(
-            {'detail': 'User update is not allowed.'},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        return self._block_update()
     
     @action(detail=False, methods=['get'], url_path='me')
     def me(self, request):
@@ -38,6 +41,17 @@ class UserViewSet(viewsets.ModelViewSet):
         user = request.user
         serializer = self.get_serializer(user)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='my_enterprises')  
+    def my_enterprises(self, request):
+        """
+        Returns all enterprises associated with the authenticated user.
+        GET /api/users/my_enterprises/
+        """
+        user = request.user
+        enterprises = Enterprise.objects.filter(user=user, active=True)
+        serializer = EnterpriseSerializer(enterprises, many=True)
+        return Response(serializer.data)    
         
 class EnterpriseViewSet(viewsets.ModelViewSet):
     queryset = Enterprise.objects.all()
@@ -45,13 +59,18 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
     
     def get_permissions(self):
         if self.action in ['list']:
-            return [AllowAny()]
+            permission_classes = [AllowAny]
         elif self.action in ['create']:
-            return [IsAuthenticated()]
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAuthenticated, IsEnterprise]
         
-        return [IsAuthenticated(), IsEnterprise()]    
-    
+        return [perm() for perm in permission_classes]  
 
+    def perform_destroy(self, instance): # We don't delete enterprises. Only changes field active to false.
+        instance.active = False 
+        instance.save()
+    
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer

@@ -40,7 +40,7 @@ class ChoiceOptions():
         
 class CustomUser(AbstractUser):
     name = models.CharField(max_length=50, null=False, blank=False)
-    cpf = models.CharField(max_length=11, null=False, blank=False)
+    cpf = models.CharField(max_length=20, null=False, blank=False)
         
 class Enterprise(BaseModel):
     user = models.ForeignKey(
@@ -49,7 +49,7 @@ class Enterprise(BaseModel):
         related_name='enterprises'
     )
     fantasy_name = models.CharField(max_length=50, null=False, blank=False)
-    cnpj = models.CharField(max_length=20, null=False, blank=False, unique=True)
+    cnpj = models.CharField(max_length=20, null=False, blank=False)
     image = models.ImageField(upload_to='assets/enterprises/', null=False, blank=False)
     
     class Meta:
@@ -194,7 +194,7 @@ class TripSegment(BaseModel):
     
 class Passenger(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
-    document = models.CharField(max_length=30, null=False, blank=False, unique=True)
+    document = models.CharField(max_length=30, null=False, blank=False)
     birthday = models.DateField(null=False, blank=False)
     
     class Meta:

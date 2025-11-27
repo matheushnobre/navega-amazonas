@@ -27,12 +27,13 @@ class EnterpriseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enterprise
         fields = '__all__'
-        read_only_fields = ['user']
+        read_only_fields = ['user', 'active']
         
     def create(self, validated_data):
         request = self.context.get('request')
         user = request.user
         validated_data['user'] = user 
+        validated_data.setdefault('active', True)
         return super().create(validated_data)
         
 class HarborSerializer(serializers.ModelSerializer):
