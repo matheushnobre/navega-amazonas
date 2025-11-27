@@ -8,9 +8,9 @@ import { Component, Input } from '@angular/core';
 })
 export class CustomInput {
   @Input()
-  type: "text" | "email" | "number"| "date" | "password"  = "text";
+  type: "text" | "email" | "number"| "date" | "password" | "file"  = "text";
   @Input()
-  type_input: "standard" | "email" | "date" | "person" | "password" = "standard";
+  type_input: "standard" | "email" | "date" | "person" | "password" | "file" = "standard";
   @Input()
   placeholder!:string
 

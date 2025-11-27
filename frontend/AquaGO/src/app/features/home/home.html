@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <app-nav [logado]=true class="w-100"></app-nav>
+    <app-nav [logado]=true [user]=user class="w-100"></app-nav>
     <section class="trip"  name="trip">
         <div class="trip-content">
             <h3 class="fs-5 fw-bold w-100 text-start" style="color: #fefefe;">Querendo viagem?</h3>
@@ -61,7 +61,7 @@
     </section>
     <section class="px-2 d-flex flex-column gap-2" name="about" style="max-width: 800px;">
         <h3 class="fs-5 fw-bold">Quem somos?</h3>
-        <p class="fs-6" style="opacity: 90%;">O <span class="fw-bold">AquaGO!</span> surgiu no IFAM campus Parintins, criado pela equipe Dois Balões e Meio, com a missão de facilitar o acesso ao transporte fluvial na região Norte. Hoje, o sistema reúne diversas empresas confiáveis que oferecem viagens de barco e lancha, permitindo que você encontre todas as opções em um único lugar.</p>
+        <p class="fs-6">O <span class="fw-bold">AquaGO!</span> surgiu no IFAM campus Parintins, criado pela equipe Dois Balões e Meio, com a missão de facilitar o acesso ao transporte fluvial na região Norte. Hoje, o sistema reúne diversas empresas confiáveis que oferecem viagens de barco e lancha, permitindo que você encontre todas as opções em um único lugar.</p>
     </section>
     <section class="px-2 mt-3 enterprise d-flex gap-3">
         <app-card-enterprise
@@ -86,12 +86,12 @@
      <section class="px-2 mt-5 mb-3 d-flex flex-column gap-2 w-100" name="about" style="max-width: 800px;">
         <h3 class="fs-5 fw-bold">Nossos valores</h3>
         <ul>
-            <li class="fs-6"><p style="opacity: 90%;"><span class="fw-bold" style="opacity: 100%;">Transparência:</span> informações claras sobre horários, preços e empresas.</p></li>
-            <li class="fs-6"><p style="opacity: 90%;"><span class="fw-bold" style="opacity: 100%;">Confiabilidade:</span> parceria apenas com empresas regulamentadas e comprometidas com a segurança.</p></li>
-            <li class="fs-6"><p style="opacity: 90%;"><span class="fw-bold" style="opacity: 100%;">Acessibilidade:</span> tornar a experiência de compra e consulta simples para todos.</p></li>
-            <li class="fs-6"><p style="opacity: 90%;"><span class="fw-bold" style="opacity: 100%;">Inovação:</span> utilizar tecnologia para transformar o transporte fluvial.</p></li>
-            <li class="fs-6"><p style="opacity: 90%;"><span class="fw-bold" style="opacity: 100%;">Respeito à região:</span> valorizar a cultura ribeirinha e a importância dos rios para a Amazônia.</p></li>
-            <li class="fs-6"><p style="opacity: 90%;"><span class="fw-bold" style="opacity: 100%;">Responsabilidade:</span> atuar de forma ética, segura e sustentável para toda a comunidade envolvida.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Transparência:</span> informações claras sobre horários, preços e empresas.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Confiabilidade:</span> parceria apenas com empresas regulamentadas e comprometidas com a segurança.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Acessibilidade:</span> tornar a experiência de compra e consulta simples para todos.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Inovação:</span> utilizar tecnologia para transformar o transporte fluvial.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Respeito à região:</span> valorizar a cultura ribeirinha e a importância dos rios para a Amazônia.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Responsabilidade:</span> atuar de forma ética, segura e sustentável para toda a comunidade envolvida.</p></li>
         </ul>
     </section>
     <section class="card-enterprise-container d-flex align-items-center w-100">
@@ -103,6 +103,7 @@
                     type="primary"
                     name="Eu quero"
                     class="w-100"
+                    (click)="register()"
                 ></app-custom-button>
             </div>
             <div class="card-enterprise-right"></div>

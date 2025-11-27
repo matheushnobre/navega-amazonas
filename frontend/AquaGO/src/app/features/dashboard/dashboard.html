@@ -1,1 +1,15 @@
-<p>dashboard works!</p>
+<div class="container-fluid w-100 px-0">
+    <app-nav [logado]="true" [user]=user class="w-100"></app-nav>
+    <section name="init" class="init card px-2" style="width:100%;max-width: 800px;">
+        <h3 class="fw-bold fs-5 p-2">Olá, {{user.username}}</h3>
+        <p class="px-2">Aqui você consegue acompanhar todas as suas embarcações e verificar suas viagens</p>
+    </section>  
+    <section name="list-enterprises-user">
+        @for (enterprise of user.enterprises; track $index) {
+            <div class="item-enterprise card">
+                <img [src]=enterprise.image>
+                <h2>{{enterprise.fantasy_name}}</h2>
+            </div>
+        } 
+    </section>
+</div>

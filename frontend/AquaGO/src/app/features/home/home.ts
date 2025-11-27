@@ -6,6 +6,9 @@ import { CardEnterprise } from "../../shared/components/card-enterprise/card-ent
 import { CustomButton } from "../../shared/components/custom-button/custom-button";
 import { Nav } from "../../core/components/nav/nav";
 import { Footer } from '../../core/components/footer/footer';
+import { Router } from '@angular/router';
+import { customUser } from '../../shared/models/customUser';
+import { enterprise } from '../../shared/models/enterprise';
 
 @Component({
   selector: 'app-home',
@@ -25,12 +28,15 @@ export class Home implements AfterViewInit{
       this.configurarScroll();
     });
   }
+  user:customUser = new customUser();
+  enterprise:enterprise = new enterprise();
+  enterprises:enterprise[] = [];
   cities:City[] = []
   city1:City = new City();
   city2:City = new City();
   city3:City = new City();
   city4:City = new City();
-  constructor(){
+  constructor(private router: Router){
     this.city1.name = "Amazonas";
     this.city1.image = "parintins.png";
 
@@ -47,6 +53,10 @@ export class Home implements AfterViewInit{
     this.cities.push(this.city2);
     this.cities.push(this.city3);
     this.cities.push(this.city4);
+
+
+    this.enterprises.push(this.enterprise);
+    this.user.enterprises = this.enterprises;
   }
   configurarScroll(){
     this.scrollContainers.forEach((containerRef: ElementRef) => {
@@ -81,5 +91,8 @@ export class Home implements AfterViewInit{
       container.scrollLeft = scrollLeft - walk;
     });
   });
+  }
+  register(){
+    this.router.navigate(['register-enterprise']);
   }
 }

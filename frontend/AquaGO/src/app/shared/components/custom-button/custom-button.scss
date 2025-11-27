@@ -1,12 +1,31 @@
-.primary{
-    background-color: var(--color-primary);
-    color: white;
+Button{
     padding: 0.5rem 1rem;
     width: 100%;
     border: none;
     border-radius: 0.5rem;
 }
+.primary{
+    background-color: var(--color-primary);
+    color: white;
+}
 .primary:hover{
     background: #112fc9;
-    
+}
+.light_outline{
+    background-color: transparent;
+    border:0.1rem solid #fefefe87;
+    color: white;
+    font-weight: 500;
+}
+.light_outline:hover{
+    background-color: #fefefe86;
+}
+.light{
+    background-color: #fefefe;
+    border:0.1rem solid #fefefe87;
+    color:var(--color-primary);
+    font-weight: 500;
+}
+.light:hover{
+    opacity: 80%;
 }

@@ -15,3 +15,10 @@
     max-width: 800px;
     //border: 1px solid red;
 }
+
+@media(max-width:768px){
+    .itens{
+        flex-direction: column;
+        max-width: 8rem;
+    }
+}
