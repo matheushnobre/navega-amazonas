@@ -1,9 +1,10 @@
 from django.db import transaction
 from django.db.utils import IntegrityError
 from rest_framework import serializers, status
-from .models import ChoiceOptions, CustomUser, Harbor, City, Enterprise, Trip, Vessel
+from .models import ChoiceOptions, CustomUser, Harbor, City, Enterprise, Trip, Vessel, TripStop, TripSegment
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.validators import UniqueValidator
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,7 +30,7 @@ class EnterpriseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enterprise
         fields = '__all__'
-        read_only_fields = ['user', 'active']
+        read_only_fields = ['user', 'active'] 
         
     def create(self, validated_data):
         request = self.context.get('request')
@@ -80,11 +81,41 @@ class VesselSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['active']
 
-class TripSerializer(serializers.ModelSerializer):
-    departure_harbor = serializers.StringRelatedField()
-    arrival_harbor = HarborSerializer()
-    vessel = VesselSerializer()
-    
+class TripSerializer(serializers.ModelSerializer):            
     class Meta:
         model = Trip
         fields = '__all__'
+        
+class TripStopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TripStop 
+        fields = '__all__'
+        
+class TripSegmentSerializer(serializers.ModelSerializer):            
+    class Meta:
+        model = TripSegment
+        fields = '__all__'
+        
+class EnterpriseMeSerializer(serializers.ModelSerializer):
+    vessels_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Enterprise
+        fields = ['id', 'fantasy_name', 'cnpj', 'vessels_count']
+
+    def get_vessels_count(self, obj):
+        return obj.vessels.count()   
+
+class UserMeSerializer(serializers.ModelSerializer):
+    cpf = serializers.SerializerMethodField()
+    enterprises = EnterpriseMeSerializer(many=True)  # ajuste conforme seu modelo
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'email', 'username', 'name', 'cpf', 'enterprises']
+
+    def get_cpf(self, obj):
+        if not obj.cpf:
+            return None
+        
+        return f"***.{obj.cpf[3:6]}.***-{obj.cpf[-2:]}"

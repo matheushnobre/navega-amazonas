@@ -145,7 +145,7 @@ class TripStop(BaseModel):
         db_column='id_harbor'
     )
     stop_datetime = models.DateTimeField(null=False, blank=False)
-    number = models.DecimalField(null=False, decimal_places=2, max_digits=6)
+    number = models.IntegerField(default=-1)
     
     class Meta:
         db_table = 'trip_stop'
