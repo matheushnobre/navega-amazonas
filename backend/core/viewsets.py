@@ -20,18 +20,6 @@ class UserViewSet(viewsets.ModelViewSet):
             
         return [perm() for perm in permission_classes]
     
-    def _block_update(self, *args, **kwargs):
-        return Response(
-            {'detail': 'User update is not allowed'},
-            status = status.HTTP_405_METHOD_NOT_ALLOWED
-        )
-        
-    def update(self, request, *args, **kwargs):
-        return self._block_update()
-        
-    def partial_update(self, request, *args, **kwargs):
-        return self._block_update()
-    
     @action(detail=False, methods=['get'], url_path='me')
     def me(self, request):
         """
