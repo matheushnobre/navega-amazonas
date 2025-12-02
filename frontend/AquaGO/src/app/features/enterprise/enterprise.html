@@ -1,0 +1,30 @@
+<div class="container-fluid w-100 px-0">
+    <app-nav  class="w-100"></app-nav>
+    <div class="enterprise-container">
+        <section name="trips" class="trips px-2">
+            <div class="trips w-100 d-flex flex-row justify-content-between">
+                <h3 class="fs-5 fw-bold">Lista de Embarcações</h3>
+                <app-custom-button
+                    name="Adicionar"
+                ></app-custom-button>
+            </div>
+            <div class="enterprises-list w-100 d-flex gap-3 flex-row mt-3">
+                @for (vessel of vessels; track $index) {
+                    <div class="item-enterprise card px-2">
+                        <img [src]=vessel.image>
+                        <h2 class="fw-bold fs-5 m-0 mt-1 text-center" style="overflow: hidden;text-overflow: ellipsis;height: min-content;line-height: 1.5rem;width: 100%;flex:1">
+                            {{vessel.name}}
+                        </h2>                    
+                        <!-- ver o que colocar aqui -->
+                        <p class="fs-6 mt-0">{{vessel.vessel_type}}</p>
+                        <app-custom-button
+                            class="w-100"
+                            name="Saber mais" 
+                        ></app-custom-button>
+                    </div>
+                } 
+            </div>
+        </section>
+    </div>
+    <app-footer class="mt-5 w-100"></app-footer>
+</div>

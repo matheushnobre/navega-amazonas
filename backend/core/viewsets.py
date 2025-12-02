@@ -20,6 +20,19 @@ class UserViewSet(viewsets.ModelViewSet):
             
         return [perm() for perm in permission_classes]
     
+    def _block_update(self, *args, **kwargs):
+        return Response(
+            {'detail': 'User update is not allowed'},
+            status = status.HTTP_405_METHOD_NOT_ALLOWED
+        )
+        
+    def update(self, request, *args, **kwargs):
+        return self._block_update()
+        
+    def partial_update(self, request, *args, **kwargs):
+        return self._block_update()
+    
+>>>>>>> 041f736a30c1f3daaa105f97478b1b0655807daa
     @action(detail=False, methods=['get'], url_path='me')
     def me(self, request):
         """
@@ -40,7 +53,7 @@ class UserViewSet(viewsets.ModelViewSet):
         enterprises = Enterprise.objects.filter(user=user, active=True)
         serializer = EnterpriseSerializer(enterprises, many=True)
         return Response(serializer.data)    
-        
+    
 class EnterpriseViewSet(viewsets.ModelViewSet):
     queryset = Enterprise.objects.all()
     serializer_class = EnterpriseSerializer

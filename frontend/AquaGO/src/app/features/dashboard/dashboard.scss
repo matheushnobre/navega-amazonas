@@ -1,0 +1,46 @@
+.container-fluid{
+    display: flex;
+    flex-direction: column;    
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.dashboard-container{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    flex: 1 0 auto;
+}
+.init{
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    align-items: center;
+    max-width: 800px;
+}
+.init-contente{
+    width: 100%;
+    margin-top: 5rem;
+}
+.list-enterprises-user{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 800px;
+}
+.item-enterprise{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+    width: 11rem;
+    height: 12rem;
+    overflow: hidden;
+}
+.item-enterprise img{
+    width: 3rem;
+    height: 3rem;
+    border: 0.1rem solid var(--color-border);
+    border-radius: 300rem;
+}

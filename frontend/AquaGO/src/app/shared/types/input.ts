@@ -1,0 +1,1 @@
+export type CustomInputValue = string | number | File | Date;
