@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { customUser } from '../../shared/models/customUser';
 import { Nav } from "../../core/components/nav/nav";
 import { enterprise } from '../../shared/models/enterprise';
-import { ListEnterprise } from "../../shared/components/list-enterprise/list-enterprise";
 import { CustomButton } from "../../shared/components/custom-button/custom-button";
 import { Footer } from "../../core/components/footer/footer";
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [Nav, ListEnterprise, CustomButton, Footer],
+  imports: [Nav, CustomButton, Footer],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })

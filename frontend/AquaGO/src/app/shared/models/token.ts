@@ -1,5 +1,5 @@
 export class TokenUsuario{
-    access_token!: string;
+    access!: string;
     refresh_token!: string;
     token_type!: string;
 }

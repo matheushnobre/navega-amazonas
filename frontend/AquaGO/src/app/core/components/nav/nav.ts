@@ -4,6 +4,8 @@ import { CustomButton } from "../../../shared/components/custom-button/custom-bu
 import { CommonModule } from '@angular/common';
 import { customUser } from '../../../shared/models/customUser';
 import { enterprise } from '../../../shared/models/enterprise';
+import { Enterprise } from '../../../features/enterprise/enterprise';
+import { UserService } from '../../services/user-service';
 
 @Component({
   selector: 'app-nav',
@@ -14,29 +16,27 @@ import { enterprise } from '../../../shared/models/enterprise';
 export class Nav implements OnChanges {
 
   @Input()
-  logado!:boolean
+  logado:boolean = false;
 
-  @Input()
-  user:customUser = new customUser();
-  enterprise:boolean = false;
-  enter:enterprise [] = [];
+  enterprises:Enterprise[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
     this.verificarUsuario();
   }
 
-
-  constructor(private router:Router){}
+  constructor(private router:Router,private userService: UserService){}
 
   verificarUsuario(){
-    try{
-      if(this.user.enterprises.length>0){
-        this.enterprise = true;
-      }
-    }
-    catch{
-      this.enterprise=false;
-    }
+    this.userService.my_enterprises().subscribe({
+      next:dados=>{
+        this.enterprises = Array.isArray(dados) ? dados : [];
+        alert(this.enterprises);
+        this.logado = true;
+      },error(err) {
+          //Sem login
+      },
+    })
+    //
   }
   home(){
     this.router.navigate(['home'])

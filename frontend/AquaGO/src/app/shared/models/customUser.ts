@@ -2,10 +2,13 @@ import { enterprise } from "./enterprise";
 
 //verificar se customUser herda de modelBase
 export class customUser{
-    id!:number;
+    id?:number | null;
+    
+    name!:string; 
     email!:string;
-    username!:string;
-    enterprises!:enterprise[];
-    cpf!:string 
+    cpf!:string;
     password!:string;
+    
+    username?:string | null;
+    enterprises?:enterprise[] | null;
 }

@@ -1,23 +1,16 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { Auth } from './auth';
 
 describe('Auth', () => {
-  let component: Auth;
-  let fixture: ComponentFixture<Auth>;
+  let service: Auth;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Auth]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(Auth);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(Auth);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 });
