@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'core.apps.CoreConfig',
     'corsheaders',
-    'core',
 ]
 
 MIDDLEWARE = [
