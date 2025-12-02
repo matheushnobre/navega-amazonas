@@ -1,9 +1,9 @@
 <div class="container-fluid w-100 px-0">
-    <app-nav [logado]="true" class="w-100"></app-nav>
+    <app-nav class="w-100"></app-nav>
     <div class="dashboard-container">
         <section name="init" class="init px-2">
             <div class="init-contente card px-2">
-                <h3 class="fw-bold fs-5 p-2">Olá, {{user.username}}</h3>
+                <h3 class="fw-bold fs-5 p-2">Olá, {{user.name}}</h3>
                 <p class="px-2">Aqui você consegue acompanhar todas as suas empresas e verificar suas viagens</p>
             </div>
         </section>  
@@ -13,6 +13,7 @@
                 <h3 class="fs-5 fw-bold">Minhas Empresas</h3>
                 <app-custom-button
                     name="Adicionar"
+                    (click)="add()"
                 ></app-custom-button>
             </div>
             <div class="enterprises-list w-100 d-flex gap-3 flex-row mt-3">
@@ -28,7 +29,7 @@
                         <app-custom-button
                             class="w-100"
                             name="Saber mais" 
-                            (click)="select(enterprise.id)"
+                            (click)="select(enterprise.id!)"
                         ></app-custom-button>
                     </div>
                 } 

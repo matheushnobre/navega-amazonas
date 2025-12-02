@@ -1,4 +1,4 @@
-Button{
+button{
     padding: 0.5rem 1rem;
     width: 100%;
     border: none;
@@ -22,7 +22,7 @@ Button{
 }
 .light{
     background-color: #fefefe;
-    border:0.1rem solid #fefefe87;
+    border:0.05rem solid var(--color-primary);
     color:var(--color-primary);
     font-weight: 500;
 }

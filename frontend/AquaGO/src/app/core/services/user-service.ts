@@ -24,7 +24,10 @@ export class UserService {
   }
   my_enterprises(): Observable<Enterprise[]>{
     const headers = this.tokenService.getAuthHeaders();
-    return this.http.get<Enterprise[]>(`${this.API}my_enterprises/`,{headers});
+    return this.http.get<Enterprise[]>(`${this.API}enterprises/`,{headers});
   }
-
+  get_security(): Observable<customUser>{
+    const headers = this.tokenService.getAuthHeaders();
+    return this.http.get<customUser>(`${this.API}me/`,{headers});
+  }
 }

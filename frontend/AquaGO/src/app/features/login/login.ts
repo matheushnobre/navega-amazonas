@@ -14,11 +14,9 @@ import { customUser } from '../../shared/models/customUser';
   styleUrl: './login.scss',
 })
 export class Login {
-  name: string = "";
+  
   email: string = "";
   password: string = "";
-  cpf: string = "";
-  login: boolean = true;
 
   constructor(
     private auth: Auth,
@@ -26,42 +24,20 @@ export class Login {
     private user: UserService
   ) {}
 
-  reverse() {
-    this.login = !this.login;
-  }
-
   confirmar(event:Event) {
-    if (this.login) {
-      event.preventDefault();
-      this.auth.login(this.email, this.password).subscribe({
-        next: (res) => {
-          alert(res);
-          localStorage.setItem('token', res.access);
-          //this.router.navigate(['/home']);
-        },
-        error: (err) => {
-          alert("Erro ao logar");
-          console.log("Erro de login:", err);
-        }
-      });
-    } else {
-      const custom: customUser = {
-        name: this.name,
-        email: this.email,
-        username: this.email,
-        cpf: this.cpf,
-        password: this.password
-      };
-      alert(this.name);
-
-      this.user.add(custom).subscribe({
-        next: (dados) => {
-          alert(`Usuário ${dados.name} cadastrado!`);
-        },
-        error: (err) => {
-          console.log("Erro ao cadastrar:", err);
-        }
-      });
-    }
+    event.preventDefault();
+    this.auth.login(this.email, this.password).subscribe({
+      next: (res) => {
+        localStorage.setItem('token', res.access);
+        this.router.navigate(['home']);
+      },
+      error: (err) => {
+        alert("Erro ao logar");
+        console.log("Erro de login:", err);
+      }
+    });
+  }
+  reverse(){
+    this.router.navigate(['register'])
   }
 }

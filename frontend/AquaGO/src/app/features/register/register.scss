@@ -1,4 +1,4 @@
-.login{
+.register{
     height: fit-content;
     display: flex;
     flex-direction: row;
@@ -6,8 +6,7 @@
     justify-content: center;
     height: 100vh;
 }
-
-.left-login,.right-login{
+.left-register,.right-register{
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -15,13 +14,13 @@
     justify-content: center; 
     height: 100%;
 }
-.right-login{
+.left-register{
     @media(max-width:759px){
         display: none;
     }
 }
 @media (max-width: 760px){
-    .login{
+    .register{
         height: auto;
         height: max-content;
         display: flex;
@@ -30,7 +29,7 @@
         width: 100%;
         flex-direction: column;
     }
-    .left-login{
+    .right-register{
         display: flex;
         flex-direction: column;
         width: 100%;
