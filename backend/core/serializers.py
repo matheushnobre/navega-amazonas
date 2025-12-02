@@ -26,10 +26,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class EnterpriseSerializer(serializers.ModelSerializer):
-    cnpj = serializers.CharField(validators=[UniqueValidator(
-        queryset=Enterprise.objects.all().all(),
-        message="CNPJ already exists."
-    )])
     class Meta:
         model = Enterprise
         fields = '__all__'
@@ -98,3 +94,27 @@ class TripSegmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = TripSegment
         fields = '__all__'
+        
+class EnterpriseMeSerializer(serializers.ModelSerializer):
+    vessels_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Enterprise
+        fields = ['id', 'fantasy_name', 'cnpj', 'vessels_count']
+
+    def get_vessels_count(self, obj):
+        return obj.vessels.count()   
+
+class UserMeSerializer(serializers.ModelSerializer):
+    cpf = serializers.SerializerMethodField()
+    enterprises = EnterpriseMeSerializer(many=True)  # ajuste conforme seu modelo
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'email', 'username', 'name', 'cpf', 'enterprises']
+
+    def get_cpf(self, obj):
+        if not obj.cpf:
+            return None
+        
+        return f"***.{obj.cpf[3:6]}.***-{obj.cpf[-2:]}"

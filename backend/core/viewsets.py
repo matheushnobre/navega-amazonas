@@ -1,6 +1,6 @@
 from rest_framework import viewsets, status
 from .models import CustomUser, City, Harbor, Enterprise, Trip, Vessel, TripSegment, TripStop
-from .serializers import UserSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, VesselSerializer, TripSegmentSerializer, TripStopSerializer
+from .serializers import UserSerializer, UserMeSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, VesselSerializer, TripSegmentSerializer, TripStopSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -39,7 +39,7 @@ class UserViewSet(viewsets.ModelViewSet):
         GET /api/users/me/
         """
         user = request.user
-        serializer = self.get_serializer(user)
+        serializer = UserMeSerializer(user)
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'], url_path='enterprises')  
