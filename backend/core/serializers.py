@@ -1,9 +1,10 @@
 from django.db import transaction
 from django.db.utils import IntegrityError
 from rest_framework import serializers, status
-from .models import ChoiceOptions, CustomUser, Harbor, City, Enterprise, Trip, Vessel
+from .models import ChoiceOptions, CustomUser, Harbor, City, Enterprise, Trip, Vessel, TripStop, TripSegment
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.validators import UniqueValidator
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,10 +26,14 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class EnterpriseSerializer(serializers.ModelSerializer):
+    cnpj = serializers.CharField(validators=[UniqueValidator(
+        queryset=Enterprise.objects.all().all(),
+        message="CNPJ already exists."
+    )])
     class Meta:
         model = Enterprise
         fields = '__all__'
-        read_only_fields = ['user', 'active']
+        read_only_fields = ['user', 'active'] 
         
     def create(self, validated_data):
         request = self.context.get('request')
@@ -79,11 +84,17 @@ class VesselSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['active']
 
-class TripSerializer(serializers.ModelSerializer):
-    departure_harbor = serializers.StringRelatedField()
-    arrival_harbor = HarborSerializer()
-    vessel = VesselSerializer()
-    
+class TripSerializer(serializers.ModelSerializer):            
     class Meta:
         model = Trip
+        fields = '__all__'
+        
+class TripStopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TripStop 
+        fields = '__all__'
+        
+class TripSegmentSerializer(serializers.ModelSerializer):            
+    class Meta:
+        model = TripSegment
         fields = '__all__'
