@@ -41,6 +41,7 @@ class ChoiceOptions():
 class CustomUser(AbstractUser):
     name = models.CharField(max_length=50, null=False, blank=False)
     cpf = models.CharField(max_length=20, null=False, blank=False)
+    image = models.ImageField(upload_to='assets/users/', null=True, blank=True, default=None)
         
 class Enterprise(BaseModel):
     user = models.ForeignKey(

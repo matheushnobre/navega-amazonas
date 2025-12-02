@@ -9,7 +9,7 @@ from rest_framework.validators import UniqueValidator
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser 
-        fields = ['id', 'password', 'email', 'username', 'name', 'cpf']
+        fields = ['id', 'password', 'email', 'username', 'name', 'cpf', 'image']
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -100,7 +100,7 @@ class EnterpriseMeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Enterprise
-        fields = ['id', 'fantasy_name', 'cnpj', 'vessels_count']
+        fields = ['id', 'fantasy_name', 'cnpj', 'image', 'vessels_count']
 
     def get_vessels_count(self, obj):
         return obj.vessels.count()   
@@ -111,7 +111,7 @@ class UserMeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'username', 'name', 'cpf', 'enterprises']
+        fields = ['id', 'email', 'username', 'name', 'cpf', 'image', 'enterprises']
 
     def get_cpf(self, obj):
         if not obj.cpf:
