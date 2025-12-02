@@ -32,7 +32,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         return self._block_update()
     
->>>>>>> 041f736a30c1f3daaa105f97478b1b0655807daa
     @action(detail=False, methods=['get'], url_path='me')
     def me(self, request):
         """
