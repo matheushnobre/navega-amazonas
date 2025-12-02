@@ -1,6 +1,6 @@
 from rest_framework import viewsets, status
-from .models import CustomUser, City, Harbor, Enterprise, Trip, Vessel
-from .serializers import UserSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, VesselSerializer
+from .models import CustomUser, City, Harbor, Enterprise, Trip, Vessel, TripSegment, TripStop
+from .serializers import UserSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, VesselSerializer, TripSegmentSerializer, TripStopSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -75,11 +75,22 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
     def get_vessels(self, request, pk=None):
         """
         Returns all vessels associated with a enterprise.
-        GET /api/enterprises/vesseçs/
+        GET /api/enterprises/vessels/
         """
         enterprise = self.get_object()
         vessels = Vessel.objects.filter(enterprise=enterprise, active=True)
         serializer = VesselSerializer(vessels, many=True)
+        return Response(serializer.data)    
+    
+    @action(detail=True, methods=['get'], url_path='trips', permission_classes=[AllowAny])  
+    def get_trips(self, request, pk=None):
+        """
+        Returns all trips associated with a enterprise.
+        GET /api/enterprises/trips/
+        """
+        enterprise = self.get_object()
+        trips = Trip.objects.filter(vessel_enterprise=enterprise)
+        serializer = TripSerialize(trips, many=True)
         return Response(serializer.data)    
     
 class CityViewSet(viewsets.ModelViewSet):
@@ -124,4 +135,21 @@ class VesselViewSet(viewsets.ModelViewSet):
 class TripViewSet(viewsets.ModelViewSet):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_permissions(self):
+        if self.action in ['create', 'list', 'retrieve']:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAuthenticated, IsEnterpriseCheck]
+            
+        return [perm() for perm in permission_classes] 
+    
+class TripStopViewSet(viewsets.ModelViewSet):
+    queryset = TripStop.objects.all()
+    serializer_class = TripStopSerializer
+    
+class TripSegmentViewSet(viewsets.ModelViewSet):
+    queryset = TripSegment.objects.all()
+    serializer_class = TripSegmentSerializer
     
