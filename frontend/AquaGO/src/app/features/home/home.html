@@ -1,0 +1,115 @@
+<div class="container-fluid">
+    <app-nav  class="w-100"></app-nav>
+    <section class="trip"  name="trip">
+        <div class="trip-content">
+            <h3 class="fs-5 fw-bold w-100 text-start" style="color: #fefefe;">Querendo viagem?</h3>
+            <p class="fs-6 w-100 text-" style="color: #fefefe;">Compre sua passagem agora, rápido e fácil!</p>
+            <form class="trip-data d-flex flex-column gap-3 my-5">
+                <div class="d-flex form-order gap-3">
+                    <div class="d-flex flex-column gap-2 form-order-item">
+                        <label class="fw-bolder fs-6">Origem</label>
+                        <app-custom-input
+                            type="text"
+                            type_input="standard"
+                            placeholder="Parintins"
+                        ></app-custom-input>
+                    </div>
+                    <div class="d-flex flex-column gap-2 form-order-item">
+                        <label class="fw-bolder fs-6">Destino</label>
+                        <app-custom-input
+                            type="text"
+                            type_input="standard"
+                            placeholder="Manaus"
+                        ></app-custom-input>
+                    </div>
+                </div>
+                <div class="d-flex form-order gap-3">
+                    <div class="d-flex flex-column gap-2 form-order-item">
+                        <label class="fw-bolder fs-6">Data</label>
+                        <app-custom-input
+                            type="date"
+                            type_input="date"
+                            placeholder="16/06"
+                        ></app-custom-input>
+                    </div>
+                    <div class="d-flex flex-column gap-2 form-order-item">
+                        <label class="fw-bolder fs-6">Passageiros</label>
+                        <app-custom-input
+                            type="number"
+                            type_input="person"
+                            placeholder="1 pessoa"
+                        ></app-custom-input>
+                    </div>
+                </div>
+                <app-custom-button
+                    type="primary"
+                    name="Confirmar"
+                ></app-custom-button>
+            </form>
+        </div>
+    </section>
+    <section class="my-5 px-2 d-flex flex-column gap-2" name="main-destinations" style="overflow: hidden; width: 100%; max-width: 800px;">
+        <h2 class="fw-bold fs-5">Principais Destinos</h2>
+        <div #scrollContainer class="produtos px-3 d-flex gap-2 py-3">
+           @for (city of cities; track $index) {
+                <app-card-city
+                    name={{city.name}}
+                    image={{city.image}}
+                ></app-card-city>
+            }
+        </div>
+    </section>
+    <section class="px-2 d-flex flex-column gap-2" name="about" style="max-width: 800px;">
+        <h3 class="fs-5 fw-bold">Quem somos?</h3>
+        <p class="fs-6">O <span class="fw-bold">AquaGO!</span> surgiu no IFAM campus Parintins, criado pela equipe Dois Balões e Meio, com a missão de facilitar o acesso ao transporte fluvial na região Norte. Hoje, o sistema reúne diversas empresas confiáveis que oferecem viagens de barco e lancha, permitindo que você encontre todas as opções em um único lugar.</p>
+    </section>
+    <section class="px-2 mt-3 enterprise d-flex gap-3">
+        <app-card-enterprise
+            path="assets/icons"
+            url="enterprise.svg"
+            title="+ 30 Empresas"
+            text="Já possuímos uma variedade empresas ofertando seus serviços em nosso sistema"
+        ></app-card-enterprise>
+        <app-card-enterprise
+            path="assets/icons"
+            url="sale.svg"
+            title="+ 100.000 Vendas"
+            text="Desde o lançamento, o sistema tem realizado a venda de muitas passagens"
+        ></app-card-enterprise>
+        <app-card-enterprise
+            path="assets/icons"
+            url="cities.svg"
+            title="+ 60 Cidades"
+            text="Atendemos em todo o Pará, Amazonas e Roraima"
+        ></app-card-enterprise>
+    </section>
+     <section class="px-2 mt-5 mb-3 d-flex flex-column gap-2 w-100" name="about" style="max-width: 800px;">
+        <h3 class="fs-5 fw-bold">Nossos valores</h3>
+        <ul>
+            <li class="fs-6"><p><span class="fw-bold">Transparência:</span> informações claras sobre horários, preços e empresas.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Confiabilidade:</span> parceria apenas com empresas regulamentadas e comprometidas com a segurança.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Acessibilidade:</span> tornar a experiência de compra e consulta simples para todos.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Inovação:</span> utilizar tecnologia para transformar o transporte fluvial.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Respeito à região:</span> valorizar a cultura ribeirinha e a importância dos rios para a Amazônia.</p></li>
+            <li class="fs-6"><p><span class="fw-bold">Responsabilidade:</span> atuar de forma ética, segura e sustentável para toda a comunidade envolvida.</p></li>
+        </ul>
+    </section>
+    <section class="card-enterprise-container d-flex align-items-center w-100">
+        <div class="card-enterprise">
+            <div class="card-enterprise-left px-4">
+                <h2 class="fw-bold fs-5 text-center">Você quer divulgar sua embarcação?</h2>
+                <p class="text-justify mt-3 mb-5">Quer fazer parte da plataforma que mais cresce na venda de passagens fluviais e divulgar as viagens da sua empresa para milhares de clientes?</p>
+                <app-custom-button
+                    type="primary"
+                    name="Eu quero"
+                    class="w-100"
+                    (click)="register()"
+                ></app-custom-button>
+            </div>
+            <div class="card-enterprise-right"></div>
+        </div>
+    </section>
+    <section class="w-100 mt-4 d-flex flex-row" style="height: auto;" name="footer">
+        <app-footer class="w-100"></app-footer>
+    </section>
+</div>

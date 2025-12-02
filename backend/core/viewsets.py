@@ -25,7 +25,7 @@ class UserViewSet(viewsets.ModelViewSet):
             {'detail': 'User update is not allowed'},
             status = status.HTTP_405_METHOD_NOT_ALLOWED
         )
-    
+        
     def update(self, request, *args, **kwargs):
         return self._block_update()
         
@@ -52,7 +52,7 @@ class UserViewSet(viewsets.ModelViewSet):
         enterprises = Enterprise.objects.filter(user=user, active=True)
         serializer = EnterpriseSerializer(enterprises, many=True)
         return Response(serializer.data)    
-        
+    
 class EnterpriseViewSet(viewsets.ModelViewSet):
     queryset = Enterprise.objects.all()
     serializer_class = EnterpriseSerializer

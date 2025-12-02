@@ -1,0 +1,21 @@
+.container-fluid{
+    display: flex;
+    flex-direction: column;    
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.enterprise-container{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    flex: 1 0 auto;
+    margin-top: 5rem;
+}
+.trips{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 800px;
+}

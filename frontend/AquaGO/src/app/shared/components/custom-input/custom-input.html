@@ -1,0 +1,33 @@
+<div class="custom-input w-100 gap-2" style="border: 0.05rem solid var(--border, #ADABAB);">
+    @if(type_input == "person"){
+        <img class="ps-2 py-1" src="assets/icons/person.svg">
+    }
+    @if(type_input == "date"){
+        <img class="ps-2 py-1" src="assets/icons/calendar.svg">
+    }
+    @if(type=="text" || type=="email"){
+        <input  
+            class="px-2 py-2" 
+            type={{type}} 
+            placeholder={{placeholder}}
+            [value] = "value"
+            (input)="onInputChange($event)"
+            (change)="onInputChange($event)">
+    }
+    @else if (type=="file") {
+        <input 
+            type={{type}} 
+            class="px-2 py-2"
+            [value] = "value"
+            (input)="onInputChange($event)"
+            (change)="onInputChange($event)">
+    }
+    @else {
+        <input 
+            type={{type}} 
+            class="px-2 py-2" 
+            [value] = "value"
+            placeholder={{placeholder}} (input)="onInputChange($event)"
+            (change)="onInputChange($event)">
+    }
+</div>
