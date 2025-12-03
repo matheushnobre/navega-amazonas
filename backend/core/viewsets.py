@@ -5,6 +5,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .permissions import IsSelfUser, IsEnterprise, IsEnterpriseCheck
+from django.db.models.deletion import ProtectedError
+from rest_framework.exceptions import ValidationError
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -42,7 +44,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)    
     
 class EnterpriseViewSet(viewsets.ModelViewSet):
-    queryset = Enterprise.objects.all()
+    queryset = Enterprise.objects.all().filter(active=True)
     serializer_class = EnterpriseSerializer
     
     def get_permissions(self):
@@ -54,10 +56,13 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated, IsEnterprise]
         
         return [perm() for perm in permission_classes]  
-
-    def perform_destroy(self, instance): # We don't delete enterprises. Only changes field active to false.
-        instance.active = False 
-        instance.save()
+    
+    def perform_destroy(self, instance):
+        try:
+            instance.delete()
+        except ProtectedError:
+            instance.active = False
+            instance.save()
         
     @action(detail=True, methods=['get'], url_path='vessels', permission_classes=[AllowAny])  
     def get_vessels(self, request, pk=None):
@@ -82,7 +87,7 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)    
     
 class CityViewSet(viewsets.ModelViewSet):
-    queryset = City.objects.all()
+    queryset = City.objects.all().filter(active=True)
     serializer_class = CitySerializer
     http_method_names = ['get']
     permission_classes = [AllowAny]
@@ -99,13 +104,13 @@ class CityViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)    
        
 class HarborViewSet(viewsets.ModelViewSet):
-    queryset = Harbor.objects.all()
+    queryset = Harbor.objects.all().filter(active=True)
     serializer_class = HarborSerializer
     http_method_names = ['get']
     permission_classes = [AllowAny]
 
 class VesselViewSet(viewsets.ModelViewSet):
-    queryset = Vessel.objects.all()
+    queryset = Vessel.objects.all().filter(active=True)
     serializer_class = VesselSerializer
     
     def get_permissions(self):
@@ -114,19 +119,23 @@ class VesselViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [IsAuthenticated, IsEnterpriseCheck]
             
-        return [perm() for perm in permission_classes]  
-
-    def perform_destroy(self, instance): # We don't delete enterprises. Only changes field active to false.
-        instance.active = False 
-        instance.save()
-        
+        return [perm() for perm in permission_classes]   
+    
+    def perform_destroy(self, instance):
+        try:
+            instance.delete()
+        except ProtectedError:
+            instance.active = False
+            instance.save()
+    
 class TripViewSet(viewsets.ModelViewSet):
-    queryset = Trip.objects.all()
+    queryset = Trip.objects.all().filter(active=True)
     serializer_class = TripSerializer
-    permission_classes = [IsAuthenticated]
     
     def get_permissions(self):
-        if self.action in ['create', 'list', 'retrieve']:
+        if self.action in ['retrieve']:
+            permission_classes = [AllowAny]
+        elif self.action in ['create', 'list']:
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAuthenticated, IsEnterpriseCheck]
@@ -134,10 +143,10 @@ class TripViewSet(viewsets.ModelViewSet):
         return [perm() for perm in permission_classes] 
     
 class TripStopViewSet(viewsets.ModelViewSet):
-    queryset = TripStop.objects.all()
+    queryset = TripStop.objects.all().filter(active=True)
     serializer_class = TripStopSerializer
     
 class TripSegmentViewSet(viewsets.ModelViewSet):
-    queryset = TripSegment.objects.all()
+    queryset = TripSegment.objects.all().filter(active=True)
     serializer_class = TripSegmentSerializer
     

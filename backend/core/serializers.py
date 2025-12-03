@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
         cpf = ''.join(filter(str.isdigit, value))
 
         if len(cpf) != 11:
-            raise serializers.ValidationError("CPF deve conter 11 dígitos.")
+            raise serializers.ValidationError("CPF must contain 11 digits.")
 
         _sum = sum(int(cpf[i]) * (10 - i) for i in range(9))
         digit1 = ((_sum * 10) % 11) % 10
@@ -67,18 +67,20 @@ class EnterpriseSerializer(serializers.ModelSerializer):
         user = request.user
         validated_data['user'] = user 
         return super().create(validated_data)
-        
+    
 class CitySerializer(serializers.ModelSerializer):    
     class Meta:
         model = City 
         fields = ['id', 'name', 'state', 'image']
-        
+        read_only_fields = ['active']
+
 class HarborSerializer(serializers.ModelSerializer):
     city = CitySerializer()
-    
+
     class Meta:
         model = Harbor
         fields = ['id', 'name', 'city']
+        read_only_fields = ['active']
 
 class VesselSerializer(serializers.ModelSerializer):
     vessel_type = serializers.CharField()
@@ -115,10 +117,6 @@ class VesselSerializer(serializers.ModelSerializer):
         vessel_type = attrs.get('vessel_type') or getattr(self.instance, 'vessel_type', None)
         individual_capacity = attrs.get('individual_capacity')
         number_of_cabins = attrs.get('number_of_cabins')
-
-        print(vessel_type)
-        print(individual_capacity)
-        print(number_of_cabins)
         
         if individual_capacity is not None and individual_capacity <= 0:
             raise serializers.ValidationError({
@@ -139,17 +137,30 @@ class VesselSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class TripSerializer(serializers.ModelSerializer):            
+class TripSerializer(serializers.ModelSerializer):    
     class Meta:
         model = Trip
         fields = '__all__'
+        read_only_fields = ['active']
+        ordering_fields = ['departure_datetime']
+        
+    def validate(self, attrs):
+        departure_datetime = attrs.get('departure_datetime') or getattr(self.instance, 'departure_datetime')
+        arrival_datetime = attrs.get('arrival_datetime') or getattr(self.instance, 'arrival_datetime')
+
+        if arrival_datetime < departure_datetime:
+             raise serializers.ValidationError({
+                'arrival_datetime': "arrival_datetime must be after departure_datetime."
+            })      
+             
+        return attrs
         
 class TripStopSerializer(serializers.ModelSerializer):
     class Meta:
         model = TripStop 
         fields = '__all__'
         
-class TripSegmentSerializer(serializers.ModelSerializer):            
+class TripSegmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = TripSegment
         fields = '__all__'
@@ -166,8 +177,8 @@ class EnterpriseMeSerializer(serializers.ModelSerializer):
 
 class UserMeSerializer(serializers.ModelSerializer):
     cpf = serializers.SerializerMethodField()
-    enterprises = EnterpriseMeSerializer(many=True)  # ajuste conforme seu modelo
-
+    enterprises = serializers.SerializerMethodField()
+    
     class Meta:
         model = CustomUser
         fields = ['id', 'email', 'username', 'name', 'cpf', 'image', 'enterprises']
@@ -177,3 +188,7 @@ class UserMeSerializer(serializers.ModelSerializer):
             return None
         
         return f"***.{obj.cpf[3:6]}.***-{obj.cpf[-2:]}"
+    
+    def get_enterprises(self, obj):
+        active_enterprises = obj.enterprises.filter(active=True)
+        return EnterpriseMeSerializer(active_enterprises, many=True).data
