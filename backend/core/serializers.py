@@ -14,7 +14,27 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
         }
 
-            
+    def validate_cpf(self, value):
+        if self.instance:
+            return value
+        
+        cpf = ''.join(filter(str.isdigit, value))
+
+        if len(cpf) != 11:
+            raise serializers.ValidationError("CPF deve conter 11 dígitos.")
+
+        _sum = sum(int(cpf[i]) * (10 - i) for i in range(9))
+        digit1 = ((_sum * 10) % 11) % 10
+        if digit1 != int(cpf[9]):
+            raise serializers.ValidationError("Invalid CPF.")
+
+        _sum = sum(int(cpf[i]) * (11 - i) for i in range(10))
+        digit2 = ((_sum * 10) % 11) % 10
+        if digit2 != int(cpf[10]):
+            raise serializers.ValidationError("Invalid CPF.")
+
+        return value
+        
     def create(self, validated_data):
         user = CustomUser.objects.create_user(
             email = validated_data['email'],
@@ -25,6 +45,16 @@ class UserSerializer(serializers.ModelSerializer):
         )
         
         return user
+    
+    def update(self, instance, validated_data):
+        allowed_fields = ['name', 'image']
+
+        for field in allowed_fields:
+            if field in validated_data:
+                setattr(instance, field, validated_data[field])
+
+        instance.save()
+        return instance
 
 class EnterpriseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,6 +82,11 @@ class HarborSerializer(serializers.ModelSerializer):
 
 class VesselSerializer(serializers.ModelSerializer):
     vessel_type = serializers.CharField()
+
+    class Meta:
+        model = Vessel 
+        fields = '__all__'
+        read_only_fields = ['active']
     
     def validate_enterprise(self, value):
         request = self.context['request']
@@ -75,11 +110,34 @@ class VesselSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Invalid vessel type')
         
         return mapping[v]
+
+    def validate(self, attrs):
+        vessel_type = attrs.get('vessel_type') or getattr(self.instance, 'vessel_type', None)
+        individual_capacity = attrs.get('individual_capacity')
+        number_of_cabins = attrs.get('number_of_cabins')
+
+        print(vessel_type)
+        print(individual_capacity)
+        print(number_of_cabins)
         
-    class Meta:
-        model = Vessel 
-        fields = '__all__'
-        read_only_fields = ['active']
+        if individual_capacity is not None and individual_capacity <= 0:
+            raise serializers.ValidationError({
+                'individual_capacity': "individual_capacity must be > 0"
+            })
+
+        if vessel_type != 'SPEED_BOAT':
+            if number_of_cabins is not None and number_of_cabins < 0:
+                raise serializers.ValidationError({
+                    'number_of_cabins': "number_of_cabins must be >= 0 when the vessel type is not 'lancha'"
+                })
+        else:
+            if number_of_cabins not in (0, None):
+                raise serializers.ValidationError({
+                    'number_of_cabins': "speed boats must have 0 cabins"
+             })
+
+        return attrs
+
 
 class TripSerializer(serializers.ModelSerializer):            
     class Meta:
