@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
@@ -176,6 +177,16 @@ class TripSegment(BaseModel):
     )
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
     individual_vacancies = models.IntegerField(default=0)
+    
+    def calculate_price(self):
+        total_trip_time = (self.trip.arrival_datetime - self.trip.departure_datetime).total_seconds()
+        total_segment_time = (self.to_stop.stop_datetime - self.from_stop.stop_datetime).total_seconds()
+        proportion = total_segment_time / total_trip_time
+        price = self.trip.base_price * Decimal(proportion)
+        add = price * Decimal(0.1)
+        
+        self.price = min(price + add, self.trip.base_price)
+        self.save()
     
     class Meta:
         db_table = 'trip_segment'
