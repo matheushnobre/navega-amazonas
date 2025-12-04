@@ -16,6 +16,9 @@ export class Auth {
   login(username:string,password:string):Observable<TokenUsuario>{
     return this.http.post<TokenUsuario>(`${this.apiUrl}/api/token/`, { username, password });
   }
+  reflash(token:string):Observable<TokenUsuario>{
+    return this.http.post<TokenUsuario>(`${this.apiUrl}/api/token/reflash/`, { token });
+  }
 
   salvarToken(token: string) {
     this.tokenService.setToken(token);

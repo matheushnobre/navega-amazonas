@@ -19,6 +19,11 @@
     align-items: center;
     max-width: 800px;
 }
+.table{
+    box-shadow: 0 0 0.1rem #1e1e1e;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
 .init-contente{
     width: 100%;
     margin-top: 5rem;
@@ -43,4 +48,12 @@
     height: 3rem;
     border: 0.1rem solid var(--color-border);
     border-radius: 300rem;
+}
+@media (max-width:600px){
+    .list-enterprises-user{
+        flex-direction: column;
+    }
+    .item-enterprise{
+        width: 100% !important;
+    }
 }

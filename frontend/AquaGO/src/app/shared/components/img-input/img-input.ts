@@ -7,13 +7,19 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
   styleUrl: './img-input.scss',
 })
 export class ImgInput {
-  @Input() startImage: string | null = null;
+  @Input() startImage: string | File | null = null;
   @Output() fileSelected = new EventEmitter<File>();
   backgroundImage: string = '';
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['startImage'] && this.startImage) {
-      this.backgroundImage = this.startImage;
+    if (this.startImage instanceof File) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.backgroundImage = reader.result as string;
+      };
+      reader.readAsDataURL(this.startImage);
+    } else {
+      this.backgroundImage = this.startImage!;
     }
   }
 

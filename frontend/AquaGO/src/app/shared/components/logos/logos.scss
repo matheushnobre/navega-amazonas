@@ -1,0 +1,51 @@
+.logos {
+  position: relative;       /* necessário para o fade funcionar */
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.logos-slide {
+  display: inline-flex;
+  gap: 2rem;
+  padding: 1rem 0;
+  animation: slide 20s linear infinite;
+}
+
+.logos-slide img {
+  height: 3rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Fade nas laterais */
+.logos::before,
+.logos::after {
+  position: absolute;
+  top: 0;
+  width: 5rem;
+  height: 100%;
+  content: "";
+  z-index: 5;               /* mais alto que as imagens */
+  pointer-events: none;     /* permite clicar nas logos */
+}
+
+.logos::before {
+  left: 0;
+  background: linear-gradient(to right, white, transparent 100%);
+}
+
+.logos::after {
+  right: 0;
+  background: linear-gradient(to left, white, transparent 100%);
+}
+
+/* Movimento contínuo */
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

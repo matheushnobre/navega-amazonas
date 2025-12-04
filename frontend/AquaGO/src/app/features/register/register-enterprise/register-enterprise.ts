@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { Nav } from "../../core/components/nav/nav";
-import { CustomInput } from "../../shared/components/custom-input/custom-input";
-import { CustomButton } from "../../shared/components/custom-button/custom-button";
-import { Footer } from "../../core/components/footer/footer";
-import { EnterpriseService } from '../../core/services/enterprise-service';
-import { enterprise } from '../../shared/models/enterprise';
-import { UserService } from '../../core/services/user-service';
-import { ImgInput } from "../../shared/components/img-input/img-input";
 import { Location } from '@angular/common';
+import { Nav } from '../../../core/components/nav/nav';
+import { CustomInput } from '../../../shared/components/custom-input/custom-input';
+import { CustomButton } from '../../../shared/components/custom-button/custom-button';
+import { Footer } from '../../../core/components/footer/footer';
+import { ImgInput } from '../../../shared/components/img-input/img-input';
+import { EnterpriseService } from '../../../core/services/enterprise-service';
+import { UserService } from '../../../core/services/user-service';
+import { enterprise } from '../../../shared/models/enterprise';
 
 @Component({
   selector: 'app-register-enterprise',

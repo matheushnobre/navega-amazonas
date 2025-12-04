@@ -26,6 +26,7 @@
         <input 
             type={{type}} 
             class="px-2 py-2" 
+            min="0"
             [value] = "value"
             placeholder={{placeholder}} (input)="onInputChange($event)"
             (change)="onInputChange($event)">

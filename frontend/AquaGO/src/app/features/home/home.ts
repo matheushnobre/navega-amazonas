@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { City } from '../../shared/models/city';
 import { CustomInput } from '../../shared/components/custom-input/custom-input';
 import { CardCity } from "../../shared/components/card-city/card-city";
@@ -9,14 +9,16 @@ import { Footer } from '../../core/components/footer/footer';
 import { Router } from '@angular/router';
 import { customUser } from '../../shared/models/customUser';
 import { enterprise } from '../../shared/models/enterprise';
+import { EnterpriseService } from '../../core/services/enterprise-service';
+import { Logos } from '../../shared/components/logos/logos';
 
 @Component({
   selector: 'app-home',
-  imports: [CustomInput, CardCity, CardEnterprise, CustomButton, Nav, Footer],
+  imports: [CustomInput, CardCity, CardEnterprise, CustomButton, Nav, Footer, Logos],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home implements AfterViewInit{
+export class Home implements AfterViewInit, OnInit{
   @ViewChildren('scrollContainer') scrollContainers!: QueryList<ElementRef>;
 
   ngAfterViewInit() {
@@ -29,14 +31,16 @@ export class Home implements AfterViewInit{
     });
   }
   user:customUser = new customUser();
-  enterprise:enterprise = new enterprise();
   enterprises:enterprise[] = [];
   cities:City[] = []
   city1:City = new City();
   city2:City = new City();
   city3:City = new City();
   city4:City = new City();
-  constructor(private router: Router){
+  constructor(
+    private router: Router,
+    private enterpriseService:EnterpriseService){
+
     this.city1.name = "Amazonas";
     this.city1.image = "parintins.png";
 
@@ -53,11 +57,16 @@ export class Home implements AfterViewInit{
     this.cities.push(this.city2);
     this.cities.push(this.city3);
     this.cities.push(this.city4);
-
-
-    this.enterprises.push(this.enterprise);
-    this.user.enterprises = this.enterprises;
   }
+  ngOnInit() {
+    this.enterpriseService.getAll().subscribe({
+        next:(dados)=> {
+          this.enterprises = Array.isArray(dados) ? dados : [];
+        }
+      }
+    )
+  }
+
   configurarScroll(){
     this.scrollContainers.forEach((containerRef: ElementRef) => {
     const container = containerRef.nativeElement;

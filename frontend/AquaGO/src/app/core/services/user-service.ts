@@ -6,6 +6,7 @@ import { TokenService } from './token-service';
 import { customUser } from '../../shared/models/customUser';
 import { Observable } from 'rxjs';
 import { Enterprise } from '../../features/enterprise/enterprise';
+import { enterprise } from '../../shared/models/enterprise';
 
 @Injectable({
   providedIn: 'root',
@@ -22,9 +23,9 @@ export class UserService {
 
     return this.http.post<customUser>(this.API, formData);
   }
-  my_enterprises(): Observable<Enterprise[]>{
+  my_enterprises(): Observable<enterprise[]>{
     const headers = this.tokenService.getAuthHeaders();
-    return this.http.get<Enterprise[]>(`${this.API}enterprises/`,{headers});
+    return this.http.get<enterprise[]>(`${this.API}enterprises/`,{headers});
   }
   get_security(): Observable<customUser>{
     const headers = this.tokenService.getAuthHeaders();

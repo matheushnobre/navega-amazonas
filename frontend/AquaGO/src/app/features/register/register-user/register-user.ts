@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
-import { CustomInput } from "../../shared/components/custom-input/custom-input";
-import { CustomButton } from "../../shared/components/custom-button/custom-button";
-import { customUser } from '../../shared/models/customUser';
-import { UserService } from '../../core/services/user-service';
 import { Router } from '@angular/router';
+import { CustomInput } from '../../../shared/components/custom-input/custom-input';
+import { CustomButton } from '../../../shared/components/custom-button/custom-button';
+import { UserService } from '../../../core/services/user-service';
+import { customUser } from '../../../shared/models/customUser';
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-register-user',
   imports: [CustomInput, CustomButton],
-  templateUrl: './register.html',
-  styleUrl: './register.scss',
+  templateUrl: './register-user.html',
+  styleUrl: './register-user.scss',
 })
-export class Register {
-  
+export class RegisterUser {
+
   name: string = "";
   email: string = "";
   password: string = "";

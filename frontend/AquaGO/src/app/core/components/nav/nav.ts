@@ -2,10 +2,11 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { Router } from '@angular/router';
 import { CustomButton } from "../../../shared/components/custom-button/custom-button";
 import { CommonModule, Location } from '@angular/common';
-import { Enterprise } from '../../../features/enterprise/enterprise';
 import { UserService } from '../../services/user-service';
 import { TokenService } from '../../services/token-service';
 import { catchError, of } from 'rxjs';
+import { enterprise } from '../../../shared/models/enterprise';
+import { Auth } from '../../auth/auth';
 
 @Component({
   selector: 'app-nav',
@@ -17,37 +18,45 @@ export class Nav implements OnInit {
 
   logado:boolean = false;
 
-  enterprises:Enterprise[] = [];
+  enterprises:enterprise[] = [];
 
   constructor(
     private router:Router,
     private userService: UserService,
     private tokenService: TokenService,
-    private location: Location
+    private location: Location,
+    private auth:Auth
   ){}
   ngOnInit() {
     this.verificarUsuario();
   }
 
   verificarUsuario() {
-  const token = this.tokenService.getToken();
-
-  if (!token) {
-    this.logado = false;
+  if (!this.tokenService.isTokenValid()) {
+    let token = this.tokenService.getToken();
+    this.auth.reflash(token!).subscribe({
+        next:(value)=> {
+            this.logado = true;
+            localStorage.setItem('token', value.access);
+        },
+        error:(err)=> {
+            this.logado = false;
+        },
+    });
     this.enterprises = [];
     return;
+  }else{
+    this.logado=true;
   }
 
   this.userService.my_enterprises()
     .pipe(
       catchError(err => {
-        this.logado = true;
         this.enterprises = [];
         return of([]);
       })
     )
     .subscribe(dados => {
-      this.logado = true; 
       this.enterprises = Array.isArray(dados) ? dados : [];
     });
   }

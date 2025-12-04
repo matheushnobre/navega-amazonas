@@ -15,7 +15,6 @@ export class TokenService {
       Authorization: `Bearer ${token}`,
     });
   }
-
   setToken(token:string){
     localStorage.setItem('token',token);
   }
