@@ -35,12 +35,15 @@ def create_trip_segments_after_insert_trip_stop(sender, instance, created, **kwa
     
     for i, stop in enumerate(stops):
         if i == idx: continue
-        TripSegment.objects.create(
+        trip_segment = TripSegment.objects.create(
             trip = trip,
             from_stop = stop if i < idx else instance,
             to_stop = instance if i < idx else stop,
             price = instance.trip.base_price,
             individual_vacancies = instance.trip.vessel.individual_capacity  
         )
+        
+        trip_segment.calculate_price()
+        
 
     
