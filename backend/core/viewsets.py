@@ -1,6 +1,6 @@
 from rest_framework import viewsets, status
-from .models import CustomUser, City, Harbor, Enterprise, Trip, Vessel, TripSegment, TripStop
-from .serializers import UserSerializer, UserMeSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, VesselSerializer, TripSegmentSerializer, TripStopSerializer
+from .models import CustomUser, City, Harbor, Enterprise, Trip, Vessel, TripStop
+from .serializers import UserSerializer, UserMeSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, VesselSerializer, TripStopSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -135,18 +135,25 @@ class TripViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['retrieve']:
             permission_classes = [AllowAny]
-        elif self.action in ['create', 'list']:
-            permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [IsAuthenticated, IsEnterpriseCheck]
+            permission_classes = [IsAuthenticated]
             
         return [perm() for perm in permission_classes] 
     
+    @action(detail=True, methods=['get'], url_path='trip_stops')  
+    def get_trip_stops(self, request, pk=None):
+        """
+        Returns all trip_stops associated with a trip.
+        GET /api/trips/trip_stops
+        """
+        trip = self.get_object()
+        trip_stops = trip.trip_stops.order_by('stop_datetime')
+        serializer = TripStopSerializer(trip_stops, many=True)
+        return Response(serializer.data)    
+    
+
 class TripStopViewSet(viewsets.ModelViewSet):
     queryset = TripStop.objects.all().filter(active=True)
     serializer_class = TripStopSerializer
     
-class TripSegmentViewSet(viewsets.ModelViewSet):
-    queryset = TripSegment.objects.all().filter(active=True)
-    serializer_class = TripSegmentSerializer
     

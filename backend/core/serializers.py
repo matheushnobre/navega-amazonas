@@ -67,19 +67,19 @@ class EnterpriseSerializer(serializers.ModelSerializer):
         user = request.user
         validated_data['user'] = user 
         return super().create(validated_data)
-    
-class CitySerializer(serializers.ModelSerializer):    
-    class Meta:
-        model = City 
-        fields = ['id', 'name', 'state', 'image']
-        read_only_fields = ['active']
 
 class HarborSerializer(serializers.ModelSerializer):
-    city = CitySerializer()
-
     class Meta:
         model = Harbor
         fields = ['id', 'name', 'city']
+        read_only_fields = ['active']
+
+class CitySerializer(serializers.ModelSerializer):  
+    harbors = HarborSerializer(many=True, read_only=True)
+      
+    class Meta:
+        model = City 
+        fields = ['id', 'name', 'state', 'image', 'harbors']
         read_only_fields = ['active']
 
 class VesselSerializer(serializers.ModelSerializer):
@@ -137,11 +137,35 @@ class VesselSerializer(serializers.ModelSerializer):
         return attrs
 
 
+class TripStopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TripStop 
+        fields = '__all__'
+        
+    def validate(self, attrs):
+        trip = attrs.get('trip') or getattr(self.instance, 'trip')
+        departure_datetime = trip.departure_datetime
+        arrival_datetime = trip.arrival_datetime
+        trip_stop_datetime = attrs.get('stop_datetime') or getattr(self.instance, 'stop_datetime')
+        
+        if trip_stop_datetime < departure_datetime or trip_stop_datetime > arrival_datetime:
+            raise serializers.ValidationError({
+                'stop_datetime': "stop_datetime must be after departure_datetime and before arrival_datetime."
+            })  
+        
+        return attrs 
+    
+    def update(self, instance, validated_data):
+        pass
+    
+
 class TripSerializer(serializers.ModelSerializer):    
+    trip_stops = TripStopSerializer(many=True, read_only=True)
+    
     class Meta:
         model = Trip
-        fields = '__all__'
-        read_only_fields = ['active']
+        fields = ['id', 'active', 'departure_datetime', 'arrival_datetime', 'departure_harbor', 'arrival_harbor', 'base_price', 'vessel', 'trip_stops']
+        read_only_fields = ['active', 'trip_stops']
         ordering_fields = ['departure_datetime']
         
     def validate(self, attrs):
@@ -149,22 +173,12 @@ class TripSerializer(serializers.ModelSerializer):
         arrival_datetime = attrs.get('arrival_datetime') or getattr(self.instance, 'arrival_datetime')
 
         if arrival_datetime < departure_datetime:
-             raise serializers.ValidationError({
+            raise serializers.ValidationError({
                 'arrival_datetime': "arrival_datetime must be after departure_datetime."
             })      
              
         return attrs
-        
-class TripStopSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TripStop 
-        fields = '__all__'
-        
-class TripSegmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TripSegment
-        fields = '__all__'
-        
+   
 class EnterpriseMeSerializer(serializers.ModelSerializer):
     vessels_count = serializers.SerializerMethodField()
 
