@@ -1,12 +1,14 @@
 from rest_framework import viewsets, status
-from .models import CustomUser, City, Harbor, Enterprise, Trip, Vessel, TripStop
-from .serializers import UserSerializer, UserMeSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, VesselSerializer, TripStopSerializer
+from .models import CustomUser, City, Harbor, Enterprise, Trip, TripSegment, Vessel, TripStop
+from .serializers import UserSerializer, UserMeSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, ListAllTripSerializer, VesselSerializer, TripStopSerializer, TripSegmentSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .permissions import IsSelfUser, IsEnterprise, IsEnterpriseCheck
 from django.db.models.deletion import ProtectedError
 from rest_framework.exceptions import ValidationError
+from rest_framework import serializers
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -129,7 +131,7 @@ class VesselViewSet(viewsets.ModelViewSet):
             instance.save()
     
 class TripViewSet(viewsets.ModelViewSet):
-    queryset = Trip.objects.all().filter(active=True)
+    queryset = Trip.objects.all().order_by('departure_datetime').filter(active=True)
     serializer_class = TripSerializer
     
     def get_permissions(self):
@@ -139,6 +141,10 @@ class TripViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
             
         return [perm() for perm in permission_classes] 
+    
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = ListAllTripSerializer
+        return super().list(request, *args, **kwargs)
     
     @action(detail=True, methods=['get'], url_path='trip_stops')  
     def get_trip_stops(self, request, pk=None):
@@ -156,4 +162,12 @@ class TripStopViewSet(viewsets.ModelViewSet):
     queryset = TripStop.objects.all().filter(active=True)
     serializer_class = TripStopSerializer
     
+    def perform_destroy(self, instance):
+        try:
+            instance.delete()
+        except DjangoValidationError as e:
+            raise serializers.ValidationError(e.message_dict)
     
+class TripSegmentViewSet(viewsets.ModelViewSet):
+    queryset = TripSegment.objects.all().filter(active=True)
+    serializer_class = TripSegmentSerializer
