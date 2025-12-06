@@ -7,6 +7,7 @@ import { RegisterEnterprise } from './features/register/register-enterprise/regi
 import { RegisterVessel } from './features/register/register-vessel/register-vessel';
 import { RegisterUser } from './features/register/register-user/register-user';
 import { EditEnterprise } from './features/edit/edit-enterprise/edit-enterprise';
+import { Checkout } from './features/checkout/checkout';
 
 export const routes: Routes = [
     {path:'',redirectTo:'home',pathMatch:'full'},
@@ -18,4 +19,5 @@ export const routes: Routes = [
     {path:'register',component:RegisterUser},
     {path:'dashboard',component:Dashboard},
     {path:'enterprise/:id',component:Enterprise},
+    {path: 'checkout/:id', component:Checkout}
 ];

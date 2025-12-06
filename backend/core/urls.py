@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .viewsets import TripSegmentViewSet, UserViewSet, CityViewSet, HarborViewSet, EnterpriseViewSet, TripViewSet, VesselViewSet, TripStopViewSet
+from .viewsets import TicketViewSet, TripSegmentViewSet, UserViewSet, CityViewSet, HarborViewSet, EnterpriseViewSet, TripViewSet, VesselViewSet, TripStopViewSet
 
 router = DefaultRouter()
 router.register('cities', CityViewSet, basename="city")
@@ -11,6 +11,7 @@ router.register('vessels', VesselViewSet, basename='vessel')
 router.register('trips', TripViewSet, basename='trip')
 router.register('trip_stops', TripStopViewSet, basename='trip_stop')
 router.register('trip_segments', TripSegmentViewSet, basename='trip_segments')
+router.register('tickets', TicketViewSet, basename='tickets')
 
 urlpatterns = [
     path("api/", include(router.urls)),

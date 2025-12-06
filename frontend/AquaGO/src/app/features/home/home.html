@@ -8,28 +8,37 @@
                 <div class="d-flex form-order gap-3">
                     <div class="d-flex flex-column gap-2 form-order-item">
                         <label class="fw-bolder fs-6">Origem</label>
-                        <app-custom-input
-                            type="text"
-                            type_input="standard"
-                            placeholder="Parintins"
-                        ></app-custom-input>
+                        <select
+                            class="form-select"
+                            [(ngModel)]="selectedDepartureCity"
+                            name="departureCity">
+                            <option value="" disabled selected>Selecione a origem...</option>
+                            <option *ngFor="let city of cities" [value]="city.id">
+                                {{ city.name }}
+                            </option>
+                        </select>
                     </div>
                     <div class="d-flex flex-column gap-2 form-order-item">
                         <label class="fw-bolder fs-6">Destino</label>
-                        <app-custom-input
-                            type="text"
-                            type_input="standard"
-                            placeholder="Manaus"
-                        ></app-custom-input>
+                        <select
+                            class="form-select"
+                            [(ngModel)]="selectedArrivalCity"
+                            name="arrivalCity">
+                            <option value="" disabled selected>Selecione o destino...</option>
+                            <option *ngFor="let city of cities" [value]="city.id">
+                                {{ city.name }}
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="d-flex form-order gap-3">
                     <div class="d-flex flex-column gap-2 form-order-item">
                         <label class="fw-bolder fs-6">Data</label>
                         <app-custom-input
-                            type="date"
+                            type="text"
                             type_input="date"
-                            placeholder="16/06"
+                            [(value)]="selectedDate"
+                            placeholder="01/12/2025"
                         ></app-custom-input>
                     </div>
                     <div class="d-flex flex-column gap-2 form-order-item">
@@ -44,10 +53,28 @@
                 <app-custom-button
                     type="primary"
                     name="Confirmar"
+                    (clicked)="search()"
                 ></app-custom-button>
             </form>
         </div>
+
+        <section class="results" *ngIf="tripSegments.length > 0">
+            <div class="results-header">
+                <h2>Resultados encontrados</h2>
+                <span>{{ tripSegments.length }} opções</span>
+            </div>
+
+            <div class="results-list">
+                <app-trip-segment-card
+                *ngFor="let segment of tripSegments"
+                [segment]="segment"
+                [buyRoute]="'/checkout/' + segment.id">
+                </app-trip-segment-card>
+            </div>
+        </section>
+
     </section>
+
     <section class="mt-5 px-2 d-flex flex-column gap-2" name="main-destinations" style="overflow: hidden; width: 100%; max-width: 800px;">
         <h2 class="fw-bold fs-5">Principais Destinos</h2>
         <div #scrollContainer class="produtos px-3 d-flex gap-2 py-3">

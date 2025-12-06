@@ -1,7 +1,7 @@
 from datetime import datetime, time
 from rest_framework import viewsets, status
-from .models import CustomUser, City, Harbor, Enterprise, Trip, TripSegment, Vessel, TripStop
-from .serializers import UserSerializer, UserMeSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, ListAllTripSerializer, VesselSerializer, TripStopSerializer, TripSegmentSerializer
+from .models import CustomUser, City, Harbor, Enterprise, Ticket, Trip, TripSegment, Vessel, TripStop
+from .serializers import TicketSerializer, UserSerializer, UserMeSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, ListAllTripSerializer, VesselSerializer, TripStopSerializer, TripSegmentSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -91,7 +91,7 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)    
     
 class CityViewSet(viewsets.ModelViewSet):
-    queryset = City.objects.all().filter(active=True)
+    queryset = City.objects.all().filter(active=True).order_by('name')
     serializer_class = CitySerializer
     http_method_names = ['get']
     permission_classes = [AllowAny]
@@ -204,3 +204,7 @@ class TripSegmentViewSet(viewsets.ModelViewSet):
     
         serializer = TripSegmentSerializer(trip_segments, many=True)
         return Response(serializer.data)    
+    
+class TicketViewSet(viewsets.ModelViewSet):
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer

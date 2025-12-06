@@ -31,4 +31,5 @@ export class UserService {
     const headers = this.tokenService.getAuthHeaders();
     return this.http.get<customUser>(`${this.API}me/`,{headers});
   }
+
 }
