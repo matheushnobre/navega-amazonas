@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.db.utils import IntegrityError
 from rest_framework import serializers, status
-from .models import ChoiceOptions, CustomUser, Harbor, City, Enterprise, Trip, Vessel, TripStop, TripSegment
+from .models import ChoiceOptions, CustomUser, Harbor, City, Enterprise, Ticket, Trip, Vessel, TripStop, TripSegment
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.validators import UniqueValidator
@@ -139,10 +139,19 @@ class VesselSerializer(serializers.ModelSerializer):
 
 
 class TripStopSerializer(serializers.ModelSerializer):
+    harbor = serializers.PrimaryKeyRelatedField(
+        queryset=Harbor.objects.all()
+    )
     class Meta:
         model = TripStop 
         fields = '__all__'
         read_only_fields = ['active', 'is_departure_stop', 'is_arrival_stop', 'number_of_lands', 'number_of_shipments']
+        
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+
+        ret['harbor'] = HarborSerializer(instance.harbor).data
+        return ret    
         
     def get_fields(self):
         fields = super().get_fields()
@@ -263,7 +272,15 @@ class UserMeSerializer(serializers.ModelSerializer):
         return EnterpriseMeSerializer(active_enterprises, many=True).data
     
 class TripSegmentSerializer(serializers.ModelSerializer):
+    from_stop = TripStopSerializer()
+    to_stop = TripStopSerializer()
+
     class Meta:
         model = TripSegment
         fields = '__all__'
         
+class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket 
+        fields = '__all__'
+        read_only_fields = ['active']

@@ -301,7 +301,7 @@ class Ticket(BaseModel):
         related_name='tickets',
         db_column='id_trip_segment'
     )
-    type_of_accommodation = models.CharField(max_length=1, null=False, blank=False, choices=ChoiceOptions.TypeOfAccommodationChoices.choices)
+    type_of_accommodation = models.CharField(max_length=1, default=ChoiceOptions.TypeOfAccommodationChoices.INDIVIDUAL, blank=False, choices=ChoiceOptions.TypeOfAccommodationChoices.choices)
     passenger = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -310,10 +310,13 @@ class Ticket(BaseModel):
         db_column='id_passenger',
         default=1
     )
-    price = models.DecimalField(null=False, decimal_places=2, max_digits=6)
+    price = models.DecimalField(decimal_places=2, max_digits=6, default=0)
     status = models.CharField(max_length=10, default='Reserved', choices=ChoiceOptions.TicketStatusChoices.choices)
 
     class Meta:
         db_table = 'ticket'
         managed = True
-        
+     
+    def save(self, *args, **kwargs):
+        self.price = self.trip_segment.individual_price   
+        super().save(*args, **kwargs)
