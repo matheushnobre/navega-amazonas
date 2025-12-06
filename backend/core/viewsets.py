@@ -1,3 +1,4 @@
+from datetime import datetime, time
 from rest_framework import viewsets, status
 from .models import CustomUser, City, Harbor, Enterprise, Trip, TripSegment, Vessel, TripStop
 from .serializers import UserSerializer, UserMeSerializer, CitySerializer, HarborSerializer, EnterpriseSerializer, TripSerializer, ListAllTripSerializer, VesselSerializer, TripStopSerializer, TripSegmentSerializer
@@ -9,6 +10,7 @@ from django.db.models.deletion import ProtectedError
 from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.utils import timezone
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -171,3 +173,34 @@ class TripStopViewSet(viewsets.ModelViewSet):
 class TripSegmentViewSet(viewsets.ModelViewSet):
     queryset = TripSegment.objects.all().filter(active=True)
     serializer_class = TripSegmentSerializer
+    
+    @action(detail=False, methods=['get'], url_path='from_to')  
+    def get_trips_segments_from_a_city_to_another(self, request, pk=None):
+        arrival_city = request.query_params.get('arrival_city')
+        departure_city = request.query_params.get('departure_city')
+        date = request.query_params.get('date')
+     
+        if not arrival_city or not departure_city:
+            raise serializers.ValidationError({
+                "detail": "arrival_city and departure_city are mandatory."
+            })
+            
+        if not date:
+            date = timezone.localdate()
+        else:
+            try:
+                date = datetime.strptime(date, "%Y-%m-%d").date()
+            except ValueError:
+                raise serializers.ValidationError({
+                    "date": "Invalid format. Use YYYY-MM-DD."
+                })
+                
+                
+        trip_segments = TripSegment.objects.all().filter(
+            from_stop__harbor__city=arrival_city,
+            to_stop__harbor__city=departure_city,
+            from_stop__stop_datetime__date=date
+        ).order_by('-from_stop__stop_datetime')
+    
+        serializer = TripSegmentSerializer(trip_segments, many=True)
+        return Response(serializer.data)    
