@@ -1,0 +1,30 @@
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environments';
+import { TokenService } from './token-service';
+import { HttpClient } from '@angular/common/http';
+import { vessel } from '../../shared/models/vessel';
+import { Observable } from 'rxjs';
+import { toFormData } from '../utils/form-data';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class VesselService {
+  
+  caminho = environment.apiUrl;
+  API = `${this.caminho}/api/vessels/`;
+
+  constructor (
+    private http:HttpClient,
+    private token:TokenService){}
+
+  add(data: vessel): Observable<vessel> {
+    const formData = toFormData(data);
+    const headers = this.token.getAuthHeaders();
+    return this.http.post<vessel>(this.API, formData,{headers});
+  }
+  get():Observable<vessel[]>{
+      const headers = this.token.getAuthHeaders();
+      return this.http.get<vessel[]>(`${this.API}`,{headers});
+    }
+}

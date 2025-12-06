@@ -1,72 +1,32 @@
-@if(login){
-   <section class="login d-flex w-100 gap-3">
-        <div class="left-login">
-            <h3 class="fs-5 fw-bold w-100 text-left mb-3 px-3 pt-3">Acessar Conta</h3>
-            <form action="" class="d-flex flex-column w-100 gap-3 my-3 px-3">
-                <label class="w-100 fs-6 text-start fw-bold" for="email">E-mail</label>
-                <app-custom-input
-                    type="email"
-                    type_input="email"
-                    placeholder="email@gmail.com"
-                ></app-custom-input>
-                <label class="w-100 fs-6 text-start fw-bold" for="password">Senha</label>
-                <app-custom-input
-                    type="password"
-                    placeholder="********"
-                ></app-custom-input>
-                <app-custom-button
-                    name="Confirmar"
-                    type="primary"
-                >
-                </app-custom-button>
-            </form>
-            <div class="d-flex justify-content-between pb-4">
-                <h3 class="fs-6 w-100 text-center mt-2">Não possui conta? <span class="fw-bold" (click)="reverse()" style="cursor: pointer;">Registre-se</span></h3>
-            </div>
+<section class="login d-flex w-100 gap-3">
+    <div class="left-login">
+        <h3 class="fs-5 fw-bold w-100 text-left mb-3 px-3 pt-3">Acessar Conta</h3>
+        <form action="" class="d-flex flex-column w-100 gap-3 my-3 px-3">
+            <label class="w-100 fs-6 text-start fw-bold" for="email">E-mail</label>
+            <app-custom-input
+                type="email"
+                type_input="email"
+                placeholder="email@gmail.com"
+                [(value)]="email"
+            ></app-custom-input>
+            <label class="w-100 fs-6 text-start fw-bold" for="password">Senha</label>
+            <app-custom-input
+                type="password"
+                placeholder="********"
+                [(value)]="password"
+            ></app-custom-input>
+            <app-custom-button
+                name="Confirmar"
+                type="primary"
+                (click)="confirmar($event)"
+            >
+            </app-custom-button>
+        </form>
+        <div class="d-flex justify-content-between pb-4">
+            <h3 class="fs-6 w-100 text-center mt-2">Não possui conta? <span class="fw-bold" (click)="reverse()" style="cursor: pointer;">Registre-se</span></h3>
         </div>
-         <div class="right-login" style="background-color: var(--color-primary); overflow: hidden;">
-            <img style="height: 100%; background-position: center;" src="/assets/register.png">
-        </div>
-    </section>
-}@else {
-    <section class="register d-flex w-100 gap-3">
-        <div class="left-register"  style="background-color: var(--color-primary); overflow: hidden;">
-            <img style="height: 100%; background-position: center;" src="/assets/login.png">
-        </div>
-        <div class="right-register">
-            <h3 class="fs-5 fw-bold w-100 text-left mb-3 px-3 pt-3">Registre-se</h3>
-            <form action="" class="d-flex flex-column w-100 gap-3 my-3 px-3">
-                <label class="w-100 fs-6 text-start fw-bold" for="name">Nome</label>
-                <app-custom-input
-                    type="text"
-                    placeholder="Seu nome"
-                ></app-custom-input>
-                <label class="w-100 fs-6 text-start fw-bold" for="cpf">CPF</label>
-                <app-custom-input
-                    type="number"
-                    placeholder="888.888.888-88"
-                ></app-custom-input>
-                <label class="w-100 fs-6 text-start fw-bold" for="email">E-mail</label>
-                <app-custom-input
-                    type="email"
-                    type_input="email"
-                    placeholder="email@gmail.com"
-                ></app-custom-input>
-                <label class="w-100 fs-6 text-start fw-bold" for="password">Senha</label>
-                <app-custom-input
-                    type="password"
-                    placeholder="********"
-                ></app-custom-input>
-                <app-custom-button
-                    name="Confirmar"
-                    type="primary"
-                >
-                </app-custom-button>
-            </form>
-            <div class="right-register-content d-flex justify-content-between pb-4">
-                <h3 class="fs-6 w-100 text-center mt-2">Já possui conta? <span class="fw-bold" (click)="reverse()" style="cursor: pointer;">Acessar conta</span></h3>
-            </div>
-        </div>
-    </section>
-}
- 
+    </div>
+        <div class="right-login" style="background-color: var(--color-primary); overflow: hidden;">
+        <img style="height: 100%; background-position: center;" src="/assets/register.png">
+    </div>
+</section>

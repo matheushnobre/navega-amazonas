@@ -1,18 +1,10 @@
-.register,.login{
+.login{
     height: fit-content;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     height: 100vh;
-}
-.left-register,.right-register{
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; 
-    height: 100%;
 }
 
 .left-login,.right-login{
@@ -23,13 +15,13 @@
     justify-content: center; 
     height: 100%;
 }
-.right-login,.left-register{
+.right-login{
     @media(max-width:759px){
         display: none;
     }
 }
 @media (max-width: 760px){
-    .login,.register{
+    .login{
         height: auto;
         height: max-content;
         display: flex;
@@ -38,7 +30,7 @@
         width: 100%;
         flex-direction: column;
     }
-    .right-register,.left-login{
+    .left-login{
         display: flex;
         flex-direction: column;
         width: 100%;

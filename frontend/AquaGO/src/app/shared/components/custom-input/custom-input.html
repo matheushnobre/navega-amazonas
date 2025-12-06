@@ -6,12 +6,29 @@
         <img class="ps-2 py-1" src="assets/icons/calendar.svg">
     }
     @if(type=="text" || type=="email"){
-        <input class="px-2 py-2" type={{type}} placeholder={{placeholder}}>
+        <input  
+            class="px-2 py-2" 
+            type={{type}} 
+            placeholder={{placeholder}}
+            [value] = "value"
+            (input)="onInputChange($event)"
+            (change)="onInputChange($event)">
     }
     @else if (type=="file") {
-         <input type={{type}} class="px-2 py-2">
+        <input 
+            type={{type}} 
+            class="px-2 py-2"
+            [value] = "value"
+            (input)="onInputChange($event)"
+            (change)="onInputChange($event)">
     }
     @else {
-        <input type={{type}} class="px-2 py-2" placeholder={{placeholder}}>
+        <input 
+            type={{type}} 
+            class="px-2 py-2" 
+            min="0"
+            [value] = "value"
+            placeholder={{placeholder}} (input)="onInputChange($event)"
+            (change)="onInputChange($event)">
     }
 </div>

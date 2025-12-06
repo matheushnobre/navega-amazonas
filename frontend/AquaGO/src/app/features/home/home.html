@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <app-nav [logado]=true [user]=user class="w-100"></app-nav>
+    <app-nav  class="w-100"></app-nav>
     <section class="trip"  name="trip">
         <div class="trip-content">
             <h3 class="fs-5 fw-bold w-100 text-start" style="color: #fefefe;">Querendo viagem?</h3>
@@ -48,7 +48,7 @@
             </form>
         </div>
     </section>
-    <section class="my-5 px-2 d-flex flex-column gap-2" name="main-destinations" style="overflow: hidden; width: 100%; max-width: 800px;">
+    <section class="mt-5 px-2 d-flex flex-column gap-2" name="main-destinations" style="overflow: hidden; width: 100%; max-width: 800px;">
         <h2 class="fw-bold fs-5">Principais Destinos</h2>
         <div #scrollContainer class="produtos px-3 d-flex gap-2 py-3">
            @for (city of cities; track $index) {
@@ -59,7 +59,7 @@
             }
         </div>
     </section>
-    <section class="px-2 d-flex flex-column gap-2" name="about" style="max-width: 800px;">
+    <section class="px-2 d-flex flex-column gap-2 mt-2" name="about" style="max-width: 800px;">
         <h3 class="fs-5 fw-bold">Quem somos?</h3>
         <p class="fs-6">O <span class="fw-bold">AquaGO!</span> surgiu no IFAM campus Parintins, criado pela equipe Dois Balões e Meio, com a missão de facilitar o acesso ao transporte fluvial na região Norte. Hoje, o sistema reúne diversas empresas confiáveis que oferecem viagens de barco e lancha, permitindo que você encontre todas as opções em um único lugar.</p>
     </section>
@@ -83,7 +83,10 @@
             text="Atendemos em todo o Pará, Amazonas e Roraima"
         ></app-card-enterprise>
     </section>
-     <section class="px-2 mt-5 mb-3 d-flex flex-column gap-2 w-100" name="about" style="max-width: 800px;">
+    <section class="px-2 d-flex flex-column my-5" name="logos">
+        <app-logos [items]="enterprises"></app-logos>
+    </section>
+     <section class="px-2 mb-3 d-flex flex-column gap-2 w-100" name="about" style="max-width: 800px;">
         <h3 class="fs-5 fw-bold">Nossos valores</h3>
         <ul>
             <li class="fs-6"><p><span class="fw-bold">Transparência:</span> informações claras sobre horários, preços e empresas.</p></li>

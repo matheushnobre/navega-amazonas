@@ -1,57 +1,52 @@
 <nav class="navbar navbar-expand-lg px-2">
-  @if (logado) {
-    <div class="container-fluid d-flex justify-content-between align-items-center px-0">
-      <div class="d-flex justify-content-center align-items-center gap-2" (click)="home()" style="cursor: pointer;">
-        <img src="/logo.svg" width="36px" height="36px" alt="">
-        <h2 class="fw-bold fs-6" style="color: #fefefe;">AquaGO!</h2>
-      </div>
+  <div class="container-fluid px-0">
+
+    <div class="d-flex justify-content-center align-items-center gap-2"
+         (click)="home()" style="cursor: pointer;">
+      <img src="/logo-primary.svg" width="36" height="36" alt="">
+      <h2 class="fw-bold fs-6" style="color:var(--color-primary)">AquaGO!</h2>
+    </div>
+    @if (logado) {
       <div class="dropdown">
-        <img 
-          src="/assets/icons/person.svg" 
-          width="36" height="36"
-          class="p-1 dropdown-toggle" 
-          alt="icone de usuário"
-          style="
-            border: 0.05rem solid var(--color-primary);
-            border-radius:300px;
-            background-color: var(--color-primary);
-            cursor: pointer;
-          "
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
+        <img src="/assets/icons/person.svg"
+              width="36" height="36"
+              class="p-1 dropdown-toggle"
+              alt="icone de usuário"
+              style="border: 0.05rem solid var(--color-primary);
+                    border-radius:300px;
+                    background-color: var(--color-primary);
+                    cursor: pointer;"
+              data-bs-toggle="dropdown">
         
         <ul class="dropdown-menu dropdown-menu-end mt-2">
           <li><a class="dropdown-item" href="#">Meu perfil</a></li>
-          @if(enterprise){
+          @if (enterprises.length > 0) {
             <li><a class="dropdown-item" href="/dashboard">Minhas empresas</a></li>
           }
           <li><a class="dropdown-item" href="#">Minhas viagens</a></li>
           <li><a class="dropdown-item" href="#">Configurações</a></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-danger" href="#">Sair</a></li>
+          <li><a class="dropdown-item text-danger" (click)="exit()">Sair</a></li>
         </ul>
       </div>
-    </div>
-  }
-  @else {
-    <div class="container-fluid px-0">
-      <div class="d-flex justify-content-center align-items-center gap-2" (click)="home()" style="cursor: pointer;">
-        <img src="/logo.svg" width="36px" height="36px" alt="">
-        <h2 class="fw-bold fs-6" style="color: #fefefe;">AquaGO!</h2>
-      </div> 
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-            aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      } 
+      @else {        
+          <button class="navbar-toggler" type="button" 
+                  data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent"
+                  aria-expanded="false"
+                  aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+
         <div class="d-flex gap-3 itens">
-          <app-custom-button variant="light" name="Entrar"></app-custom-button>     
-          <app-custom-button variant="light_outline" name="Criar Conta"></app-custom-button>   
+          <app-custom-button variant="light" name="Entrar" (click)="login()"></app-custom-button>
+          <app-custom-button variant="primary" name="Criar Conta" (click)="create()"></app-custom-button>
         </div>
       </div>
-    </div>
-  }
+    }
+  </div>
 </nav>

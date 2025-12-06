@@ -1,9 +1,10 @@
 .navbar{
     width: 100%;
     position: fixed;
-    background-color: var(--color-primary) !important;
+    background-color: #fefefe !important;
     opacity: 100% !important;
-    z-index: 1;
+    z-index: 2;
+    box-shadow: 0 0 0.2rem #1e1e1e52;
     transition: opacity .3s ease, transform .3s ease;
 }
 .hidden {
@@ -14,6 +15,9 @@
 .container-fluid{
     max-width: 800px;
     //border: 1px solid red;
+}
+a{
+    cursor: pointer;
 }
 
 @media(max-width:768px){

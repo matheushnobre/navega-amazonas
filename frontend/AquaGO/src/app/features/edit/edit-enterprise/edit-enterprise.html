@@ -1,0 +1,26 @@
+<div class="container-fluid">
+    <app-nav class="w-100"></app-nav>
+    <section class="register px-2" style="max-width: 800px;" name="register">
+        <h3 class="fs-5 fw-bold">Editar sua Empresa</h3>
+        <p class="fs-6 mb-4">Faça parte da plataforma que mais cresce no Norte!</p>
+        <form action="" class="card px-3 py-3 d-flex flex-column gap-2">
+            <label class="w-100 fw-bold text-center" for="name">Logo</label>
+            <app-img-input class="mt-2" [startImage]="enterprise.image!" (fileSelected)="onImagemSelecionada($event)"></app-img-input>
+            <label class="w-100 fw-bold" for="name">Nome da Empresa:</label>
+            <app-custom-input
+                type="text"
+                class="w-100"
+                type_input="standard"
+                placeholder="Lancha Amazonas"
+                [(value)]="enterprise.fantasy_name"
+
+            ></app-custom-input>
+            <app-custom-button 
+                class="mt-2 w-100" 
+                name="Confirmar"
+                (click)="edit($event)">
+            </app-custom-button>
+        </form>
+    </section>
+    <app-footer class="w-100"></app-footer>
+</div>

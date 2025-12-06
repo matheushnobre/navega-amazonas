@@ -13,6 +13,11 @@
     flex: 1 0 auto;
     margin-top: 5rem;
 }
+.table{
+    box-shadow: 0 0 0.1rem #1e1e1e;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
 .trips{
     display: flex;
     flex-direction: column;
