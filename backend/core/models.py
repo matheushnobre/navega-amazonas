@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class BaseModel(models.Model):
@@ -76,6 +77,7 @@ class Vessel(BaseModel):
     class Meta:
         db_table = 'vessel'
         managed = True  
+        
 class City(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
     state = models.CharField(max_length=50, null=False, blank=False)
@@ -125,7 +127,8 @@ class Trip(BaseModel):
         null=False,
         db_column='id_vessel'
     )
-    base_price =  models.DecimalField(null=False, decimal_places=2, max_digits=6)
+    individual_base_price =  models.DecimalField(null=False, decimal_places=2, max_digits=6)
+    cabin_base_price = models.DecimalField(decimal_places=2, max_digits=6, default=0)
     
     class Meta:
         db_table = 'trip'
@@ -134,7 +137,7 @@ class Trip(BaseModel):
 class TripStop(BaseModel):
     trip = models.ForeignKey(
         to='Trip',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         null=False,
         related_name='trip_stops',
         db_column='id_trip'            
@@ -147,8 +150,97 @@ class TripStop(BaseModel):
         db_column='id_harbor'
     )
     stop_datetime = models.DateTimeField(null=False, blank=False)
-    number = models.IntegerField(default=-1)
+    number_of_shipments = models.IntegerField(default=0)
+    number_of_lands = models.IntegerField(default=0)
+    is_departure_stop = models.BooleanField(default=False)
+    is_arrival_stop = models.BooleanField(default=False)
     
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old = TripStop.objects.get(pk=self.pk)
+            old_datetime = old.stop_datetime
+            old_harbor = old.harbor
+
+            new_datetime = self.stop_datetime
+            new_harbor = self.harbor
+
+            trip = self.trip
+
+            # Datetime changes
+            if old_datetime != new_datetime:
+                if self.is_departure_stop:
+                    trip.departure_datetime = new_datetime
+                elif self.is_arrival_stop:
+                    trip.arrival_datetime = new_datetime
+                trip.save()
+
+            # Harbor changes
+            if old_harbor != new_harbor:
+                if self.is_departure_stop:
+                    trip.departure_harbor = new_harbor
+                elif self.is_arrival_stop:
+                    trip.arrival_harbor = new_harbor
+                trip.save()
+
+        super().save(*args, **kwargs)
+        
+    def delete(self, *args, **kwargs):
+        if self.is_departure_stop:
+            raise ValidationError({
+                "detail": "You can't delete the departure stop"
+                })
+        
+        if self.is_arrival_stop:
+            raise ValidationError({
+                "detail": "You can't delete arrival stop"
+                })
+
+        if self.number_of_lands > 0 or self.number_of_shipments > 0:
+            raise ValidationError({
+                "detail:" "You can't delete a trip stop if someone boards or disembarks at it."
+                })
+            
+        super().delete(*args, **kwargs)
+    
+    def clean(self):
+        if self.pk:
+            self._validate_stop_datetime_on_update()
+            self._validate_harbor_on_update()
+        else:
+            self._validate_stop_datetime_on_create()
+            
+    def _validate_stop_datetime_on_update(self):
+        old = TripStop.objects.get(pk=self.pk)
+        new_datetime = self.stop_datetime
+            
+        stops = self.trip.trip_stops.exclude(pk=self.pk).order_by("stop_datetime")
+        prev_stop = stops.filter(stop_datetime__lt=old.stop_datetime).last()
+        next_stop = stops.filter(stop_datetime__gt=old.stop_datetime).first()
+        
+        if prev_stop and new_datetime < prev_stop.stop_datetime:
+            raise ValidationError({
+                "stop_datetime": "You can't update stop_datetime to a datetime earlier than the previous stop."
+            })
+
+        if next_stop and new_datetime > next_stop.stop_datetime:
+            raise ValidationError({
+                "stop_datetime": "You can't update stop_datetime to a datetime later than the next stop."
+            })
+            
+    def _validate_stop_datetime_on_create(self):
+        if self.stop_datetime < self.trip.departure_datetime or self.stop_datetime > self.trip.arrival_datetime:
+            raise ValidationError({
+                "stop_datetime": "stop_datetime must be after departure_datetime and before arrival_datetime."
+            }) 
+            
+    def _validate_harbor_on_update(self):
+        old = TripStop.objects.get(pk=self.pk)
+        
+        if self.harbor.city != old.harbor.city:
+            raise ValidationError({
+                "harbor": "You can only update harbor if the city remains the same."
+            }) 
+            
     class Meta:
         db_table = 'trip_stop'
         managed = True
@@ -156,53 +248,42 @@ class TripStop(BaseModel):
 class TripSegment(BaseModel):
     trip = models.ForeignKey(
         to='Trip',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         null=False,
         related_name='trip_segments',
         db_column='id_trip'            
     )
     from_stop = models.ForeignKey(
         to='TripStop',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         null=False,
         related_name='from_stop', # apenas para não dar conflito, nem será usado
         db_column='id_from_stop'
     )
     to_stop = models.ForeignKey(
         to='TripStop',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         null=False,
         related_name='to_stop', # apenas para não dar conflito, nem será usado
         db_column='id_to_stop'
     )
-    price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
-    individual_vacancies = models.IntegerField(default=0)
+    individual_price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
     
     def calculate_price(self):
         total_trip_time = (self.trip.arrival_datetime - self.trip.departure_datetime).total_seconds()
         total_segment_time = (self.to_stop.stop_datetime - self.from_stop.stop_datetime).total_seconds()
         proportion = total_segment_time / total_trip_time
-        price = self.trip.base_price * Decimal(proportion)
+        price = self.trip.individual_base_price * Decimal(proportion)
         add = price * Decimal(0.1)
         
-        self.price = min(price + add, self.trip.base_price)
+        self.individual_price = min(price + add, self.trip.individual_base_price)
         self.save()
     
     class Meta:
         db_table = 'trip_segment'
         managed = True
-    
-class Passenger(BaseModel):
-    name = models.CharField(max_length=50, null=False, blank=False)
-    document = models.CharField(max_length=30, null=False, blank=False)
-    birthday = models.DateField(null=False, blank=False)
-    
-    class Meta:
-        db_table = 'passenger'
-        managed = True 
         
 class Payment(BaseModel):
-    # inserir sale
     payment_method = models.CharField(max_length=1, null=False, blank=False, choices=ChoiceOptions.PaymentMethodChoices.choices)
     payment_status = models.CharField(max_length=1, null=False, blank=False, choices=ChoiceOptions.PaymentStatusChoices.choices)
     paid_at = models.DateTimeField(null=True, blank=True)
@@ -211,55 +292,7 @@ class Payment(BaseModel):
     class Meta:
         db_table = 'payment'
         managed = True
-        
-class Cart(BaseModel):
-    user = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        null=False,
-        related_name='carts',
-        db_column='id_user'
-    )
-    
-    is_open = models.BooleanField(default=True)
-    
-    class Meta:
-        db_table = 'cart'
-        managed = True
 
-class CartItem(BaseModel):
-    cart = models.ForeignKey(
-        to='Cart',
-        on_delete=models.CASCADE,
-        null=False,
-        related_name='items',
-        db_column='id_cart'
-    )
-    
-    ticket = models.ForeignKey(
-        to='Ticket',
-        on_delete=models.PROTECT,
-        null=False,
-        db_column='id_ticket'
-    )
-    
-class Sale(BaseModel):
-    cart = models.OneToOneField(
-        to='Cart',
-        on_delete=models.PROTECT,
-        null=False,
-        db_column='id_cart'
-    )
-    
-    payment = models.OneToOneField(
-        to='Payment',
-        on_delete=models.PROTECT,
-        null=False,
-        db_column='id_payment'
-    )
-    
-    total_amount = models.DecimalField(null=False, decimal_places=2, max_digits=6)
-    
 class Ticket(BaseModel):
     trip_segment = models.ForeignKey(
         to='TripSegment',
@@ -269,12 +302,13 @@ class Ticket(BaseModel):
         db_column='id_trip_segment'
     )
     type_of_accommodation = models.CharField(max_length=1, null=False, blank=False, choices=ChoiceOptions.TypeOfAccommodationChoices.choices)
-    main_passenger = models.ForeignKey(
-        to='Passenger',
+    passenger = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
         null=False,
         related_name='tickets',
-        db_column='id_passenger'
+        db_column='id_passenger',
+        default=1
     )
     price = models.DecimalField(null=False, decimal_places=2, max_digits=6)
     status = models.CharField(max_length=10, default='Reserved', choices=ChoiceOptions.TicketStatusChoices.choices)
@@ -283,21 +317,3 @@ class Ticket(BaseModel):
         db_table = 'ticket'
         managed = True
         
-class AssociatedPassenger(BaseModel):
-    ticket = models.ForeignKey(
-        to='Ticket',
-        on_delete=models.PROTECT,
-        null=False,
-        related_name='associated_passengers',
-        db_column='id_ticket'
-    )
-    passenger = models.ForeignKey(
-        to='Passenger',
-        on_delete=models.PROTECT,
-        null=False,
-        db_column='id_passenger'
-    )
-    
-    class Meta:
-        db_table = 'associated_passenger'
-        managed = True
