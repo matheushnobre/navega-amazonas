@@ -13,4 +13,10 @@ export class CustomButton {
 
   @Input()
   variant: "light"| "light_outline" |"primary" = "primary";
+
+  @Output() clicked = new EventEmitter<void>();
+
+  onClick(){
+    this.clicked.emit();
+  }
 }

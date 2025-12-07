@@ -34,7 +34,7 @@ export class Nav implements OnInit {
   verificarUsuario() {
   if (!this.tokenService.isTokenValid()) {
     let token = this.tokenService.getToken();
-    this.auth.reflash(token!).subscribe({
+    this.auth.refresh(token!).subscribe({
         next:(value)=> {
             this.logado = true;
             localStorage.setItem('token', value.access);

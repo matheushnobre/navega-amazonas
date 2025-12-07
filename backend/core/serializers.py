@@ -1,10 +1,11 @@
 from django.db import transaction
 from django.db.utils import IntegrityError
 from rest_framework import serializers, status
-from .models import ChoiceOptions, CustomUser, Harbor, City, Enterprise, Trip, Vessel, TripStop, TripSegment
+from .models import ChoiceOptions, CustomUser, Harbor, City, Enterprise, Ticket, Trip, Vessel, TripStop, TripSegment
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.validators import UniqueValidator
+from django.core.exceptions import ValidationError
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -67,19 +68,19 @@ class EnterpriseSerializer(serializers.ModelSerializer):
         user = request.user
         validated_data['user'] = user 
         return super().create(validated_data)
-    
-class CitySerializer(serializers.ModelSerializer):    
-    class Meta:
-        model = City 
-        fields = ['id', 'name', 'state', 'image']
-        read_only_fields = ['active']
 
 class HarborSerializer(serializers.ModelSerializer):
-    city = CitySerializer()
-
     class Meta:
         model = Harbor
         fields = ['id', 'name', 'city']
+        read_only_fields = ['active']
+
+class CitySerializer(serializers.ModelSerializer):  
+    harbors = HarborSerializer(many=True, read_only=True)
+      
+    class Meta:
+        model = City 
+        fields = ['id', 'name', 'state', 'image', 'harbors']
         read_only_fields = ['active']
 
 class VesselSerializer(serializers.ModelSerializer):
@@ -137,34 +138,111 @@ class VesselSerializer(serializers.ModelSerializer):
         return attrs
 
 
+class TripStopSerializer(serializers.ModelSerializer):
+    harbor = serializers.PrimaryKeyRelatedField(
+        queryset=Harbor.objects.all()
+    )
+    class Meta:
+        model = TripStop 
+        fields = '__all__'
+        read_only_fields = ['active', 'is_departure_stop', 'is_arrival_stop', 'number_of_lands', 'number_of_shipments']
+        
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+
+        ret['harbor'] = HarborSerializer(instance.harbor).data
+        return ret    
+        
+    def get_fields(self):
+        fields = super().get_fields()
+
+        if self.instance is not None:
+            fields['trip'].read_only = True
+
+        return fields
+    
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        
+        try:
+            instance.clean()
+        except ValidationError as e:
+            raise serializers.ValidationError(e.message_dict)
+        
+        instance.save()
+        return instance
+            
+    
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        try:
+            instance.clean()
+        except ValidationError as e:
+            raise serializers.ValidationError(e.message_dict)
+        
+        instance.save()
+        return instance
+        
 class TripSerializer(serializers.ModelSerializer):    
+    trip_stops = TripStopSerializer(many=True, read_only=True)
+    
     class Meta:
         model = Trip
-        fields = '__all__'
-        read_only_fields = ['active']
+        fields = ['id', 'active', 'departure_datetime', 'arrival_datetime', 'departure_harbor', 'arrival_harbor', 'individual_base_price', 'cabin_base_price', 'vessel', 'trip_stops']
+        read_only_fields = ['active', 'trip_stops']
         ordering_fields = ['departure_datetime']
+        
+    def get_fields(self):
+        fields = super().get_fields()
+
+        if self.instance is not None:
+            fields['departure_datetime'].read_only = True
+            fields['departure_harbor'].read_only = True
+            fields['arrival_datetime'].read_only = True
+            fields['arrival_harbor'].read_only = True
+            
+        return fields   
         
     def validate(self, attrs):
         departure_datetime = attrs.get('departure_datetime') or getattr(self.instance, 'departure_datetime')
         arrival_datetime = attrs.get('arrival_datetime') or getattr(self.instance, 'arrival_datetime')
 
         if arrival_datetime < departure_datetime:
-             raise serializers.ValidationError({
+            raise serializers.ValidationError({
                 'arrival_datetime': "arrival_datetime must be after departure_datetime."
             })      
              
         return attrs
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        ordered_stops = sorted(
+            data['trip_stops'],
+            key=lambda stop: stop['stop_datetime']
+        )
+
+        data['trip_stops'] = ordered_stops
+        return data
+    
+    def update(self, instance, validated_data):
+        validated_data.pop('departure_datetime')
+        validated_data.pop('arrival_datetime')
         
-class TripStopSerializer(serializers.ModelSerializer):
+        return super().update(instance, validated_data)
+
+class ListAllTripSerializer(serializers.ModelSerializer):
+    trip_stops = TripStopSerializer(many=True, read_only=True)
+    vessel = VesselSerializer(read_only=True)
+    arrival_harbor = HarborSerializer(read_only=True)
+    departure_harbor = HarborSerializer(read_only=True)
+    
     class Meta:
-        model = TripStop 
-        fields = '__all__'
-        
-class TripSegmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TripSegment
-        fields = '__all__'
-        
+        model = Trip
+        fields = ['id', 'active', 'departure_datetime', 'arrival_datetime', 'departure_harbor', 'arrival_harbor', 'individual_base_price', 'cabin_base_price', 'vessel', 'trip_stops']
+
 class EnterpriseMeSerializer(serializers.ModelSerializer):
     vessels_count = serializers.SerializerMethodField()
 
@@ -192,3 +270,17 @@ class UserMeSerializer(serializers.ModelSerializer):
     def get_enterprises(self, obj):
         active_enterprises = obj.enterprises.filter(active=True)
         return EnterpriseMeSerializer(active_enterprises, many=True).data
+    
+class TripSegmentSerializer(serializers.ModelSerializer):
+    from_stop = TripStopSerializer()
+    to_stop = TripStopSerializer()
+
+    class Meta:
+        model = TripSegment
+        fields = '__all__'
+        
+class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket 
+        fields = '__all__'
+        read_only_fields = ['active']
