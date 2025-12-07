@@ -280,6 +280,9 @@ class TripSegmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class TicketSerializer(serializers.ModelSerializer):
+    passenger = UserSerializer()
+    trip_segment = TripSegmentSerializer()
+    
     class Meta:
         model = Ticket 
         fields = '__all__'
