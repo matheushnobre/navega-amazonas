@@ -86,8 +86,16 @@ export class Checkout implements OnInit {
         this.router.navigate(['/']); // volta para home, mas assim que eu fizer certinho vai levar pro historico do passageiro pra de la ele poder pagar a passagem
       },
       error: (err) => {
-        console.error(err);
-        alert('Erro ao reservar a passagem. Tente novamente.');
+        const backend = err.error;
+        
+        const detail = Array.isArray(backend?.detail) ? backend.detail[0]: backend?.detail;
+
+        if(detail === "Exceed capacity."){
+          alert("Não há mais passagens disponíveis neste trecho.");
+          this.router.navigate(['/']); 
+        } else{
+          alert('Erro ao reservar a passagem. Tente novamente.');
+        }
       }
     });
   }

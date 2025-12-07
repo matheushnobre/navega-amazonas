@@ -215,8 +215,8 @@ class TripSegmentViewSet(viewsets.ModelViewSet):
                 
                 
         trip_segments = TripSegment.objects.all().filter(
-            from_stop__harbor__city=arrival_city,
-            to_stop__harbor__city=departure_city,
+            from_stop__harbor__city=departure_city,
+            to_stop__harbor__city=arrival_city,
             from_stop__stop_datetime__date=date
         ).order_by('-from_stop__stop_datetime')
     
