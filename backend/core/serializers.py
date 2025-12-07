@@ -280,10 +280,36 @@ class TripSegmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class TicketSerializer(serializers.ModelSerializer):
-    passenger = UserSerializer()
-    trip_segment = TripSegmentSerializer()
+    passenger = serializers.PrimaryKeyRelatedField(
+        queryset=CustomUser.objects.all()
+    )
+    trip_segment = serializers.PrimaryKeyRelatedField(
+        queryset=TripSegment.objects.all()
+    )
     
     class Meta:
         model = Ticket 
         fields = '__all__'
         read_only_fields = ['active']
+        
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+
+        rep['passenger'] = UserSerializer(instance.passenger).data
+        rep['trip_segment'] = TripSegmentSerializer(instance.trip_segment).data
+
+        return rep    
+        
+    def validate(self, attrs):
+        if not self.instance:
+            trip_segment = attrs['trip_segment']
+            from_stop = trip_segment.from_stop
+            to_stop = trip_segment.to_stop
+            trip = trip_segment.trip
+            
+            if not trip.can_sell_ticket(from_stop, to_stop):
+                raise serializers.ValidationError({
+                    "detail": "Exceed capacity."
+                })
+            
+        return attrs

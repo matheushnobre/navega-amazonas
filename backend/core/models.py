@@ -130,6 +130,20 @@ class Trip(BaseModel):
     individual_base_price =  models.DecimalField(null=False, decimal_places=2, max_digits=6)
     cabin_base_price = models.DecimalField(decimal_places=2, max_digits=6, default=0)
     
+    def can_sell_ticket(self, from_stop, to_stop):
+        trip_stops = TripStop.objects.filter(trip=self).order_by('stop_datetime')
+        passengers = 0
+        
+        for ts in trip_stops:
+            passengers += ts.number_of_shipments
+            passengers -= ts.number_of_landings
+                        
+            if ts.stop_datetime >= from_stop.stop_datetime and ts.stop_datetime < to_stop.stop_datetime:
+                if passengers >= self.vessel.individual_capacity:
+                    return False
+        
+        return True
+    
     class Meta:
         db_table = 'trip'
         managed = True
@@ -151,7 +165,7 @@ class TripStop(BaseModel):
     )
     stop_datetime = models.DateTimeField(null=False, blank=False)
     number_of_shipments = models.IntegerField(default=0)
-    number_of_lands = models.IntegerField(default=0)
+    number_of_landings = models.IntegerField(default=0)
     is_departure_stop = models.BooleanField(default=False)
     is_arrival_stop = models.BooleanField(default=False)
     
@@ -195,7 +209,7 @@ class TripStop(BaseModel):
                 "detail": "You can't delete arrival stop"
                 })
 
-        if self.number_of_lands > 0 or self.number_of_shipments > 0:
+        if self.number_of_landings > 0 or self.number_of_shipments > 0:
             raise ValidationError({
                 "detail:" "You can't delete a trip stop if someone boards or disembarks at it."
                 })
@@ -316,7 +330,3 @@ class Ticket(BaseModel):
     class Meta:
         db_table = 'ticket'
         managed = True
-     
-    def save(self, *args, **kwargs):
-        self.price = self.trip_segment.individual_price   
-        super().save(*args, **kwargs)
