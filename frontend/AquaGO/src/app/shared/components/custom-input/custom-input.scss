@@ -36,3 +36,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .primary:hover,.primary:active{
     background-color: var(--color-primary-activated)
 }
+input[type="datetime-local"]::-webkit-datetime-edit {
+  color: transparent;
+}
+
+input[type="datetime-local"]:focus::-webkit-datetime-edit,
+input[type="datetime-local"]:valid::-webkit-datetime-edit {
+  color: inherit;
+}

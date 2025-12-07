@@ -17,13 +17,15 @@ import { vessel } from '../../../shared/models/vessel';
   styleUrl: './register-vessel.scss',
 })
 export class RegisterVessel {
-  name:string = "";
-  image:File | null = null;
-  registry_code:string = "";
-  individual_capacity:number = 0;
-  enterprise!:enterprise | number;
-  number_of_cabins:number = 0;
-  opt:string = "barco";
+
+  vessel: vessel = {
+    name:"",
+    image: null,
+    registry_code:"",
+    individual_capacity:0,
+    number_of_cabins: 0,
+    vessel_type:"barco"
+  }
   id!:number
 
   constructor(
@@ -34,35 +36,28 @@ export class RegisterVessel {
 
   }
   onImagemSelecionada(file: File) {
-    this.image = file;
+    this.vessel.image = file;
   }
   register(event:Event){
     event.preventDefault();
-
-
-    const vessel:vessel = {
-      image: this.image,
-      individual_capacity: this.individual_capacity,
-      name: this.name,
-      registry_code:this.registry_code,
-      number_of_cabins: this.number_of_cabins,
-      enterprise: this.id,
-      vessel_type: this.opt
+    if(!(this.vessel.image instanceof File)){
+      delete this.vessel.image;
     }
-
-    this.vesselService.add(vessel).subscribe({
-      next(value) {
+    this.vesselService.add(this.vessel).subscribe({
+      next:(value)=>{
           alert('Embarcação Cadastrada com sucesso');
-      },
+          this.location.back();
+        },error:(err)=> {
+            alert('Falha ao Cadastrar Embarcação')
+        },
     })
-    
   }
   loadUser(){
     this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
 
   }
   onSelect(event:any){
-    this.opt = event.target.value;
+    this.vessel.vessel_type = event.target.value;
   }
 }
 

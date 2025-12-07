@@ -1,1 +1,1 @@
-export type CustomInputValue = string | number | File | Date;
+export type CustomInputValue = string | number | File | Date | Date;

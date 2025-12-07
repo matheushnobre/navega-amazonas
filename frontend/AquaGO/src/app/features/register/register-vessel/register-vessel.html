@@ -12,7 +12,7 @@
                 class="w-100"
                 type_input="standard"
                 placeholder="Lancha Amazonas"
-                [(value)]="name"
+                [(value)]="vessel.name"
 
             ></app-custom-input>
             <label class="w-100 fw-bold" for="name">Nome da Embarcação:</label>
@@ -32,7 +32,7 @@
                 class="w-100"
                 type_input="standard"
                 placeholder="111.111.111/11-1"
-                [(value)]="registry_code"
+                [(value)]="vessel.registry_code"
             ></app-custom-input>
 
             <label class="w-100 fw-bold" for="name">Capacidade Individual:</label>
@@ -41,16 +41,16 @@
                 class="w-100"
                 type_input="standard"
                 placeholder="111.111.111/11-1"
-                [(value)]="individual_capacity"
+                [(value)]="vessel.individual_capacity"
             ></app-custom-input>
-            @if (opt == "barco") {
+            @if (vessel.vessel_type == "barco") {
                 <label class="w-100 fw-bold" for="name">Quantidade de Camarotes:</label>
                 <app-custom-input
                     type="number"
                     class="w-100"
                     type_input="standard"
                     placeholder="0"
-                    [(value)]="number_of_cabins"
+                    [(value)]="vessel.number_of_cabins"
                 ></app-custom-input>
 
             }

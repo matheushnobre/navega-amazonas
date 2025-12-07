@@ -23,8 +23,17 @@ export class VesselService {
     const headers = this.token.getAuthHeaders();
     return this.http.post<vessel>(this.API, formData,{headers});
   }
-  get():Observable<vessel[]>{
+  get(id:number):Observable<vessel>{
       const headers = this.token.getAuthHeaders();
-      return this.http.get<vessel[]>(`${this.API}`,{headers});
-    }
+      return this.http.get<vessel>(`${this.API}${id}`,{headers});
+  }
+  del(id:number){
+    const headers = this.token.getAuthHeaders();
+    return this.http.delete(`${this.API}${id}/`,{headers});
+  }
+  update(id:number,data:vessel):Observable<vessel>{
+    const headers = this.token.getAuthHeaders();
+    const formData = toFormData(data);
+    return this.http.patch<vessel>(`${this.API}${id}/`,formData,{headers});
+  }
 }

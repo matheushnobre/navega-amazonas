@@ -38,7 +38,7 @@ export class EditEnterprise {
   }
   edit(event:Event){
     event.preventDefault();
-    if(!(this.enterprise instanceof File)){
+    if(!(this.enterprise.image instanceof File)){
       delete this.enterprise.image; 
     }
     this.enterpriseService.update(this.id,this.enterprise).subscribe({

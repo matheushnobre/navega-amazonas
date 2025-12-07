@@ -58,9 +58,6 @@ export class Nav implements OnInit {
     )
     .subscribe(dados => {
       this.user = dados as customUser;
-      if (!this.user.enterprises){
-        this.user.enterprises = [];
-      }
     });
   }
 

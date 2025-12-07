@@ -9,26 +9,28 @@
                     (click)="addVessel()"
                 ></app-custom-button>
             </div>
-        <table class="table table-hover w-100 mt-3">
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (vessel of vessels; track $index) {                            
-                    <tr (click)="select(vessel.id!)" style="vertical-align: middle;">
-                        <td><img [src]=(vessel.image) width="36px" height="36px" style="border-radius:300px;border: 0.01rem solid var(--color-primary);"></td>
-                        <td class="fs-6">{{vessel.name}}</td>
-                        <td class="fs-6">{{vessel.vessel_type}}</td>
-                        <td class="d-flex gap-2 justify-content-end">
-                            <button class="btn btn-warning" (click)="edit(vessel.id!);$event.stopPropagation()">Editar</button>
-                            <button class="btn btn-danger" (click)="del(vessel.id!); $event.stopPropagation()">Excluir</button>
-                        </td>
-                    </tr> 
+            <table class="table table-hover w-100 mt-3">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(vessels.length>0){
+                        @for (vessel of vessels; track $index) {                            
+                            <tr (click)="select(vessel.id!)" style="vertical-align: middle;">
+                                <td><img [src]="path+vessel.image" width="36px" height="36px" style="border-radius:300px;border: 0.01rem solid var(--color-primary);"></td>
+                                <td class="fs-6">{{vessel.name}}</td>
+                                <td class="fs-6">{{vessel.vessel_type}}</td>
+                                <td class="d-flex gap-2 justify-content-end">
+                                    <button class="btn btn-warning" (click)="edit(vessel.id!);$event.stopPropagation()">Editar</button>
+                                    <button class="btn btn-danger" (click)="del(vessel.id!); $event.stopPropagation()">Excluir</button>
+                                </td>
+                            </tr> 
+                        }
                     }
                 </tbody>
             </table>

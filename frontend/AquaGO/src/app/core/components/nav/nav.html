@@ -9,14 +9,14 @@
     @if (logado) {
       <div class="dropdown">
         <div 
-          [style.backgroundImage]="this.user.image ? 'url(' + this.user.image + ')' : 'url(/assets/icons/default.svg)'"
+          [style.backgroundImage]="this.user.image ? 'url(' + this.user.image + ')' : 'url(/assets/icons/person.svg)'"
           style="
             width: 36px;
             height: 36px;
             padding: 4px;
             border: 0.05rem solid var(--color-primary);
             border-radius: 300px;
-            background-color: var(--color-primary);
+            background-color: white;
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
