@@ -14,8 +14,11 @@
 }
 .container-fluid{
     max-width: 800px;
-    //border: 1px solid red;
 }
+.dropdown-toggle::after {
+  display: none !important;
+}
+
 a{
     cursor: pointer;
 }

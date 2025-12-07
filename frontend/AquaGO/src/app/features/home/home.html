@@ -12,7 +12,7 @@
                             class="form-select"
                             [(ngModel)]="selectedDepartureCity"
                             name="departureCity">
-                            <option value="" disabled selected>Selecione a origem...</option>
+                            <option value="null" disabled selected>Selecione a origem...</option>
                             <option *ngFor="let city of cities" [value]="city.id">
                                 {{ city.name }}
                             </option>
@@ -24,7 +24,7 @@
                             class="form-select"
                             [(ngModel)]="selectedArrivalCity"
                             name="arrivalCity">
-                            <option value="" disabled selected>Selecione o destino...</option>
+                            <option value="null" disabled selected>Selecione o destino...</option>
                             <option *ngFor="let city of cities" [value]="city.id">
                                 {{ city.name }}
                             </option>

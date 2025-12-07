@@ -7,6 +7,7 @@ import { TokenService } from '../../services/token-service';
 import { catchError, of } from 'rxjs';
 import { enterprise } from '../../../shared/models/enterprise';
 import { Auth } from '../../auth/auth';
+import { customUser } from '../../../shared/models/customUser';
 
 @Component({
   selector: 'app-nav',
@@ -18,8 +19,7 @@ export class Nav implements OnInit {
 
   logado:boolean = false;
 
-  enterprises:enterprise[] = [];
-
+  user:customUser = new customUser();
   constructor(
     private router:Router,
     private userService: UserService,
@@ -43,21 +43,24 @@ export class Nav implements OnInit {
             this.logado = false;
         },
     });
-    this.enterprises = [];
+    this.user.enterprises = [];
     return;
   }else{
     this.logado=true;
   }
 
-  this.userService.my_enterprises()
+  this.userService.me()
     .pipe(
       catchError(err => {
-        this.enterprises = [];
+        this.user.enterprises = [];
         return of([]);
       })
     )
     .subscribe(dados => {
-      this.enterprises = Array.isArray(dados) ? dados : [];
+      this.user = dados as customUser;
+      if (!this.user.enterprises){
+        this.user.enterprises = [];
+      }
     });
   }
 

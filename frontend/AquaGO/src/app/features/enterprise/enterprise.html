@@ -6,7 +6,7 @@
                 <h3 class="fs-5 fw-bold">Lista de Embarcações</h3>
                 <app-custom-button
                     name="Adicionar"
-                    (click)="adicionar()"
+                    (click)="addVessel()"
                 ></app-custom-button>
             </div>
         <table class="table table-hover w-100 mt-3">
@@ -20,10 +20,10 @@
             </thead>
             <tbody>
                 @for (vessel of vessels; track $index) {                            
-                    <tr (click)="select(vessel.id!)">
+                    <tr (click)="select(vessel.id!)" style="vertical-align: middle;">
                         <td><img [src]=(vessel.image) width="36px" height="36px" style="border-radius:300px;border: 0.01rem solid var(--color-primary);"></td>
-                        <td>{{vessel.name}}</td>
-                        <td>{{vessel.vessel_type}}</td>
+                        <td class="fs-6">{{vessel.name}}</td>
+                        <td class="fs-6">{{vessel.vessel_type}}</td>
                         <td class="d-flex gap-2 justify-content-end">
                             <button class="btn btn-warning" (click)="edit(vessel.id!);$event.stopPropagation()">Editar</button>
                             <button class="btn btn-danger" (click)="del(vessel.id!); $event.stopPropagation()">Excluir</button>
@@ -32,6 +32,15 @@
                     }
                 </tbody>
             </table>
+        </section>
+        <section name="routes" class="w-100 px-2">
+            <div class="trips w-100 d-flex flex-row justify-content-between">
+                <h3 class="fs-5 fw-bold">Minhas Rotas</h3>
+                <app-custom-button
+                    name="Adicionar"
+                    (click)="addTrip()"
+                ></app-custom-button>
+            </div>
         </section>
     </div>
     <app-footer class="mt-5 w-100"></app-footer>

@@ -1,0 +1,33 @@
+<div class="container-fluid">
+    <app-nav class="w-100"></app-nav>
+    <section class="register px-2" style="max-width: 800px;" name="register">
+        <h3 class="fs-5 fw-bold">Cadastre sua Empresa</h3>
+        <p class="fs-6 mb-4">Faça parte da plataforma que mais cresce no Norte!</p>
+        <form action="" class="card px-3 py-3 d-flex flex-column gap-2">
+            <label class="w-100 fw-bold text-center" for="name">Logo</label>
+            <label class="w-100 fw-bold" for="name">Nome da Empresa:</label>
+            <app-custom-input
+                type="text"
+                class="w-100"
+                type_input="standard"
+                placeholder="Lancha Amazonas"
+                [(value)]="fantasy_name"
+
+            ></app-custom-input>
+            <label class="w-100 fw-bold" for="name">Cnpj:</label>
+            <app-custom-input
+                type="text"
+                class="w-100"
+                type_input="standard"
+                placeholder="88.888.888/8888-88"
+                [(value)]="cnpj"
+            ></app-custom-input>
+            <app-custom-button 
+                class="mt-2 w-100" 
+                name="Cadastrar"
+                (click)="register($event)">
+            </app-custom-button>
+        </form>
+    </section>
+    <app-footer class="w-100"></app-footer>
+</div>

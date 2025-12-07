@@ -8,19 +8,26 @@
     </div>
     @if (logado) {
       <div class="dropdown">
-        <img src="/assets/icons/person.svg"
-              width="36" height="36"
-              class="p-1 dropdown-toggle"
-              alt="icone de usuário"
-              style="border: 0.05rem solid var(--color-primary);
-                    border-radius:300px;
-                    background-color: var(--color-primary);
-                    cursor: pointer;"
-              data-bs-toggle="dropdown">
-        
+        <div 
+          [style.backgroundImage]="this.user.image ? 'url(' + this.user.image + ')' : 'url(/assets/icons/default.svg)'"
+          style="
+            width: 36px;
+            height: 36px;
+            padding: 4px;
+            border: 0.05rem solid var(--color-primary);
+            border-radius: 300px;
+            background-color: var(--color-primary);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;"
+          class="dropdown-toggle"
+          data-bs-toggle="dropdown">
+      </div>
+
         <ul class="dropdown-menu dropdown-menu-end mt-2">
           <li><a class="dropdown-item" href="#">Meu perfil</a></li>
-          @if (enterprises.length > 0) {
+          @if (user.enterprises!.length > 0) {
             <li><a class="dropdown-item" href="/dashboard">Minhas empresas</a></li>
           }
           <li><a class="dropdown-item" href="#">Minhas viagens</a></li>

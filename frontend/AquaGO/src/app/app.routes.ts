@@ -8,6 +8,7 @@ import { RegisterVessel } from './features/register/register-vessel/register-ves
 import { RegisterUser } from './features/register/register-user/register-user';
 import { EditEnterprise } from './features/edit/edit-enterprise/edit-enterprise';
 import { Checkout } from './features/checkout/checkout';
+import { RegisterTrip } from './features/register/register-trip/register-trip';
 
 export const routes: Routes = [
     {path:'',redirectTo:'home',pathMatch:'full'},
@@ -16,6 +17,7 @@ export const routes: Routes = [
     {path:'register-enterprise',component:RegisterEnterprise},
     {path:'edit-enterprise/:id',component:EditEnterprise},
     {path:'register-vessel/:id',component:RegisterVessel},
+    {path:'register-trip/:id',component:RegisterTrip},
     {path:'register',component:RegisterUser},
     {path:'dashboard',component:Dashboard},
     {path:'enterprise/:id',component:Enterprise},

@@ -25,8 +25,11 @@ export class Enterprise {
       this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
       this.load();
   }
-  adicionar(){
+  addVessel(){
     this.router.navigate(['register-vessel',this.id])
+  }
+  addTrip(){
+    this.router.navigate(['register-trip',this.id])
   }
   load(){
     this.vesselService.get().subscribe({

@@ -26,10 +26,10 @@
                 </thead>
                 <tbody>
                     @for (enterprise of user.enterprises; track $index) {                            
-                            <tr (click)="select(enterprise.id!)">
+                            <tr (click)="select(enterprise.id!)" style="vertical-align: middle;">
                                 <td><img [src]=(caminho+enterprise.image) width="36px" height="36px" style="border-radius:300px;border: 0.01rem solid var(--color-primary);"></td>
-                                <td>{{enterprise.fantasy_name}}</td>
-                                <td>{{enterprise.cnpj}}</td>
+                                <td class="fs-6">{{enterprise.fantasy_name}}</td>
+                                <td class="fs-6">{{enterprise.cnpj}}</td>
                                 <td class="d-flex gap-2 justify-content-end">
                                     <button class="btn btn-warning" (click)="edit(enterprise.id!);$event.stopPropagation()">Editar</button>
                                     <button class="btn btn-danger" (click)="del(enterprise.id!); $event.stopPropagation()">Excluir</button>

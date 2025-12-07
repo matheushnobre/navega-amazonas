@@ -23,9 +23,9 @@ export class UserService {
 
     return this.http.post<customUser>(this.API, formData);
   }
-  my_enterprises(): Observable<enterprise[]>{
+  me(): Observable<customUser>{
     const headers = this.tokenService.getAuthHeaders();
-    return this.http.get<enterprise[]>(`${this.API}enterprises/`,{headers});
+    return this.http.get<customUser>(`${this.API}me/`,{headers});
   }
   get_security(): Observable<customUser>{
     const headers = this.tokenService.getAuthHeaders();
