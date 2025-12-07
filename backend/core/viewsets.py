@@ -47,6 +47,13 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = EnterpriseSerializer(enterprises, many=True)
         return Response(serializer.data)    
     
+    @action(detail=False, methods=['get'], url_path='tickets')  
+    def get_tickets(self, request):
+        user = request.user
+        tickets = Ticket.objects.filter(passenger=user, active=True)
+        serializer = TicketSerializer(tickets, many=True)
+        return Response(serializer.data)
+    
 class EnterpriseViewSet(viewsets.ModelViewSet):
     queryset = Enterprise.objects.all().filter(active=True)
     serializer_class = EnterpriseSerializer
@@ -157,7 +164,18 @@ class TripViewSet(viewsets.ModelViewSet):
         trip = self.get_object()
         trip_stops = trip.trip_stops.order_by('stop_datetime')
         serializer = TripStopSerializer(trip_stops, many=True)
-        return Response(serializer.data)    
+        return Response(serializer.data)   
+    
+    @action(detail=True, methods=['get'], url_path='passengers')  
+    def get_passengers(self, request, pk=None):
+        """
+        Returns all passengers associated with a trip.
+        GET /api/trips/passengers
+        """
+        trip = self.get_object()
+        tickets = Ticket.objects.filter(trip_segment__trip=trip).order_by('passenger__name')
+        serializer = TicketSerializer(tickets, many=True)
+        return Response(serializer.data)     
     
 
 class TripStopViewSet(viewsets.ModelViewSet):
