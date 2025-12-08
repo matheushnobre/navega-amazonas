@@ -187,13 +187,16 @@ class TripStopSerializer(serializers.ModelSerializer):
         
 class TripSerializer(serializers.ModelSerializer):    
     trip_stops = TripStopSerializer(many=True, read_only=True)
+    vessel = serializers.PrimaryKeyRelatedField(
+        queryset=Vessel.objects.all()
+    )
     
     class Meta:
         model = Trip
         fields = ['id', 'active', 'departure_datetime', 'arrival_datetime', 'departure_harbor', 'arrival_harbor', 'individual_base_price', 'cabin_base_price', 'vessel', 'trip_stops']
         read_only_fields = ['active', 'trip_stops']
         ordering_fields = ['departure_datetime']
-        
+    
     def get_fields(self):
         fields = super().get_fields()
 
@@ -225,6 +228,7 @@ class TripSerializer(serializers.ModelSerializer):
         )
 
         data['trip_stops'] = ordered_stops
+        data['vessel'] = VesselSerializer(instance.vessel).data
         return data
     
     def update(self, instance, validated_data):
@@ -274,10 +278,18 @@ class UserMeSerializer(serializers.ModelSerializer):
 class TripSegmentSerializer(serializers.ModelSerializer):
     from_stop = TripStopSerializer()
     to_stop = TripStopSerializer()
+    trip = serializers.PrimaryKeyRelatedField(
+        queryset=Trip.objects.all()
+    )
 
     class Meta:
         model = TripSegment
         fields = '__all__'
+        
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['trip'] = TripSerializer(instance.trip).data
+        return rep   
         
 class TicketSerializer(serializers.ModelSerializer):
     passenger = serializers.PrimaryKeyRelatedField(
