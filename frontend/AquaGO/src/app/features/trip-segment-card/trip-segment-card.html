@@ -1,8 +1,7 @@
 <div class="segment-card">
   <div class="left">
     <h3 class="city">{{ segment.from_stop.harbor.name }} → {{ segment.to_stop.harbor.name }}</h3>
-
-    <div class="datetime-block">
+ <div class="datetime-block">
       <div>
         <span class="label">Data de saída</span>
         <span class="date">{{ segment.from_stop.stop_datetime | date: 'dd/MM/yyyy' }}</span>
