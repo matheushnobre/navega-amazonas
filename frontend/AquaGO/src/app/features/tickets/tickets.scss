@@ -1,0 +1,40 @@
+.page-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.enterprise-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 900px;
+  margin-top: 5rem;
+  padding: 0 1rem;
+}
+
+.trips {
+  width: 100%;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;       
+  border-radius: 0.5rem;   
+  box-shadow: 0 0 0.1rem #1e1e1e;
+}
+
+.table-responsive {
+  margin: 0;
+}
+
+.table {
+  margin-bottom: 0;
+  border-radius: 0 !important;  // evita borda dupla
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8f9fa;
+}

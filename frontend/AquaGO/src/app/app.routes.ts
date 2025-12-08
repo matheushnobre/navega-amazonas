@@ -10,6 +10,7 @@ import { EditEnterprise } from './features/edit/edit-enterprise/edit-enterprise'
 import { Checkout } from './features/checkout/checkout';
 import { RegisterTrip } from './features/register/register-trip/register-trip';
 import { EditVessel } from './features/edit/edit-vessel/edit-vessel';
+import { Tickets } from './features/tickets/tickets';
 
 export const routes: Routes = [
     {path:'',redirectTo:'home',pathMatch:'full'},
@@ -23,5 +24,6 @@ export const routes: Routes = [
     {path:'register',component:RegisterUser},
     {path:'dashboard',component:Dashboard},
     {path:'enterprise/:id',component:Enterprise},
-    {path: 'checkout/:id', component:Checkout}
+    {path: 'checkout/:id', component:Checkout},
+    {path: 'tickets', component:Tickets}
 ];
