@@ -4,7 +4,6 @@ import { environment } from '../../../environments/environments';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../core/services/user-service';
 import { Nav } from '../../core/components/nav/nav';
-import { CustomButton } from '../../shared/components/custom-button/custom-button';
 import { Footer } from '../../core/components/footer/footer';
 import { TripSegment } from '../../shared/models/tripSegment';
 import { DatePipe } from '@angular/common';
@@ -12,7 +11,7 @@ import { Vessel } from '../vessel/vessel';
 
 @Component({
   selector: 'app-tickets',
-  imports: [Nav, CustomButton, Footer, DatePipe],
+  imports: [Nav, Footer, DatePipe],
   templateUrl: './tickets.html',
   styleUrl: './tickets.scss',
 })
