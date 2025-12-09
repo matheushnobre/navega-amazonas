@@ -83,7 +83,7 @@ export class Checkout implements OnInit {
     this.ticketService.add(ticket).subscribe({
       next: () => {
         alert(`Passagem reservada e pendente de pagamento. ${this.segment?.from_stop?.harbor?.name} → ${this.segment?.to_stop?.harbor?.name}`);
-        this.router.navigate(['/']); // volta para home, mas assim que eu fizer certinho vai levar pro historico do passageiro pra de la ele poder pagar a passagem
+        this.router.navigate(['/tickets']); // volta para home, mas assim que eu fizer certinho vai levar pro historico do passageiro pra de la ele poder pagar a passagem
       },
       error: (err) => {
         const backend = err.error;
