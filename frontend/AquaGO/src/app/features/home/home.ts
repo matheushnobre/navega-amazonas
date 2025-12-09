@@ -114,19 +114,19 @@ export class Home implements AfterViewInit, OnInit{
       return `${year}-${month}-${day}`;
   }
 
-search() {
-  const apiDate = this.convertDate(this.selectedDate);
+  search() {
+    const apiDate = this.convertDate(this.selectedDate);
 
-  this.tripSegmentService
-    .search(this.selectedDepartureCity, this.selectedArrivalCity, apiDate)
-    .subscribe({
-      next: (dados) => {
-        this.tripSegments = Array.isArray(dados) ? dados : [];
+    this.tripSegmentService
+      .search(this.selectedDepartureCity, this.selectedArrivalCity, apiDate)
+      .subscribe({
+        next: (dados) => {
+          this.tripSegments = Array.isArray(dados) ? dados : [];
 
-        if (this.tripSegments.length === 0) {
-          alert("Não há viagens condizentes com o que foi repassado.");
-        }
-      },
+          if (this.tripSegments.length === 0) {
+            alert("Não há viagens condizentes com o que foi repassado.");
+          }
+        },
 
       error: (err) => {
         if (err.status === 400) {
@@ -138,6 +138,5 @@ search() {
         console.error(err);
       }
     });
-}
-
+  }
 }

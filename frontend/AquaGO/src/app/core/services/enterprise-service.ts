@@ -6,6 +6,7 @@ import { TokenService } from './token-service';
 import { HttpClient } from '@angular/common/http';
 import { toFormData } from '../utils/form-data';
 import { vessel } from '../../shared/models/vessel';
+import { trip } from '../../shared/models/trip';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,10 @@ export class EnterpriseService {
   getVessels(id:number):Observable<vessel[]>{
     const headers = this.token.getAuthHeaders();
     return this.http.get<vessel[]>(`${this.API}${id}/vessels`,{headers});
+  }
+  getTrips(id:number):Observable<trip[]>{
+    const headers = this.token.getAuthHeaders();
+    return this.http.get<trip[]>(`${this.API}${id}/trips`,{headers});
   }
   update(id:number,dados:enterprise):Observable<enterprise>{
     const headers = this.token.getAuthHeaders();

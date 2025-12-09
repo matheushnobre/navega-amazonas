@@ -1,4 +1,4 @@
-.custom-input{
+.custom-input {
     display: flex;
     align-items: center;
     background-color: white;
@@ -6,9 +6,9 @@
     overflow: hidden;
     height: auto;
     justify-content: center;
-    align-items: center;
 }
-input{
+
+.custom-input input {
     border: none;
     padding: 0.5rem 0;
     background: transparent;
@@ -16,31 +16,25 @@ input{
     min-width: 0;
     line-height: 1.5;
 }
-input:active,input:hover,input:focus{
-    border: none;
+
+.custom-input input:focus {
     outline: none;
 }
-.custom-input:focus-within{
+
+.custom-input:focus-within {
     background-color: #f4f4f4;
 }
+
 input[type="date"]::-webkit-calendar-picker-indicator {
-    display: none;
-    -webkit-appearance: none;
+    opacity: 0;
 }
 
-.primary{
+.primary {
     background-color: var(--color-primary);
     color: white;
     border: none;
 }
-.primary:hover,.primary:active{
-    background-color: var(--color-primary-activated)
-}
-input[type="datetime-local"]::-webkit-datetime-edit {
-  color: transparent;
-}
 
-input[type="datetime-local"]:focus::-webkit-datetime-edit,
-input[type="datetime-local"]:valid::-webkit-datetime-edit {
-  color: inherit;
+.primary:hover, .primary:active {
+    background-color: var(--color-primary-activated);
 }

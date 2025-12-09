@@ -26,8 +26,6 @@ export class RegisterVessel {
     number_of_cabins: 0,
     vessel_type:"barco"
   }
-  id!:number
-
   constructor(
     private vesselService:VesselService,
     private location:Location,
@@ -53,8 +51,7 @@ export class RegisterVessel {
     })
   }
   loadUser(){
-    this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-
+    this.vessel.enterprise = Number(this.activatedRoute.snapshot.paramMap.get('id'));
   }
   onSelect(event:any){
     this.vessel.vessel_type = event.target.value;

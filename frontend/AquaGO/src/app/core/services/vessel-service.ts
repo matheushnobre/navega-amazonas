@@ -29,7 +29,7 @@ export class VesselService {
   }
   del(id:number){
     const headers = this.token.getAuthHeaders();
-    return this.http.delete(`${this.API}${id}/`,{headers});
+    return this.http.delete(`${this.API}${id}/hh`,{headers});
   }
   update(id:number,data:vessel):Observable<vessel>{
     const headers = this.token.getAuthHeaders();

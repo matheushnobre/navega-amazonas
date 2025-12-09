@@ -21,13 +21,17 @@
                 <tbody>
                     @if(vessels.length>0){
                         @for (vessel of vessels; track $index) {                            
-                            <tr (click)="select(vessel.id!)" style="vertical-align: middle;">
+                            <tr style="vertical-align: middle;">
                                 <td><img [src]="path+vessel.image" width="36px" height="36px" style="border-radius:300px;border: 0.01rem solid var(--color-primary);"></td>
                                 <td class="fs-6">{{vessel.name}}</td>
-                                <td class="fs-6">{{vessel.vessel_type}}</td>
+                                @if (vessel.vessel_type=="BOAT") {
+                                    <td class="fs-6">Barco</td>
+                                }@else {
+                                    <td class="fs-6">Lancha</td>
+                                }
                                 <td class="d-flex gap-2 justify-content-end">
-                                    <button class="btn btn-warning" (click)="edit(vessel.id!);$event.stopPropagation()">Editar</button>
-                                    <button class="btn btn-danger" (click)="del(vessel.id!); $event.stopPropagation()">Excluir</button>
+                                    <button class="btn btn-warning" (click)="editVessel(vessel.id!);$event.stopPropagation()">Editar</button>
+                                    <button class="btn btn-danger" (click)="delVessel(vessel.id!); $event.stopPropagation()">Excluir</button>
                                 </td>
                             </tr> 
                         }
@@ -37,12 +41,33 @@
         </section>
         <section name="routes" class="w-100 px-2">
             <div class="trips w-100 d-flex flex-row justify-content-between">
-                <h3 class="fs-5 fw-bold">Minhas Rotas</h3>
+                <h3 class="fs-5 fw-bold">Minhas viagens</h3>
                 <app-custom-button
                     name="Adicionar"
                     (click)="addTrip()"
                 ></app-custom-button>
             </div>
+            <table class="table table-hover w-100 mt-3">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(trips.length>0){
+                        @for (trip of trips; track $index) {                            
+                            <tr (click)="selectTrip(trip.id!)" style="vertical-align: middle;">
+                                <td class="fs-6">{{trip.arrival_datetime}}</td>
+                                <td class="d-flex gap-2 justify-content-end">
+                                    <button class="btn btn-warning" (click)="editTrip(trip.id!);$event.stopPropagation()">Editar</button>
+                                    <button class="btn btn-danger" (click)="delTrip(trip.id!); $event.stopPropagation()">Excluir</button>
+                                </td>
+                            </tr> 
+                        }
+                    }
+                </tbody>
+            </table>
         </section>
     </div>
     <app-footer class="mt-5 w-100"></app-footer>

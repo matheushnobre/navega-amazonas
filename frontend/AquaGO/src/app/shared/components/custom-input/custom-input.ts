@@ -9,7 +9,7 @@ import { CustomInputValue } from '../../types/input';
 })
 export class CustomInput {
   @Input()
-  type: "text" | "email" | "number"| "date" | "password" | "file" | "datetime-local" = "text";
+  type: "text" | "email" | "number"| "date" | "password" | "file" | "time" = "text";
   @Input()
   type_input: "standard" | "email" | "date" | "person" | "password" | "file" = "standard";
   @Input()
@@ -27,10 +27,15 @@ export class CustomInput {
     } else if (this.type === 'number') {
       value = Number(event.target.value);
     } else if (this.type === 'date') {
-      value = new Date(event.target.value);
+      value = event.target.value;
     } else{
       value = event.target.value;
     }
     this.valueChange.emit(value);
   }
+  blockKeyboard(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
 }

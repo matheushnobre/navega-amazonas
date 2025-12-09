@@ -1,34 +1,58 @@
 <div class="custom-input w-100 gap-2" style="border: 0.05rem solid var(--border, #ADABAB);">
+
     @if(type_input == "person"){
         <img class="ps-2 py-1" src="assets/icons/person.svg">
     }
+
     @if(type_input == "date"){
         <img class="ps-2 py-1" src="assets/icons/calendar.svg">
     }
+
     @if(type=="text" || type=="email"){
         <input  
             class="px-2 py-2" 
-            type={{type}} 
-            placeholder={{placeholder}}
-            [value] = "value"
+            type="{{type}}"
+            placeholder="{{placeholder}}"
+            [value]="value"
             (input)="onInputChange($event)"
             (change)="onInputChange($event)">
     }
-    @else if (type=="file" || type == "datetime-local") {
+
+    @else if (type == "file" || type == "time") {
         <input 
-            type={{type}} 
+            type="{{type}}"
             class="px-2 py-2"
-            [value] = "value"
-            (input)="onInputChange($event)"
+            #dt
+            (focus)="dt.showPicker()"
+            (click)="dt.showPicker()"
+            (keydown)="blockKeyboard($event)"
+            (beforeinput)="blockKeyboard($event)"
+            (input)="blockKeyboard($event)"
+            (paste)="blockKeyboard($event)"
+            (drop)="blockKeyboard($event)"
+            [value]="value"
             (change)="onInputChange($event)">
     }
+
+    @else if (type == "date") {
+        <input 
+            type="date"
+            class="px-2 py-2"
+            #dt
+            (focus)="dt.showPicker()"
+            (click)="dt.showPicker()"
+            [value]="value"
+            (change)="onInputChange($event)">
+    }
+
     @else {
         <input 
-            type={{type}} 
+            type="{{type}}" 
             class="px-2 py-2" 
             min="0"
-            [value] = "value"
-            placeholder={{placeholder}} (input)="onInputChange($event)"
+            placeholder="{{placeholder}}"
+            [value]="value"
+            (input)="onInputChange($event)"
             (change)="onInputChange($event)">
     }
 </div>

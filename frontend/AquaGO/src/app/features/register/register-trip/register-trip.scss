@@ -18,3 +18,15 @@
     align-items: center;
     width: 100%;
 }
+.left{
+    flex-direction: column;
+}
+.right{
+    flex-direction: column;
+}
+select{
+    border-color: var(--color-border);
+}
+.h-form{
+    margin: 1rem 0;
+}

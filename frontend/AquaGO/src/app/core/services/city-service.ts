@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { TokenService } from './token-service';
 import { HttpClient } from '@angular/common/http';
 import { toFormData } from '../utils/form-data';
+import { Harbor } from '../../shared/models/harbor';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,10 @@ export class CityService {
   get(id:number):Observable<City>{
     const headers = this.token.getAuthHeaders();
     return this.http.get<City>(`${this.API}${id}`,{headers});
+  }
+  getHarbors(id:number):Observable<Harbor[]>{
+    const headers = this.token.getAuthHeaders();
+    return this.http.get<Harbor[]>(`${this.API}${id}/harbors/`,{headers});
   }
   update(id:number,dados:City):Observable<City>{
     const headers = this.token.getAuthHeaders();

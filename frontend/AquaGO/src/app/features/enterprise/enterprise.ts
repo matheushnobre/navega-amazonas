@@ -8,6 +8,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { VesselService } from '../../core/services/vessel-service';
 import { environment } from '../../../environments/environments';
 import { EnterpriseService } from '../../core/services/enterprise-service';
+import { trip } from '../../shared/models/trip';
+import { TripService } from '../../core/services/trip-service';
 
 @Component({
   selector: 'app-enterprise',
@@ -17,15 +19,18 @@ import { EnterpriseService } from '../../core/services/enterprise-service';
 })
 export class Enterprise {
   vessels:vessel [] = [];
+  trips:trip[] = [];
   id!:number;
   path = environment.apiUrl;
 
   constructor(private router:Router,
     private activatedRoute:ActivatedRoute,
     private enterpriseService:EnterpriseService,
-    private vesselService:VesselService){
+    private vesselService:VesselService,
+  ){
       this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-      this.load();
+      this.loadVessels();
+      this.loadTrips();
   }
   addVessel(){
     this.router.navigate(['register-vessel',this.id])
@@ -33,7 +38,7 @@ export class Enterprise {
   addTrip(){
     this.router.navigate(['register-trip',this.id])
   }
-  load(){
+  loadVessels(){
     this.enterpriseService.getVessels(this.id).subscribe({
       next:(dados)=> {
           this.vessels = dados;
@@ -43,13 +48,27 @@ export class Enterprise {
       },
     })
   }
+  loadTrips(){
+    console.log("abriu")
+    this.enterpriseService.getTrips(this.id).subscribe({
+      next:(data)=> {
+        console.log(data)
+        this.trips = data;
+      },error:(err)=> {
+        this.trips = []
+      },
+    })
+  }
   select(event:any){
 
   }
-  edit(id:number){
+  selectTrip(event:any){
+
+  }
+  editVessel(id:number){
     this.router.navigate(['edit-vessel',id])
   }
-  del(id:number){
+  delVessel(id:number){
     this.vesselService.del(id).subscribe({
       next:(dados)=>{
         alert("Embarcação deletada com Sucesso")
@@ -59,5 +78,11 @@ export class Enterprise {
         console.log("falha ao deletar:",err);
       }
     });
+  }
+  editTrip(id:number){
+
+  }
+  delTrip(id:number){
+
   }
 }
