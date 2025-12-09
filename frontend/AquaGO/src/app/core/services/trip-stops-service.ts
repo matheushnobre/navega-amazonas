@@ -12,12 +12,16 @@ import { toFormData } from '../utils/form-data';
 export class TripStopsService {
   
   apiURL = environment.apiUrl;
-  API = `${this.apiURL}/api/trip_segments/`;
+  API = `${this.apiURL}/api/trip_stops/`;
   constructor(private token:TokenService,private http:HttpClient){}
 
   add(dados: TripStop):Observable<TripStop>{
-      const headers = this.token.getAuthHeaders();
-      const formData = toFormData(dados);
-      return this.http.post<TripStop>(`${this.API}`,formData,{headers});
-    }
+    const headers = this.token.getAuthHeaders();
+    const formData = toFormData(dados);
+    return this.http.post<TripStop>(`${this.API}`,formData,{headers});
+  }
+  delete(id:number){
+    const headers = this.token.getAuthHeaders();    
+    return this.http.delete(`${this.API}${id}/`,{headers});
+  }
 }
