@@ -51,7 +51,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='tickets')  
     def get_tickets(self, request):
         user = request.user
-        tickets = Ticket.objects.filter(passenger=user, active=True)
+        tickets = Ticket.objects.filter(passenger=user, active=True).order_by('-trip_segment__from_stop__stop_datetime')
         serializer = TicketSerializer(tickets, many=True)
         return Response(serializer.data)
     
@@ -225,7 +225,7 @@ class TripSegmentViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)    
     
 class TicketViewSet(viewsets.ModelViewSet):
-    queryset = Ticket.objects.all()
+    queryset = Ticket.objects.all().order_by('-trip_segment__from_stop__stop_datetime')
     serializer_class = TicketSerializer
     
     @action(detail=True, methods=['get'], url_path='payment')
