@@ -41,13 +41,13 @@
 
                 <td class="fs-6">
                   @if (isTripSegment(ticket.trip_segment)) {
-                    {{ ticket.trip_segment.from_stop.stop_datetime | date:'dd/MM/yyyy' }}
+                    {{ ticket.trip_segment.from_stop.stop_datetime | date:'dd/MM/yyyy': 'UTC-4' }}
                   }
                 </td>
 
                 <td class="fs-6">
                   @if (isTripSegment(ticket.trip_segment)) {
-                    {{ ticket.trip_segment.from_stop.stop_datetime | date:'HH:mm' }}
+                    {{ ticket.trip_segment.from_stop.stop_datetime | date:'HH:mm': 'UTC-4' }}
                   }
                 </td>
 
