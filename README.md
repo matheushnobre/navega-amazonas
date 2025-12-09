@@ -3,7 +3,7 @@
 
 Projeto fullstack utilizando Python + Django no backend e Angular + Node no frontend.
 
-Este projeto tem como objetivo ser uma aplicação web que permita a venda de passagens fluviais na Região Norte do Brasil.
+Este projeto tem como objetivo ser uma aplicação web que permita a venda de passagens fluviais na Região Norte do Brasil e foi desenvolvido durante a disciplina de Proramação Web do Instituto Federal do Amazonas (IFAM) campus Parintins por Lucas Ferreira, Matheus Nobre e Robert Cruz.
 
 Dentre as funcionalidades estão:
 
