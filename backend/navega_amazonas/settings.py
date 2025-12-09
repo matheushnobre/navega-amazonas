@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-cv_yw9_g!36kd1r15ty7iz+i9#q)2(yfign08-=+x=)mrubpw-
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    os.environ.get("ALLOWED_HOST", ""),
+    "aquago.onrender.com",
     "localhost",
     "127.0.0.1",
 ]
