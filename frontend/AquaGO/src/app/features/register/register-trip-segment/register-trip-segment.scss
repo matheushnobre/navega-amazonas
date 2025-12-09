@@ -1,0 +1,32 @@
+.container-fluid{
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.register{
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    padding: 5rem 0 2rem 0;
+    flex: 1 0 auto;
+}
+.card{
+    align-items: center;
+    width: 100%;
+}
+.left{
+    flex-direction: column;
+}
+.right{
+    flex-direction: column;
+}
+select{
+    border-color: var(--color-border);
+}
+.h-form{
+    margin: 1rem 0;
+}

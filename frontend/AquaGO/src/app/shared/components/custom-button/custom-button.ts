@@ -12,7 +12,7 @@ export class CustomButton {
   name!:string;
 
   @Input()
-  variant: "light"| "light_outline" |"primary" | "warning" = "primary";
+  variant: "light"| "light_outline" |"primary" | "del" | "warning" = "primary";
 
   @Output() clicked = new EventEmitter<void>();
 

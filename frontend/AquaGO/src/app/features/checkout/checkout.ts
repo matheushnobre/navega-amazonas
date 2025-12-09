@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { Nav } from '../../core/components/nav/nav';
 import { TicketService } from '../../core/services/ticket-service';
 import { Ticket } from '../../shared/models/ticket';
+import { Harbor } from '../../shared/models/harbor';
 
 @Component({
   selector: 'app-checkout',
@@ -82,9 +83,29 @@ export class Checkout implements OnInit {
     console.log(ticket)
     this.ticketService.add(ticket).subscribe({
       next: () => {
-        alert(`Passagem reservada e pendente de pagamento. ${this.segment?.from_stop?.harbor?.name} → ${this.segment?.to_stop?.harbor?.name}`);
-        this.router.navigate(['/']); // volta para home, mas assim que eu fizer certinho vai levar pro historico do passageiro pra de la ele poder pagar a passagem
-      },
+        const seg = this.segment;
+
+        if (!seg || !seg.from_stop || !seg.to_stop) {
+          alert("Erro: dados da viagem incompletos.");
+          return;
+        }
+
+        const fromHarbor =
+          seg.from_stop.harbor && typeof seg.from_stop.harbor === 'object'
+            ? seg.from_stop.harbor.name
+            : "(porto indefinido)";
+
+        const toHarbor =
+          seg.to_stop.harbor && typeof seg.to_stop.harbor === 'object'
+            ? seg.to_stop.harbor.name
+            : "(porto indefinido)";
+
+        alert(`Passagem reservada e pendente de pagamento. ${fromHarbor} → ${toHarbor}`);
+
+        this.router.navigate(['/']);
+      }
+
+      ,
       error: (err) => {
         const backend = err.error;
         
@@ -104,4 +125,8 @@ export class Checkout implements OnInit {
   cancel() {
     this.router.navigate(['/']); // volta para home
   }
+  getHarborName(harbor: number | Harbor | null | undefined): string {
+    return harbor && typeof harbor === 'object' ? harbor.name : '';
+  }
+
 }

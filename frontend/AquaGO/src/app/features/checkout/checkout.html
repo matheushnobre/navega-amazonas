@@ -4,8 +4,8 @@
 
 <section class="segment-info">
     <h3>Detalhes da viagem</h3>
-    <p><strong>Origem:</strong> {{ segment?.from_stop?.harbor?.name }}</p>
-    <p><strong>Destino:</strong> {{ segment?.to_stop?.harbor?.name }}</p>
+    <p><strong>Origem:</strong> {{ getHarborName(segment?.from_stop?.harbor) }}</p>
+    <p><strong>Destino:</strong> {{ getHarborName(segment?.to_stop?.harbor) }}</p>
     <p><strong>Data:</strong> {{ segment?.from_stop?.stop_datetime | date:'dd/MM/yyyy' }}</p>
     <p><strong>Hora:</strong> {{ segment?.from_stop?.stop_datetime | date:'HH:mm': 'UTC-4' }}</p>
     <p><strong>Preço:</strong> R$ {{ segment?.individual_price }}</p>

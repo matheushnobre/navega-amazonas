@@ -22,4 +22,12 @@ export class TripService {
     const headers = this.token.getAuthHeaders();
     return this.http.post<trip>(this.API, formData,{headers});
   }
+  delete(id:number){
+    const headers = this.token.getAuthHeaders();
+    return this.http.delete(`${this.API}${id}/`,{headers});
+  }
+  getAll(id:number):Observable<trip>{
+    const headers = this.token.getAuthHeaders();
+    return this.http.get<trip>(`${this.API}${id}/`,{headers});
+  }
 }

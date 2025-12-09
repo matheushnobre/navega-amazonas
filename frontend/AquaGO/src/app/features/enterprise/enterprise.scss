@@ -17,8 +17,9 @@
     box-shadow: 0 0 0.1rem #1e1e1e;
     border-radius: 0.5rem;
     overflow: hidden;
+    max-width: 100%;
 }
-.trips{
+.trips,.routes{
     display: flex;
     flex-direction: column;
     width: 100%;

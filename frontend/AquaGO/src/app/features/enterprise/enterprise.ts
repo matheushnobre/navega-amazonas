@@ -10,10 +10,11 @@ import { environment } from '../../../environments/environments';
 import { EnterpriseService } from '../../core/services/enterprise-service';
 import { trip } from '../../shared/models/trip';
 import { TripService } from '../../core/services/trip-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-enterprise',
-  imports: [Nav, Footer, CustomButton],
+  imports: [Nav, Footer, CustomButton,CommonModule],
   templateUrl: './enterprise.html',
   styleUrl: './enterprise.scss',
 })
@@ -26,6 +27,7 @@ export class Enterprise {
   constructor(private router:Router,
     private activatedRoute:ActivatedRoute,
     private enterpriseService:EnterpriseService,
+    private tripService:TripService,
     private vesselService:VesselService,
   ){
       this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
@@ -49,21 +51,13 @@ export class Enterprise {
     })
   }
   loadTrips(){
-    console.log("abriu")
     this.enterpriseService.getTrips(this.id).subscribe({
       next:(data)=> {
-        console.log(data)
         this.trips = data;
       },error:(err)=> {
         this.trips = []
       },
     })
-  }
-  select(event:any){
-
-  }
-  selectTrip(event:any){
-
   }
   editVessel(id:number){
     this.router.navigate(['edit-vessel',id])
@@ -79,10 +73,18 @@ export class Enterprise {
       }
     });
   }
-  editTrip(id:number){
-
+  detailTrip(id:number){
+    this.router.navigate(['vessel',id]);
   }
   delTrip(id:number){
-
+    this.tripService.delete(id).subscribe({
+      next:(dados)=>{
+        alert("Viagem deletada com sucesso");
+        this.loadTrips();
+      },error:(err)=>{
+        alert("Erro ao tentar deletar viagem");
+        console.log(err);
+      }
+    })
   }
 }

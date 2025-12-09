@@ -29,9 +29,11 @@
                                 }@else {
                                     <td class="fs-6">Lancha</td>
                                 }
-                                <td class="d-flex gap-2 justify-content-end">
-                                    <button class="btn btn-warning" (click)="editVessel(vessel.id!);$event.stopPropagation()">Editar</button>
-                                    <button class="btn btn-danger" (click)="delVessel(vessel.id!); $event.stopPropagation()">Excluir</button>
+                                <td>
+                                    <div  class="d-flex gap-2 justify-content-end">
+                                        <button class="btn btn-warning" (click)="editVessel(vessel.id!);$event.stopPropagation()">Editar</button>
+                                        <button class="btn btn-danger" (click)="delVessel(vessel.id!); $event.stopPropagation()">Excluir</button>
+                                    </div>
                                 </td>
                             </tr> 
                         }
@@ -39,7 +41,7 @@
                 </tbody>
             </table>
         </section>
-        <section name="routes" class="w-100 px-2">
+        <section name="routes" class="routes w-100 px-2">
             <div class="trips w-100 d-flex flex-row justify-content-between">
                 <h3 class="fs-5 fw-bold">Minhas viagens</h3>
                 <app-custom-button
@@ -50,20 +52,49 @@
             <table class="table table-hover w-100 mt-3">
                 <thead>
                     <tr>
-                        <th scope="col"></th>
+                        <th scope="col">Embarcação</th>
+                        <th scope="col" class="text-center">Partida</th>
+                        <th scope="col" class="text-center">Chegada</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if(trips.length>0){
                         @for (trip of trips; track $index) {                            
-                            <tr (click)="selectTrip(trip.id!)" style="vertical-align: middle;">
-                                <td class="fs-6">{{trip.arrival_datetime}}</td>
-                                <td class="d-flex gap-2 justify-content-end">
-                                    <button class="btn btn-warning" (click)="editTrip(trip.id!);$event.stopPropagation()">Editar</button>
-                                    <button class="btn btn-danger" (click)="delTrip(trip.id!); $event.stopPropagation()">Excluir</button>
+                            <tr style="vertical-align: middle;">
+                                <td class="text-center">
+                                    {{ typeof trip.vessel === 'object' ? trip.vessel.name : '' }}
                                 </td>
-                            </tr> 
+
+                                <td class="fs-6">
+                                    <div class="d-flex gap-3">
+                                        <span>{{ trip.departure_datetime | date:'dd/MM/yyyy' }}</span>
+                                        <span>{{ trip.departure_datetime | date:'HH:mm' }}</span>
+                                    </div>
+                                </td>
+
+                                <td class="fs-6">
+                                    <div class="d-flex gap-3">
+                                        <span>{{ trip.arrival_datetime | date:'dd/MM/yyyy' }}</span>
+                                        <span>{{ trip.arrival_datetime | date:'HH:mm' }}</span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <app-custom-button
+                                            name="detalhar"
+                                            (click)="detailTrip(trip.id!); $event.stopPropagation()"
+                                        ></app-custom-button>
+                                        <app-custom-button
+                                            name="excluir"
+                                            variant="del"
+                                            (click)="delTrip(trip.id!); $event.stopPropagation()"
+                                        ></app-custom-button>
+                                    </div>
+                                </td>
+                            </tr>
+
                         }
                     }
                 </tbody>
