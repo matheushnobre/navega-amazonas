@@ -13,25 +13,22 @@
                 <thead>
                     <tr>
                         <th scope="col">Porto</th>
+                        <th scope="col">Data</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (stop of trip.trip_stops; track $index) {                            
                             <tr style="vertical-align: middle;">
-                                <td class="fs-6">{{stop.harbor.name}}</td>
+                                <td class="fs-6">{{getHarborName(stop?.harbor)}}</td>
+                                <td class="fs-6">{{stop.stop_datetime}}</td>
                                 @if ($index !== 0 && $index !== trip.trip_stops!.length - 1) {
-                                 
                                     <td>
                                         <div class="d-flex gap-2 justify-content-end">
                                             <app-custom-button
-                                                name="detalhar"
-                                                (click)="edit(trip.id!); $event.stopPropagation()"
-                                            ></app-custom-button>
-                                            <app-custom-button
                                                 name="excluir"
                                                 variant="del"
-                                                (click)="del(trip.id!); $event.stopPropagation()"
+                                                (click)="del(stop.id!); $event.stopPropagation()"
                                             ></app-custom-button>
                                         </div>
                                     </td>

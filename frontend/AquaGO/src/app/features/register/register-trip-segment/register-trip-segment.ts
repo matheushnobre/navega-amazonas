@@ -5,7 +5,7 @@ import { CustomButton } from "../../../shared/components/custom-button/custom-bu
 import { Harbor } from '../../../shared/models/harbor';
 import { City } from '../../../shared/models/city';
 import { CityService } from '../../../core/services/city-service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Footer } from "../../../core/components/footer/footer";
 import { ActivatedRoute } from '@angular/router';
@@ -24,12 +24,17 @@ export class RegisterTripSegment {
   citys:City[] = [];
 
   selectedCity:City| null = null;
-  tripStop:TripStop = new TripStop();
+  tripStop:TripStop ={
+    harbor:0,
+    stop_datetime:'',
+    trip:0
+  };
 
   stop_date:string = "2025-05-20";
   stop_time:string = '05:00';
 
   constructor(
+    private location:Location,
     private cityService:CityService,
     private tripStopService:TripStopsService,
     private activatedRoute:ActivatedRoute
@@ -64,16 +69,20 @@ export class RegisterTripSegment {
   }
   register(event:Event){
     event.preventDefault();
+    this.reloadData();
+    console.log(this.tripStop);
     this.tripStopService.add(this.tripStop).subscribe({
       next:(value)=> {
-        alert("Parada cadastrada com sucesso");
+        alert("Parada cadastrada");
+        this.location.back();
+
       },error:(err)=> {
         alert("Erro ao cadastrar parada");
       },
     });
   }
   reloadData(){
-    const stop_datetime = new Date(`${this.stop_date}T${this.stop_time}:00`);
-    this.tripStop.stop_datetime = stop_datetime.toISOString();
+    const stop_datetime_local = `${this.stop_date}T${this.stop_time}:00-04:00`;
+    this.tripStop.stop_datetime = stop_datetime_local;
   }
 }
