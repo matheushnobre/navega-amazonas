@@ -1,5 +1,7 @@
 import mercadopago
-sdk = mercadopago.SDK("APP_USR-5111301254319352-120909-61845ddcb8017c37cbe3252dd532c0d1-3051901638")
+from django.conf import settings
+
+sdk = mercadopago.SDK(settings.MERCADOPAGO_ACESS_TOKEN)
 
 def generate_payment_link(departure_harbor, arrival_harbor, price):
     payment_data = {
