@@ -25,4 +25,12 @@ export class TicketService {
     const headers = this.token.getAuthHeaders();
     return this.http.get<Ticket>(`${this.API}${id}`,{headers});
   }
+
+  get_payment_link(id: number): Observable<{ link: string }> {
+    const headers = this.token.getAuthHeaders();
+    return this.http.get<{ link: string }>(
+      `${this.API}${id}/payment/`,
+      { headers }
+    );
+  }
 }
