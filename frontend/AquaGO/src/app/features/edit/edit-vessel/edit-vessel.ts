@@ -7,11 +7,12 @@ import { Footer } from "../../../core/components/footer/footer";
 import { VesselService } from '../../../core/services/vessel-service';
 import { ActivatedRoute } from '@angular/router';
 import { vessel } from '../../../shared/models/vessel';
+import { FormsModule } from "@angular/forms";
 import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-edit-vessel',
-  imports: [Nav, ImgInput, CustomInput, CustomButton, Footer],
+  imports: [Nav, ImgInput, CustomInput, CustomButton, Footer, FormsModule],
   templateUrl: './edit-vessel.html',
   styleUrl: './edit-vessel.scss',
 })
@@ -22,7 +23,7 @@ export class EditVessel {
     registry_code: "",
     individual_capacity: 0,
     number_of_cabins:0,   
-    vessel_type: "barco" 
+    vessel_type: "" 
   }
   
   id!:number
@@ -49,8 +50,9 @@ export class EditVessel {
       this.vessel.vessel_type = "LANCHA";
     }
     this.vesselService.update(this.id,this.vessel).subscribe({
-      next(value) {
+      next:(value)=> {
           alert('Embarcação Editada com sucesso');
+          this.location.back();
       },error:(value)=>{
         alert('Erro ao cadastrar embarcação');
         console.log(value);

@@ -38,6 +38,6 @@ export class Login {
     });
   }
   reverse(){
-    this.router.navigate(['register'])
+    this.router.navigate(['register-user'])
   }
 }

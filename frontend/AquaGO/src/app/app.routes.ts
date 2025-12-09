@@ -23,6 +23,7 @@ export const routes: Routes = [
     {path:'edit-enterprise/:id',component:EditEnterprise},
     {path:'edit-vessel/:id',component:EditVessel},
     
+    {path:'register-user', component:RegisterUser},
     {path:'register-enterprise',canActivate:[authGuard], component:RegisterEnterprise},
     {path:'register-vessel/:id',canActivate:[authGuard],component:RegisterVessel},
     {path:'register-trip/:id',canActivate:[authGuard],component:RegisterTrip},

@@ -8,6 +8,7 @@ import { Footer } from '../../core/components/footer/footer';
 import { TripSegment } from '../../shared/models/tripSegment';
 import { DatePipe } from '@angular/common';
 import { Vessel } from '../vessel/vessel';
+import { Harbor } from '../../shared/models/harbor';
 
 @Component({
   selector: 'app-tickets',
@@ -55,4 +56,8 @@ export class Tickets implements OnInit {
   pay(ticket_id: number){
     
   }
+  getHarborName(harbor: number | Harbor | null | undefined): string {
+    return harbor && typeof harbor === 'object' ? harbor.name : '';
+  }
+
 }

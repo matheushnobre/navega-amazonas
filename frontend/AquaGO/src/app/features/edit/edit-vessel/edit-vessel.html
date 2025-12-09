@@ -18,11 +18,18 @@
             <label class="w-100 fw-bold" for="name">Nome da Embarcação:</label>
             <div class="d-flex w-100 gap-3">
                 <div class="form-check">
-                    <input type="radio" class="form-check-input" id="radio1" name="optradio" value="barco" (change)="onSelect($event)" checked>Barco
+                    <input type="radio" 
+                    class="form-check-input" id="radio1" name="optradio" 
+                    value="barco" 
+                    [(ngModel)]="vessel.vessel_type">Barco
                     <label class="form-check-label" for="radio1"></label>
                 </div>
                 <div class="form-check">
-                    <input type="radio" class="form-check-input" id="radio2" name="optradio" value="lancha" (change)="onSelect($event)">Lancha
+                    <input type="radio" 
+                    class="form-check-input" id="radio2" name="optradio" 
+                    value="lancha"
+                    [(ngModel)]="vessel.vessel_type"
+                    >Lancha
                     <label class="form-check-label" for="radio2"></label>
                 </div>
             </div>
@@ -43,7 +50,7 @@
                 placeholder="111.111.111/11-1"
                 [(value)]="vessel.individual_capacity"
             ></app-custom-input>
-            @if (vessel.vessel_type) {
+            @if (vessel.vessel_type === "BOAT" || vessel.vessel_type === "barco" ) {
                 <label class="w-100 fw-bold" for="name">Quantidade de Camarotes:</label>
                 <app-custom-input
                     type="number"

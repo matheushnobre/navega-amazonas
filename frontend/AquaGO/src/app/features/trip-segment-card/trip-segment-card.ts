@@ -3,6 +3,7 @@ import { DatePipe } from '@angular/common';
 import { TripSegment } from '../../shared/models/tripSegment';
 import { Router } from '@angular/router';
 import { CustomButton } from '../../shared/components/custom-button/custom-button';
+import { Harbor } from '../../shared/models/harbor';
 
 @Component({
   selector: 'app-trip-segment-card',
@@ -22,4 +23,8 @@ export class TripSegmentCard {
     console.log("comprar");
     this.router.navigate([this.buyRoute]);
   }
+  getHarborName(harbor: number | Harbor | null | undefined): string {
+    return harbor && typeof harbor === 'object' ? harbor.name : '';
+  }
+
 }
