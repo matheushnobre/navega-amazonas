@@ -94,8 +94,8 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
         GET /api/enterprises/trips/
         """
         enterprise = self.get_object()
-        trips = Trip.objects.filter(vessel_enterprise=enterprise)
-        serializer = TripSerialize(trips, many=True)
+        trips = Trip.objects.filter(vessel__enterprise=enterprise)
+        serializer = TripSerializer(trips, many=True)
         return Response(serializer.data)    
     
 class CityViewSet(viewsets.ModelViewSet):
