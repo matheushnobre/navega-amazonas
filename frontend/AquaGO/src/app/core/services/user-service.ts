@@ -7,6 +7,7 @@ import { customUser } from '../../shared/models/customUser';
 import { Observable } from 'rxjs';
 import { Enterprise } from '../../features/enterprise/enterprise';
 import { enterprise } from '../../shared/models/enterprise';
+import { Ticket } from '../../shared/models/ticket';
 
 @Injectable({
   providedIn: 'root',
@@ -32,4 +33,8 @@ export class UserService {
     return this.http.get<customUser>(`${this.API}me/`,{headers});
   }
 
+  getTickets(): Observable<Ticket[]>{
+    const headers = this.tokenService.getAuthHeaders();
+    return this.http.get<Ticket[]>(`${this.API}tickets/`,{headers});
+  }
 }

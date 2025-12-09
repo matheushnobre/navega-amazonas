@@ -11,6 +11,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils import timezone
+from .payment import generate_payment_link
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -50,7 +51,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='tickets')  
     def get_tickets(self, request):
         user = request.user
-        tickets = Ticket.objects.filter(passenger=user, active=True)
+        tickets = Ticket.objects.filter(passenger=user, active=True).order_by('-trip_segment__from_stop__stop_datetime')
         serializer = TicketSerializer(tickets, many=True)
         return Response(serializer.data)
     
@@ -224,5 +225,11 @@ class TripSegmentViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)    
     
 class TicketViewSet(viewsets.ModelViewSet):
-    queryset = Ticket.objects.all()
+    queryset = Ticket.objects.all().order_by('-trip_segment__from_stop__stop_datetime')
     serializer_class = TicketSerializer
+    
+    @action(detail=True, methods=['get'], url_path='payment')
+    def payment(self, request, pk=None):
+        ticket = self.get_object()
+        link = generate_payment_link(departure_harbor=ticket.trip_segment.from_stop.harbor.name, arrival_harbor=ticket.trip_segment.to_stop.harbor.name, price=float(ticket.price))
+        return Response({"link": link})
