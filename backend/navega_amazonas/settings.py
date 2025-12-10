@@ -166,7 +166,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",  # Angular
-    "https://navega-amazonas.vercel.app/home",
+    "https://navega-amazonas.vercel.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
