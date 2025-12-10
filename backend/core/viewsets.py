@@ -101,7 +101,6 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all().filter(active=True).order_by('name')
     serializer_class = CitySerializer
-    http_method_names = ['get']
     permission_classes = [AllowAny]
     
     @action(detail=True, methods=['get'], url_path='harbors')  
@@ -118,7 +117,6 @@ class CityViewSet(viewsets.ModelViewSet):
 class HarborViewSet(viewsets.ModelViewSet):
     queryset = Harbor.objects.all().filter(active=True)
     serializer_class = HarborSerializer
-    http_method_names = ['get']
     permission_classes = [AllowAny]
 
 class VesselViewSet(viewsets.ModelViewSet):
