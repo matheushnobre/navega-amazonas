@@ -102,7 +102,7 @@ export class Checkout implements OnInit {
 
         alert(`Passagem reservada e pendente de pagamento. ${fromHarbor} → ${toHarbor}`);
 
-        this.router.navigate(['/']);
+        this.router.navigate(['/tickets']);
       }
 
       ,

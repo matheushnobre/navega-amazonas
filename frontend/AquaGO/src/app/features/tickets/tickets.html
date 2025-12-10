@@ -35,7 +35,7 @@
 
                 <td class="fs-6">
                   @if (isTripSegment(ticket.trip_segment)) {
-                    {{ getHarborName(ticket?.trip_segment?.from_stop?.harbor) }}
+                    {{ getHarborName(ticket?.trip_segment?.to_stop?.harbor) }}
                   }
                 </td>
 

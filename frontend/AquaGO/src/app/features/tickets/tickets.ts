@@ -9,6 +9,7 @@ import { TripSegment } from '../../shared/models/tripSegment';
 import { DatePipe } from '@angular/common';
 import { Vessel } from '../vessel/vessel';
 import { Harbor } from '../../shared/models/harbor';
+import { TicketService } from '../../core/services/ticket-service';
 
 @Component({
   selector: 'app-tickets',
@@ -23,7 +24,8 @@ export class Tickets implements OnInit {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private userService: UserService
+    private userService: UserService,
+    private ticketService: TicketService
   ) {}
 
   ngOnInit(): void {
@@ -53,9 +55,18 @@ export class Tickets implements OnInit {
     return value && typeof value === 'object';
   }
 
-  pay(ticket_id: number){
-    
+  pay(ticket_id: number) {
+    console.log(ticket_id);
+    this.ticketService.get_payment_link(ticket_id).subscribe({
+      next: (res) => {
+        window.location.href = res.link; 
+      },
+      error: (err) => {
+        console.error("Erro ao gerar link de pagamento:", err);
+      }
+    });
   }
+  
   getHarborName(harbor: number | Harbor | null | undefined): string {
     return harbor && typeof harbor === 'object' ? harbor.name : '';
   }
