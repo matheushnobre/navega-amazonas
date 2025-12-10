@@ -48,6 +48,37 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = EnterpriseSerializer(enterprises, many=True)
         return Response(serializer.data)    
     
+    @action(detail=False, methods=['post'], url_path='change-password')
+    def change_password(self, request):
+        """
+        POST /api/users/change-password/
+        Body:
+        {
+            "old_password": "senhaAtual",
+            "new_password": "novaSenha123"
+        }
+        """
+        user = request.user
+        old_password = request.data.get("old_password")
+        new_password = request.data.get("new_password")
+
+        if not old_password or not new_password:
+            return Response(
+                {"detail": "old_password e new_password são obrigatórios."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if not user.check_password(old_password):
+            return Response(
+                {"detail": "Senha atual incorreta."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
     @action(detail=False, methods=['get'], url_path='tickets')  
     def get_tickets(self, request):
         user = request.user

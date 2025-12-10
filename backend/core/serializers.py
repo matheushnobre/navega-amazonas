@@ -190,6 +190,12 @@ class TripSerializer(serializers.ModelSerializer):
     vessel = serializers.PrimaryKeyRelatedField(
         queryset=Vessel.objects.all()
     )
+    departure_harbor = serializers.PrimaryKeyRelatedField(
+        queryset=Harbor.objects.all()
+    )
+    arrival_harbor = serializers.PrimaryKeyRelatedField(
+        queryset=Harbor.objects.all()
+    )
     
     class Meta:
         model = Trip
@@ -229,6 +235,8 @@ class TripSerializer(serializers.ModelSerializer):
 
         data['trip_stops'] = ordered_stops
         data['vessel'] = VesselSerializer(instance.vessel).data
+        data['departure_harbor'] = HarborSerializer(instance.departure_harbor).data
+        data['arrival_harbor'] = HarborSerializer(instance.arrival_harbor).data
         return data
     
     def update(self, instance, validated_data):
