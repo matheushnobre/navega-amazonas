@@ -91,7 +91,7 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
     serializer_class = EnterpriseSerializer
     
     def get_permissions(self):
-        if self.action in ['list', 'get_vessels']:
+        if self.action in ['get_vessels', 'list']:
             permission_classes = [AllowAny]
         elif self.action in ['create']:
             permission_classes = [IsAuthenticated]
@@ -155,7 +155,9 @@ class VesselViewSet(viewsets.ModelViewSet):
     serializer_class = VesselSerializer
     
     def get_permissions(self):
-        if self.action in ['list', 'retrive']:
+        if self.action in ['list']:
+            permission_classes = [IsAdminUser]
+        elif self.action in ['retrive']:
             permission_classes  = [AllowAny]
         else:
             permission_classes = [IsAuthenticated, IsEnterpriseCheck]
@@ -176,6 +178,8 @@ class TripViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['retrieve']:
             permission_classes = [AllowAny]
+        elif self.action in ['list']:
+            permission_classes = [IsAdminUser]
         else:
             permission_classes = [IsAuthenticated]
             
@@ -212,6 +216,16 @@ class TripStopViewSet(viewsets.ModelViewSet):
     queryset = TripStop.objects.all().filter(active=True)
     serializer_class = TripStopSerializer
     
+    def get_permissions(self):
+        if self.action in ['list']:
+            permission_classes = [IsAdminUser]
+        elif self.action in ['retrive']:
+            permission_classes  = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+            
+        return [perm() for perm in permission_classes]   
+    
     def perform_destroy(self, instance):
         try:
             instance.delete()
@@ -221,6 +235,16 @@ class TripStopViewSet(viewsets.ModelViewSet):
 class TripSegmentViewSet(viewsets.ModelViewSet):
     queryset = TripSegment.objects.all().filter(active=True)
     serializer_class = TripSegmentSerializer
+    
+    def get_permissions(self):
+        if self.action in ['list']:
+            permission_classes = [IsAdminUser]
+        elif self.action in ['retrive', 'get_trips_segments_from_a_city_to_another']:
+            permission_classes  = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+            
+        return [perm() for perm in permission_classes]   
     
     @action(detail=False, methods=['get'], url_path='from_to')  
     def get_trips_segments_from_a_city_to_another(self, request, pk=None):
@@ -257,6 +281,16 @@ class TicketViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.all().order_by('-trip_segment__from_stop__stop_datetime')
     serializer_class = TicketSerializer
     
+    def get_permissions(self):
+        if self.action in ['list']:
+            permission_classes = [IsAdminUser]
+        elif self.action in ['retrive']:
+            permission_classes  = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        
+        return [perm() for perm in permission_classes]   
+
     @action(detail=True, methods=['get'], url_path='payment')
     def payment(self, request, pk=None):
         ticket = self.get_object()
