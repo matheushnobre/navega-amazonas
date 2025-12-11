@@ -40,7 +40,6 @@ export class EditVessel {
   }
   edit(event:Event){
     event.preventDefault();
-    alert(this.vessel.vessel_type)
     if(!(this.vessel.image instanceof File)){
       delete this.vessel.image;
     }

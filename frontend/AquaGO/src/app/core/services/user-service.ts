@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { Enterprise } from '../../features/enterprise/enterprise';
 import { enterprise } from '../../shared/models/enterprise';
 import { Ticket } from '../../shared/models/ticket';
+import { userPassword } from '../../shared/models/userPassword';
 
 @Injectable({
   providedIn: 'root',
@@ -21,8 +22,17 @@ export class UserService {
 
   add(data: customUser): Observable<customUser> {
     const formData = toFormData(data);
-
     return this.http.post<customUser>(this.API, formData);
+  }
+  update(data: customUser): Observable<customUser> {
+    const headers = this.tokenService.getAuthHeaders();
+    const formData = toFormData(data);
+    return this.http.patch<customUser>(`${this.API}${data.id}/`, formData,{headers});
+  }
+  updatePassword(data:userPassword): Observable<customUser> {
+    const headers = this.tokenService.getAuthHeaders();
+    const formData = toFormData(data);
+    return this.http.post<customUser>(`${this.API}change-password/`, formData,{headers});
   }
   me(): Observable<customUser>{
     const headers = this.tokenService.getAuthHeaders();

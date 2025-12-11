@@ -8,6 +8,7 @@ import { catchError, of } from 'rxjs';
 import { enterprise } from '../../../shared/models/enterprise';
 import { Auth } from '../../auth/auth';
 import { customUser } from '../../../shared/models/customUser';
+import { environment } from '../../../../environments/environments';
 
 @Component({
   selector: 'app-nav',
@@ -18,7 +19,7 @@ import { customUser } from '../../../shared/models/customUser';
 export class Nav implements OnInit {
 
   logado:boolean = false;
-
+  path = environment.apiUrl;
   user:customUser = new customUser();
   constructor(
     private router:Router,

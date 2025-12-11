@@ -1,0 +1,25 @@
+.container-fluid{
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.register{
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    padding: 5rem 0 2rem 0;
+    flex: 1 0 auto;
+}
+.card{
+    align-items: center;
+    width: 100%;
+}
+.box{
+    background-color: #eeeded;
+    border: 0.05rem solid var(--border, #ADABAB);
+    border-radius: 0.5rem;
+}

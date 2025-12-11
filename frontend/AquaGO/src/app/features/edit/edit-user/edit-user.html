@@ -1,1 +1,56 @@
-<p>edit-user works!</p>
+<div class="container-fluid">
+    <app-nav class="w-100"></app-nav>
+    <section class="register px-2" style="max-width: 800px;" name="register">
+        <h3 class="fs-5 fw-bold">Editar seus dados</h3>
+        <p class="fs-6 mb-4">Sua conta está segura conosco!</p>
+        <form action="" class="card px-3 py-3 d-flex flex-column gap-2">
+            <app-img-input class="mt-2" [startImage]="path + user.image!" (fileSelected)="onImagemSelecionada($event)"></app-img-input>
+            <label class="w-100 fw-bold" for="name">Nome:</label>
+            <app-custom-input
+                type="text"
+                class="w-100"
+                type_input="standard"
+                placeholder="Lancha Amazonas"
+                [(value)]="user.name"
+            ></app-custom-input>
+
+            <label class="w-100 fw-bold" for="name">Email:</label>
+            <label class="w-100 box p-2" for="name">{{user.email}}</label>
+            <label class="w-100 fw-bold" for="name">Cpf:</label>
+            <label class="w-100 box p-2" for="name">{{user.cpf}}</label>
+
+            <app-custom-button 
+                variant="warning"
+                class="mt-2 w-100" 
+                name="Confirmar"
+                (click)="edit($event)">
+            </app-custom-button>
+        </form>
+        <form action="" class="card mt-5 px-3 py-3 d-flex flex-column gap-2">
+            <label class="w-100 fw-bold" for="name">Senha atual:</label>
+            <app-custom-input
+                type="password"
+                class="w-100"
+                type_input="standard"
+                placeholder="Senha antiga"
+                [(value)]="userPassword.old_password"
+            ></app-custom-input>
+             <label class="w-100 fw-bold" for="name">Nova senha:</label>
+            <app-custom-input
+                type="password"
+                class="w-100"
+                type_input="standard"
+                placeholder="Nova Senha"
+                [(value)]="userPassword.new_password"
+            ></app-custom-input>
+
+            <app-custom-button 
+                variant="warning"
+                class="mt-2 w-100" 
+                name="Confirmar"
+                (click)="newPassword($event)">
+            </app-custom-button>
+        </form>
+    </section>
+    <app-footer class="w-100"></app-footer>
+</div>
