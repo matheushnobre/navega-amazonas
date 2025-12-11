@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'core.apps.CoreConfig',
     'corsheaders',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -173,3 +175,11 @@ CORS_ALLOW_CREDENTIALS = True
 
 USE_TZ = True
 TIME_ZONE = "America/Manaus"
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get("CLOUD_NAME"),
+    'API_KEY': os.environ.get("CLOUD_API_KEY"),
+    'API_SECRET': os.environ.get("CLOUD_API_SECRET"),
+}
