@@ -129,14 +129,8 @@ export class RegisterTrip {
     });
   }
   reloadData() {
-    const departure_datetime = new Date(`${this.departure_date}T${this.departure_time}:00`);
-    const arrival_datetime = new Date(`${this.arrival_date}T${this.arrival_time}:00`);
-
-    const departure_utc4 = new Date(departure_datetime.getTime() - 4 * 60 * 60 * 1000);
-    const arrival_utc4 = new Date(arrival_datetime.getTime() - 4 * 60 * 60 * 1000);
-
-    this.trip.departure_datetime = departure_utc4.toISOString();
-    this.trip.arrival_datetime = arrival_utc4.toISOString();
+    this.trip.departure_datetime = `${this.departure_date}T${this.departure_time}:00`;
+    this.trip.arrival_datetime = `${this.arrival_date}T${this.arrival_time}:00`;
   }
   getVersselName(vessel: number | vessel | null | undefined): string {
     return vessel && typeof vessel === 'object' ? vessel.vessel_type : '';

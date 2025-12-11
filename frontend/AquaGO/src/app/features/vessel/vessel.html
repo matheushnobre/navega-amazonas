@@ -24,7 +24,7 @@
                                 <tr style="vertical-align: middle;">
                                     <td class="fs-6">{{getHarborName(stop?.harbor)}}</td>
                                     <td class="fs-6">{{stop.stop_datetime | date:'dd/MM/yyyy'}}</td>
-                                    <td class="fs-6">{{ stop.stop_datetime | date:'HH:mm' }}</td>
+                                    <td class="fs-6">{{ stop.stop_datetime | date:'HH:mm' : 'UTC-4' }}</td>
                                     @if ($index !== 0 && $index !== trip.trip_stops!.length - 1) {
                                         <td>
                                             <div class="d-flex gap-2 justify-content-end">

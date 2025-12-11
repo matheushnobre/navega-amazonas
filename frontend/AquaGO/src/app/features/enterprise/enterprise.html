@@ -58,6 +58,8 @@
                             <th scope="col">Embarcação</th>
                             <th scope="col" class="text-center">Partida</th>
                             <th scope="col" class="text-center">Chegada</th>
+                            <th scope="col" class="text-center">Data</th>
+                            <th scope="col" class="text-center">Horário</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -75,6 +77,14 @@
 
                                     <td class="fs-6">
                                         {{ typeof trip.arrival_harbor === 'object' ? trip.arrival_harbor?.name : '' }}
+                                    </td>
+
+                                    <td class="fs-6">
+                                        {{ trip.departure_datetime | date: 'dd/MM/yyyy' }}
+                                    </td>
+
+                                    <td class="fs-6">
+                                        {{ trip.departure_datetime | date: 'HH:mm': 'UTC-4' }}
                                     </td>
 
                                     <td>
