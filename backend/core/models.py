@@ -43,7 +43,7 @@ class ChoiceOptions():
 class CustomUser(AbstractUser):
     name = models.CharField(max_length=50, null=False, blank=False)
     cpf = models.CharField(max_length=20, null=False, blank=False)
-    image = models.ImageField(upload_to='assets/users/', null=True, blank=True, default=None)
+    image = models.ImageField(upload_to='users/', null=True, blank=True, default=None)
         
 class Enterprise(BaseModel):
     user = models.ForeignKey(
@@ -53,7 +53,7 @@ class Enterprise(BaseModel):
     )
     fantasy_name = models.CharField(max_length=50, null=False, blank=False)
     cnpj = models.CharField(max_length=20, null=False, blank=False)
-    image = models.ImageField(upload_to='assets/enterprises/', null=False, blank=False)
+    image = models.ImageField(upload_to='enterprises/', null=False, blank=False)
     
     class Meta:
         db_table = 'enterprise'
@@ -61,7 +61,7 @@ class Enterprise(BaseModel):
             
 class Vessel(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
-    image = models.ImageField(upload_to='assets/vessels/', null=False, blank=False)
+    image = models.ImageField(upload_to='vessels/', null=False, blank=False)
     registry_code = models.CharField(max_length=50, null=False, blank=False)
     vessel_type = models.CharField(max_length=20, null=False, choices=ChoiceOptions.VesselTypeChoices.choices)
     individual_capacity = models.IntegerField(null=False, blank=False)
@@ -81,7 +81,7 @@ class Vessel(BaseModel):
 class City(BaseModel):
     name = models.CharField(max_length=50, null=False, blank=False)
     state = models.CharField(max_length=50, null=False, blank=False)
-    image = models.ImageField(upload_to='assets/cities/', null=False, blank=False)
+    image = models.ImageField(upload_to='cities/', null=False, blank=False)
     
     class Meta:
         db_table = 'city'

@@ -91,7 +91,7 @@ class EnterpriseViewSet(viewsets.ModelViewSet):
     serializer_class = EnterpriseSerializer
     
     def get_permissions(self):
-        if self.action in ['get_vessels']:
+        if self.action in ['get_vessels', 'list']:
             permission_classes = [AllowAny]
         elif self.action in ['create']:
             permission_classes = [IsAuthenticated]
@@ -237,9 +237,9 @@ class TripSegmentViewSet(viewsets.ModelViewSet):
     serializer_class = TripSegmentSerializer
     
     def get_permissions(self):
-        if self.action in ['list', 'get_trips_segments_from_a_city_to_another']:
+        if self.action in ['list']:
             permission_classes = [IsAdminUser]
-        elif self.action in ['retrive']:
+        elif self.action in ['retrive', 'get_trips_segments_from_a_city_to_another']:
             permission_classes  = [AllowAny]
         else:
             permission_classes = [IsAuthenticated]
