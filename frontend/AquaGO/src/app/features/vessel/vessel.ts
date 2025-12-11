@@ -7,10 +7,11 @@ import { TripService } from '../../core/services/trip-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Harbor } from '../../shared/models/harbor';
 import { TripStopsService } from '../../core/services/trip-stops-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-vessel',
-  imports: [Footer, CustomButton, Nav],
+  imports: [Footer, CustomButton, Nav,CommonModule],
   templateUrl: './vessel.html',
   styleUrl: './vessel.scss',
 })

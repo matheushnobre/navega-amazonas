@@ -9,72 +9,68 @@
       </div>
 
       <div class="table-wrapper">
-        <div class="table-responsive">
-          <table class="table table-hover mb-0">
-            <thead>
-              <tr>
-                <th scope="col">Origem</th>
-                <th scope="col">Destino</th>
-                <th scope="col">Data de Partida</th>
-                <th scope="col">Horário</th>
-                <th scope="col">Status</th>
-                <th scope="col" class="text-end">Ações</th>
-              </tr>
-            </thead>
+        <div class="table-responsive w-100 mt-3">
+            <table class="table table-hover w-100">
+              <thead>
+                <tr>
+                  <th scope="col">Origem</th>
+                  <th scope="col">Destino</th>
+                  <th scope="col">Data de Partida</th>
+                  <th scope="col">Horário</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" class="text-end">Ações</th>
+                </tr>
+              </thead>
 
-            <tbody>
-              @for (ticket of tickets; track $index) {
-              <tr (click)="select(ticket.id!)"
-                  style="vertical-align: middle; cursor: pointer;">
+              <tbody>
+                @for (ticket of tickets; track $index) {
+                <tr (click)="select(ticket.id!)"
+                    style="vertical-align: middle; cursor: pointer;">
 
-                <td class="fs-6">
-                  @if (isTripSegment(ticket.trip_segment)) {
-                    {{ getHarborName(ticket?.trip_segment?.from_stop?.harbor) }}
-                  }
-                </td>
+                  <td class="fs-6">
+                    @if (isTripSegment(ticket.trip_segment)) {
+                      {{ getHarborName(ticket?.trip_segment?.from_stop?.harbor) }}
+                    }
+                  </td>
 
-                <td class="fs-6">
-                  @if (isTripSegment(ticket.trip_segment)) {
-                    {{ getHarborName(ticket?.trip_segment?.to_stop?.harbor) }}
-                  }
-                </td>
+                  <td class="fs-6">
+                    @if (isTripSegment(ticket.trip_segment)) {
+                      {{ getHarborName(ticket?.trip_segment?.to_stop?.harbor) }}
+                    }
+                  </td>
 
-                <td class="fs-6">
-                  @if (isTripSegment(ticket.trip_segment)) {
-                    {{ ticket.trip_segment.from_stop.stop_datetime | date:'dd/MM/yyyy': 'UTC-4' }}
-                  }
-                </td>
+                  <td class="fs-6">
+                    @if (isTripSegment(ticket.trip_segment)) {
+                      {{ ticket.trip_segment.from_stop.stop_datetime | date:'dd/MM/yyyy': 'UTC-4' }}
+                    }
+                  </td>
 
-                <td class="fs-6">
-                  @if (isTripSegment(ticket.trip_segment)) {
-                    {{ ticket.trip_segment.from_stop.stop_datetime | date:'HH:mm': 'UTC-4' }}
-                  }
-                </td>
+                  <td class="fs-6">
+                    @if (isTripSegment(ticket.trip_segment)) {
+                      {{ ticket.trip_segment.from_stop.stop_datetime | date:'HH:mm': 'UTC-4' }}
+                    }
+                  </td>
 
-                <td class="fs-6">
-                  {{ ticket.status }}
-                </td>
+                  <td class="fs-6">
+                    {{ ticket.status }}
+                  </td>
 
-                <td class="text-end">
-                  @if (ticket.status === "Reserved") {
-                    <button class="btn btn-danger btn-sm"
-                            (click)="pay(ticket.id!); $event.stopPropagation()">
-                      Pagar
-                    </button>
-                  }
-                </td>
+                  <td class="text-end">
+                    @if (ticket.status === "Reserved") {
+                      <button class="btn btn-danger btn-sm"
+                              (click)="pay(ticket.id!); $event.stopPropagation()">
+                        Pagar
+                      </button>
+                    }
+                  </td>
 
-              </tr>
-              }
-            </tbody>
-
-          </table>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-
     </section>
-
   </div>
-
   <app-footer class="mt-5 w-100"></app-footer>
 </div>

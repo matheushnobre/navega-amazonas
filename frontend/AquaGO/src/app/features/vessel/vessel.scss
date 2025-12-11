@@ -19,10 +19,14 @@
     align-items: center;
     max-width: 800px;
 }
-.table{
+.table-responsive{
     box-shadow: 0 0 0.1rem #1e1e1e;
     border-radius: 0.5rem;
-    overflow: hidden;
+    overflow-x: auto !important;
+    max-width: 100%;
+}
+.table{
+    margin: 0;
 }
 .init-contente{
     width: 100%;
