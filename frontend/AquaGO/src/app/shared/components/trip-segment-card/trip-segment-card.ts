@@ -1,9 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { TripSegment } from '../../shared/models/tripSegment';
 import { Router } from '@angular/router';
-import { CustomButton } from '../../shared/components/custom-button/custom-button';
-import { Harbor } from '../../shared/models/harbor';
+import { CustomButton } from '../custom-button/custom-button';
+import { TripSegment } from '../../models/tripSegment';
+import { Harbor } from '../../models/harbor';
+import { Vessel } from '../../../features/vessel/vessel';
+import { vessel } from '../../models/vessel';
 
 @Component({
   selector: 'app-trip-segment-card',
@@ -20,11 +22,14 @@ export class TripSegmentCard {
   constructor(private router: Router) {}
 
   buy() {
-    console.log("comprar");
+    alert("comprar");
     this.router.navigate([this.buyRoute]);
   }
   getHarborName(harbor: number | Harbor | null | undefined): string {
     return harbor && typeof harbor === 'object' ? harbor.name : '';
+  }
+  getVesselName(vessel: number | vessel | null | undefined): string {
+    return vessel && typeof vessel === 'object' ? vessel.name : '';
   }
 
 }

@@ -14,14 +14,16 @@ import { Tickets } from './features/tickets/tickets';
 import { Vessel } from './features/vessel/vessel';
 import { RegisterTripSegment } from './features/register/register-trip-segment/register-trip-segment';
 import { authGuard } from './guards/auth-guard';
+import { EditUser } from './features/edit/edit-user/edit-user';
 
 export const routes: Routes = [
     {path:'',redirectTo:'home',pathMatch:'full'},
     {path:'home',component:Home},
     {path:'login',component:Login},
 
-    {path:'edit-enterprise/:id',component:EditEnterprise},
-    {path:'edit-vessel/:id',component:EditVessel},
+    {path:'edit-enterprise/:id',canActivate:[authGuard],component:EditEnterprise},
+    {path:'edit-vessel/:id',canActivate:[authGuard],component:EditVessel},
+    {path:'edit-user/',canActivate:[authGuard],component:EditUser},
     
     {path:'register-user', component:RegisterUser},
     {path:'register-enterprise',canActivate:[authGuard], component:RegisterEnterprise},

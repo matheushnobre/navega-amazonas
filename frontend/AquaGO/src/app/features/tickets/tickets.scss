@@ -20,20 +20,14 @@
   width: 100%;
 }
 
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;       
-  border-radius: 0.5rem;   
-  box-shadow: 0 0 0.1rem #1e1e1e;
+.table-responsive{
+    box-shadow: 0 0 0.1rem #1e1e1e;
+    border-radius: 0.5rem;
+    overflow-x: auto !important;
+    max-width: 100%;
 }
-
-.table-responsive {
-  margin: 0;
-}
-
-.table {
-  margin-bottom: 0;
-  border-radius: 0 !important;  // evita borda dupla
+.table{
+    margin: 0;
 }
 
 .table-hover tbody tr:hover {

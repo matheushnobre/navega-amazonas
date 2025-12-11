@@ -9,39 +9,41 @@
                     (click)="addVessel()"
                 ></app-custom-button>
             </div>
-            <table class="table table-hover w-100 mt-3">
-                <thead>
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Tipo</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if(vessels.length>0){
-                        @for (vessel of vessels; track $index) {                            
-                            <tr style="vertical-align: middle;">
-                                <td><img [src]="path+vessel.image" width="36px" height="36px" style="border-radius:300px;border: 0.01rem solid var(--color-primary);"></td>
-                                <td class="fs-6">{{vessel.name}}</td>
-                                @if (vessel.vessel_type=="BOAT") {
-                                    <td class="fs-6">Barco</td>
-                                }@else {
-                                    <td class="fs-6">Lancha</td>
-                                }
-                                <td>
-                                    <div  class="d-flex gap-2 justify-content-end">
-                                        <button class="btn btn-warning" (click)="editVessel(vessel.id!);$event.stopPropagation()">Editar</button>
-                                        <button class="btn btn-danger" (click)="delVessel(vessel.id!); $event.stopPropagation()">Excluir</button>
-                                    </div>
-                                </td>
-                            </tr> 
+            <div class="table-responsive w-100 mt-3">
+                <table class="table table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(vessels.length>0){
+                            @for (vessel of vessels; track $index) {                            
+                                <tr style="vertical-align: middle;">
+                                    <td><img [src]="path+vessel.image" width="36px" height="36px" style="border-radius:300px;border: 0.01rem solid var(--color-primary);"></td>
+                                    <td class="fs-6">{{vessel.name}}</td>
+                                    @if (vessel.vessel_type=="BOAT") {
+                                        <td class="fs-6">Barco</td>
+                                    }@else {
+                                        <td class="fs-6">Lancha</td>
+                                    }
+                                    <td>
+                                        <div  class="d-flex gap-2 justify-content-end">
+                                            <button class="btn btn-warning" (click)="editVessel(vessel.id!);$event.stopPropagation()">Editar</button>
+                                            <button class="btn btn-danger" (click)="delVessel(vessel.id!); $event.stopPropagation()">Excluir</button>
+                                        </div>
+                                    </td>
+                                </tr> 
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </section>
-        <section name="routes" class="routes w-100 px-2">
+        <section name="routes" class="routes w-100 px-2 mt-5">
             <div class="trips w-100 d-flex flex-row justify-content-between">
                 <h3 class="fs-5 fw-bold">Minhas viagens</h3>
                 <app-custom-button
@@ -49,56 +51,52 @@
                     (click)="addTrip()"
                 ></app-custom-button>
             </div>
-            <table class="table table-hover w-100 mt-3">
-                <thead>
-                    <tr>
-                        <th scope="col">Embarcação</th>
-                        <th scope="col" class="text-center">Partida</th>
-                        <th scope="col" class="text-center">Chegada</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if(trips.length>0){
-                        @for (trip of trips; track $index) {                            
-                            <tr style="vertical-align: middle;">
-                                <td class="text-center">
-                                    {{ typeof trip.vessel === 'object' ? trip.vessel.name : '' }}
-                                </td>
+            <div class="table-responsive w-100 mt-3">
+                <table class="table table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th scope="col">Embarcação</th>
+                            <th scope="col" class="text-center">Partida</th>
+                            <th scope="col" class="text-center">Chegada</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(trips.length>0){
+                            @for (trip of trips; track $index) {                            
+                                <tr style="vertical-align: middle;">
+                                    <td class="text-center">
+                                        {{ typeof trip.vessel === 'object' ? trip.vessel.name : '' }}
+                                    </td>
 
-                                <td class="fs-6">
-                                    <div class="d-flex gap-3">
-                                        <span>{{ trip.departure_datetime | date:'dd/MM/yyyy' }}</span>
-                                        <span>{{ trip.departure_datetime | date:'HH:mm' }}</span>
-                                    </div>
-                                </td>
+                                    <td class="fs-6">
+                                        {{ typeof trip.departure_harbor === 'object' ? trip.departure_harbor?.name : '' }}
+                                    </td>
 
-                                <td class="fs-6">
-                                    <div class="d-flex gap-3">
-                                        <span>{{ trip.arrival_datetime | date:'dd/MM/yyyy' }}</span>
-                                        <span>{{ trip.arrival_datetime | date:'HH:mm' }}</span>
-                                    </div>
-                                </td>
+                                    <td class="fs-6">
+                                        {{ typeof trip.arrival_harbor === 'object' ? trip.arrival_harbor?.name : '' }}
+                                    </td>
 
-                                <td>
-                                    <div class="d-flex gap-2 justify-content-end">
-                                        <app-custom-button
-                                            name="detalhar"
-                                            (click)="detailTrip(trip.id!); $event.stopPropagation()"
-                                        ></app-custom-button>
-                                        <app-custom-button
-                                            name="excluir"
-                                            variant="del"
-                                            (click)="delTrip(trip.id!); $event.stopPropagation()"
-                                        ></app-custom-button>
-                                    </div>
-                                </td>
-                            </tr>
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-end">
+                                            <app-custom-button
+                                                name="detalhar"
+                                                (click)="detailTrip(trip.id!); $event.stopPropagation()"
+                                            ></app-custom-button>
+                                            <app-custom-button
+                                                name="excluir"
+                                                variant="del"
+                                                (click)="delTrip(trip.id!); $event.stopPropagation()"
+                                            ></app-custom-button>
+                                        </div>
+                                    </td>
+                                </tr>
 
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </section>
     </div>
     <app-footer class="mt-5 w-100"></app-footer>

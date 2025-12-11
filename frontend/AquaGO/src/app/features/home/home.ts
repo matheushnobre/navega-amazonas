@@ -16,7 +16,7 @@ import { Logos } from '../../shared/components/logos/logos';
 import { CommonModule } from '@angular/common';   
 import { FormsModule } from '@angular/forms';    
 import { TripSegment } from '../../shared/models/tripSegment';
-import { TripSegmentCard } from '../trip-segment-card/trip-segment-card';
+import { TripSegmentCard } from '../../shared/components/trip-segment-card/trip-segment-card';
 
 @Component({
   selector: 'app-home',
@@ -43,7 +43,7 @@ export class Home implements AfterViewInit, OnInit{
 
   selectedDepartureCity: number | null = null;
   selectedArrivalCity: number | null = null;
-  selectedDate: string | null = null;
+  selectedDate: string | null = '2025-05-20';
 
   constructor(
     private router: Router,
@@ -115,10 +115,9 @@ export class Home implements AfterViewInit, OnInit{
   }
 
   search() {
-    const apiDate = this.convertDate(this.selectedDate);
 
     this.tripSegmentService
-      .search(this.selectedDepartureCity, this.selectedArrivalCity, apiDate)
+      .search(this.selectedDepartureCity, this.selectedArrivalCity, this.selectedDate)
       .subscribe({
         next: (dados) => {
           this.tripSegments = Array.isArray(dados) ? dados : [];

@@ -123,7 +123,7 @@
 
                         <option [ngValue]="null" disabled>Selecione a embarcação...</option>
 
-                        <option *ngFor="let vessel of vessels" [ngValue]="vessel.id">
+                        <option *ngFor="let vessel of vessels" [ngValue]="vessel">
                             {{ vessel.name }}
                         </option>
                     </select>
@@ -137,7 +137,7 @@
                         </app-custom-input>
                     </div>
 
-                    @if (trip.vessel && trip.vessel !== null && typeof trip.vessel === 'object' && trip.vessel.vessel_type==='BOAT') {
+                    @if (getVersselName(trip.vessel)=='BOAT') {
                         <div class="right d-flex flex-column w-100">
                             <label class="fw-bold fs-6 w-100">Preço do Camarote</label>
                             <app-custom-input

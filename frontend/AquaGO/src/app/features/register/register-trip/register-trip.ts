@@ -53,7 +53,6 @@ export class RegisterTrip {
     private activatedRoute:ActivatedRoute,
     private enterpriseService:EnterpriseService,
     private cityService: CityService,
-    private cdr: ChangeDetectorRef,
     private tripService:TripService
   ){
     this.id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
@@ -62,14 +61,18 @@ export class RegisterTrip {
   register(event:Event){
     event.preventDefault();
     this.reloadData();
-    this.tripService.add(this.trip).subscribe({
-      next:(dados)=> {
-        alert("Viagem cadastrada com sucesso");
-      },error(err) {
-        alert("Erro ao cadastrar")
-        console.log(err);
-      },
-    })
+    if (typeof this.trip.vessel !== 'number') {
+      this.trip.vessel = this.trip.vessel!.id;
+      this.tripService.add(this.trip).subscribe({
+        next:(dados)=> {
+          alert("Viagem cadastrada com sucesso");
+          this.location.back();
+        },error(err) {
+          alert("Erro ao cadastrar")
+          console.log(err);
+        },
+      })
+    }
   }
   load(){
     this.loadVessels();
@@ -125,10 +128,18 @@ export class RegisterTrip {
       }
     });
   }
-  reloadData(){
+  reloadData() {
     const departure_datetime = new Date(`${this.departure_date}T${this.departure_time}:00`);
     const arrival_datetime = new Date(`${this.arrival_date}T${this.arrival_time}:00`);
-    this.trip.departure_datetime = departure_datetime.toISOString();
-    this.trip.arrival_datetime = arrival_datetime.toISOString();
+
+    const departure_utc4 = new Date(departure_datetime.getTime() - 4 * 60 * 60 * 1000);
+    const arrival_utc4 = new Date(arrival_datetime.getTime() - 4 * 60 * 60 * 1000);
+
+    this.trip.departure_datetime = departure_utc4.toISOString();
+    this.trip.arrival_datetime = arrival_utc4.toISOString();
   }
+  getVersselName(vessel: number | vessel | null | undefined): string {
+    return vessel && typeof vessel === 'object' ? vessel.vessel_type : '';
+  }
+
 }
