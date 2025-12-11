@@ -1,15 +1,19 @@
 <div class="container-fluid">
     <app-nav  class="w-100"></app-nav>
     <section class="trip"  name="trip">
-        <div id="mainToast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    Hello, world! This is a toast message.
+        @if(fechado!=false){
+            <div class="toast-box mx-2">
+                <div class="">
+                    <h2>Atenção:</h2>
+                    <p>Site fictício desenvolvido exclusivamente para fins acadêmicos.</p>
                 </div>
-                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+                <app-custom-button
+                    variant="primary"
+                    name="Fechar"
+                    (click)="fechar()"
+                ></app-custom-button>
             </div>
-        </div>
-
+        }
         <div class="trip-content">
             <h3 class="fs-5 fw-bold w-100 text-start" style="color: #fefefe;">Querendo viagem?</h3>
             <p class="fs-6 w-100 text-" style="color: #fefefe;">Compre sua passagem agora, rápido e fácil!</p>

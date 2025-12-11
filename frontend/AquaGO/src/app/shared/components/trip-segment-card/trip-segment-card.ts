@@ -1,16 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { CustomButton } from '../custom-button/custom-button';
 import { TripSegment } from '../../models/tripSegment';
 import { Harbor } from '../../models/harbor';
-import { Vessel } from '../../../features/vessel/vessel';
 import { vessel } from '../../models/vessel';
 
 @Component({
   selector: 'app-trip-segment-card',
   standalone: true,
-  imports: [DatePipe, CustomButton],
+  imports: [DatePipe],
   templateUrl: './trip-segment-card.html',
   styleUrls: ['./trip-segment-card.scss']
 })

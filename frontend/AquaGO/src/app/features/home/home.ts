@@ -17,7 +17,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';    
 import { TripSegment } from '../../shared/models/tripSegment';
 import { TripSegmentCard } from '../../shared/components/trip-segment-card/trip-segment-card';
-import { Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-home',
@@ -36,12 +35,8 @@ export class Home implements AfterViewInit, OnInit{
     this.scrollContainers.changes.subscribe(() => {
       this.configurarScroll();
     });
-    const toastEl = document.getElementById('mainToast');
-    if (toastEl) {
-      const toast = new Toast(toastEl);
-      toast.show();
-    }
   }
+  fechado = true;
   user:customUser = new customUser();
   enterprises:enterprise[] = [];
   cities: City[] = [];
@@ -71,7 +66,9 @@ export class Home implements AfterViewInit, OnInit{
       }
     })
   }
-
+  fechar(){
+    this.fechado = !this.fechado;
+  }
   configurarScroll(){
     this.scrollContainers.forEach((containerRef: ElementRef) => {
     const container = containerRef.nativeElement;

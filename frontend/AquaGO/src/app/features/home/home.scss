@@ -1,3 +1,13 @@
+.toast-box {
+  position: absolute;
+  background: #333;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
 .container-fluid{
     padding: 0;
     margin: 0;
